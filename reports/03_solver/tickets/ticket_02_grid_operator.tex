@@ -1,0 +1,492 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{fontspec}
+\IfFontExistsTF{Times New Roman}
+  {\setmainfont{Times New Roman}}
+  {\IfFontExistsTF{TeX Gyre Termes}{\setmainfont{TeX Gyre Termes}}{\setmainfont{Times}}}
+\usepackage{newtxmath}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+\usepackage{fancyhdr}
+\usepackage{microtype}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.65em}
+\setlist[itemize]{leftmargin=1.4em,itemsep=0.2em,topsep=0.2em}
+\setlist[enumerate]{leftmargin=1.6em,itemsep=0.2em,topsep=0.2em}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small Ticket 02 Study Report}
+\rhead{\small Grid and Operator Setup}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  columns=fullflexible,
+  keepspaces=true,
+  rulecolor=\color{black!30},
+  xleftmargin=0.5em,
+  xrightmargin=0.5em
+}
+
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\file}[1]{\path{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash\ttfamily\footnotesize}p{#1}}
+
+\title{\textbf{Ticket 02 Study Report: Finite-Difference Grid and Black-Scholes Operator Setup}\\
+\large SURF2026 American Option Risk Surfaces}
+\author{Codex-assisted implementation report}
+\date{June 15, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Ticket 2 builds the first numerical layer beneath the future option solver: uniform spot and
+time-to-maturity grids, an explicit interior-node convention, central finite-difference
+coefficients for the Black-Scholes spatial operator, a small operator-application helper, and
+simple boundary-value helpers. This report is written for beginner researchers with accounting,
+data, machine-learning, and Python experience who are still learning finite differences,
+PDE-based pricing, CN/PSOR, and American option free-boundary logic. Ticket 2 prepares later
+European Crank-Nicolson validation and American CN/PSOR work, but it does not implement or
+validate those solvers.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Role of Ticket 2 in the Whole Solver Project}
+
+Ticket 1 gave the project analytic option-pricing utilities: payoff functions and European
+Black-Scholes closed-form prices. Ticket 2 begins the numerical side. Its purpose is to define
+the finite grid on which a future solver will approximate option values, and to define the
+discrete spatial operator that will later appear inside the Crank-Nicolson matrices.
+
+This order matters because CN/PSOR combines several ideas at once: a grid, finite differences,
+time stepping, linear algebra, an American payoff obstacle, and iterative projection. If all of
+those pieces are written together, debugging becomes confusing. Ticket 2 isolates only the grid
+and the spatial operator. Later tickets can then test time stepping and projection against a
+known, reviewed numerical foundation.
+
+In plain language, Ticket 2 answers three basic questions:
+\begin{itemize}
+  \item Where are the spot and time points?
+  \item Which spot nodes are solved by the PDE operator, and which nodes are imposed boundaries?
+  \item What are the lower, diagonal, and upper finite-difference weights for the Black-Scholes
+        spatial operator?
+\end{itemize}
+
+It is important to state the boundary of this ticket. Ticket 2 does not march through time, does
+not solve a linear system, does not run PSOR, does not enforce the American obstacle, and does
+not extract a free boundary. It creates reusable pieces that Ticket 3 can use for the European
+Crank-Nicolson validation check.
+
+\section{Theory and Methodology Connection}
+
+The source basis for this ticket is internal and project-specific:
+\begin{itemize}
+  \item \file{reports/01_literature/literature_map.md};
+  \item \file{reports/02_math/formulation_note.md};
+  \item \file{reports/03_solver/solver_validation_plan.md};
+  \item \file{reports/03_solver/solver_implementation_tickets.md};
+  \item the Ticket 1 Black-Scholes utility report and code.
+\end{itemize}
+
+The literature map places this work in the classical finite-difference American option
+literature. It mentions Brennan-Schwartz finite-difference valuation as background and emphasizes
+that a trusted classical benchmark must come before neural surrogate modelling. This Ticket 2
+report does not add a standalone bibliography because the available project notes do not provide
+complete bibliographic details for every external source. Instead, it uses the internal literature
+map and formulation note as the documented source basis.
+
+The formulation note defines the dividend-adjusted Black-Scholes spatial operator:
+\begin{equation}
+  L U =
+  \frac{1}{2}\sigma^2 S^2 U_{SS}
+  + (r-q)S U_S
+  - r U.
+  \label{eq:continuous-operator}
+\end{equation}
+
+The solver validation plan states that the finite-difference version \(L_h\) should approximate
+\(U_S\) and \(U_{SS}\) on interior nodes, while boundary conditions must be handled consistently
+later. Ticket 2 implements this \(L_h\) coefficient setup only. The future CN step will use
+\begin{equation}
+  A = I - \frac{\Delta \tau}{2}L_h,
+  \qquad
+  b^n = \left(I + \frac{\Delta \tau}{2}L_h\right)U^n,
+\end{equation}
+but Ticket 2 deliberately does not build \(A\), \(b^n\), or any time-marching solver.
+
+\section{Finite-Difference Grids in Plain Language}
+
+A continuous option-pricing problem has infinitely many possible spot prices and times. A
+computer cannot solve infinitely many points directly. A finite-difference method replaces the
+continuous domain with a finite list of grid points.
+
+For spot, Ticket 2 uses a uniform grid on a truncated domain:
+\begin{equation}
+  S_i = i\Delta S,\qquad i = 0,1,\ldots,M,
+  \qquad
+  \Delta S = \frac{S_{\max}}{M}.
+\end{equation}
+
+The domain starts at \(S=0\) and ends at \(S=S_{\max}\). The true Black-Scholes model allows
+unbounded spot prices, but a numerical solver must choose a finite upper boundary. Later
+validation work will check whether \(S_{\max}\) is large enough.
+
+For time-to-maturity, Ticket 2 uses
+\begin{equation}
+  \tau_n = n\Delta \tau,\qquad n = 0,1,\ldots,N,
+  \qquad
+  \Delta \tau = \frac{T}{N}.
+\end{equation}
+
+The project uses \(\tau\), time-to-maturity, rather than calendar time. At \(\tau=0\), the option
+is at maturity and the value is the payoff. As \(\tau\) increases, the future solver moves away
+from maturity toward earlier calendar times.
+
+Uniform grids are not the most advanced choice, but they are the right first step here. They make
+indexing readable, make central finite-difference formulas simple, and keep the beginner
+implementation auditable. Nonuniform grids can be considered later only after the uniform-grid
+solver is validated.
+
+\section{Black-Scholes Spatial Operator}
+
+The operator in Equation~\ref{eq:continuous-operator} has three parts:
+\begin{longtable}{L{0.30\textwidth}L{0.58\textwidth}}
+\toprule
+Term & Plain-language meaning \\
+\midrule
+\endhead
+\(\frac{1}{2}\sigma^2S^2U_{SS}\) &
+Diffusion or curvature term. It captures how volatility and option curvature affect value. \\
+\((r-q)SU_S\) &
+Drift term. It captures the risk-neutral movement of the underlying after continuous dividends. \\
+\(-rU\) &
+Discounting term. It subtracts the risk-free discounting effect from the value. \\
+\bottomrule
+\end{longtable}
+
+Ticket 2 converts this continuous operator into a tridiagonal discrete operator. ``Tridiagonal''
+means that at an interior node \(i\), the approximation uses only three neighboring values:
+\(U_{i-1}\), \(U_i\), and \(U_{i+1}\).
+
+\section{Central Finite Differences}
+
+At an interior node \(S_i\), central differences approximate the first and second spot
+derivatives:
+\begin{align}
+  U_S(S_i) &\approx \frac{U_{i+1} - U_{i-1}}{2\Delta S}, \\
+  U_{SS}(S_i) &\approx \frac{U_{i+1} - 2U_i + U_{i-1}}{(\Delta S)^2}.
+\end{align}
+
+Substituting these formulas into Equation~\ref{eq:continuous-operator} gives
+\begin{equation}
+  (L_h U)_i = a_i U_{i-1} + b_i U_i + c_i U_{i+1},
+\end{equation}
+where
+\begin{align}
+  a_i &=
+    \frac{1}{2}\sigma^2\frac{S_i^2}{(\Delta S)^2}
+    - \frac{1}{2}(r-q)\frac{S_i}{\Delta S}, \\
+  b_i &=
+    -\sigma^2\frac{S_i^2}{(\Delta S)^2}
+    - r, \\
+  c_i &=
+    \frac{1}{2}\sigma^2\frac{S_i^2}{(\Delta S)^2}
+    + \frac{1}{2}(r-q)\frac{S_i}{\Delta S}.
+\end{align}
+
+The implementation calls these arrays \code{lower}, \code{diagonal}, and \code{upper}. The names
+come from the matrix form: \(a_i\) multiplies the value to the left, \(b_i\) multiplies the
+current node, and \(c_i\) multiplies the value to the right.
+
+Two manufactured-function checks are useful:
+\begin{align}
+  L(1) &= -r, \\
+  L(S) &= -qS.
+\end{align}
+These identities are simple but powerful. They check the signs of the drift and discount terms
+without needing a full option solver.
+
+\section{Interior Nodes and Boundary Nodes}
+
+For a grid with nodes \(0,\ldots,M\), Ticket 2 defines:
+\begin{itemize}
+  \item node \(0\) as the lower boundary at \(S=0\);
+  \item node \(M\) as the upper boundary at \(S=S_{\max}\);
+  \item nodes \(1,\ldots,M-1\) as interior nodes.
+\end{itemize}
+
+The function \code{interior\_indices(M)} returns exactly those interior indices. This is a small
+helper, but it prevents a common off-by-one error. The future PDE solve should operate on
+interior nodes while boundary values are imposed separately.
+
+Boundary values are included in the full value vector because the discrete operator at the first
+and last interior nodes needs \(U_0\) and \(U_M\). However, the operator helper returns only
+interior results. This keeps the distinction between imposed boundary values and solved interior
+values explicit.
+
+\section{Design Decisions}
+
+\subsection{Uniform Grid First}
+
+The implementation uses uniform spot and time grids because the formulation note and solver
+validation plan introduce the method with \(\Delta S\) and \(\Delta \tau\). Uniform grids make
+the coefficient formulas easy to inspect and test. This is especially important for greenhand
+researchers who are still learning how the PDE becomes code.
+
+\subsection{Explicit Interior Indexing}
+
+Interior indexing is implemented as a named helper instead of being hidden inside slices
+throughout the solver code. The goal is not abstraction for its own sake. The goal is to make it
+obvious that nodes \(0\) and \(M\) are boundaries while nodes \(1,\ldots,M-1\) are the PDE
+nodes.
+
+\subsection{Coefficient Arrays Instead of Full Matrix}
+
+Ticket 2 returns lower, diagonal, and upper coefficient arrays rather than a dense matrix. This is
+enough for tridiagonal finite-difference work and avoids introducing matrix assembly details
+before Ticket 3. The future CN solver can decide how to build or solve tridiagonal systems.
+
+\subsection{Simple Boundary Helpers}
+
+The boundary helpers return boundary values only. They do not adjust a Crank-Nicolson
+right-hand side, solve a PDE, or extract a free boundary. The helpers are included because later
+European validation and American cases need consistent boundary formulas.
+
+\section{Implementation Record}
+
+\subsection{Files Created}
+
+\begin{longtable}{P{0.42\textwidth}L{0.50\textwidth}}
+\toprule
+File & Role in Ticket 2 \\
+\midrule
+\endhead
+\file{src/american_risk_surfaces/solvers/grid.py} &
+Ticket 02 module containing uniform spot/time grids plus explicit interior-node indices. \\
+\file{src/american_risk_surfaces/solvers/operator.py} &
+Ticket 02 module containing Black-Scholes operator coefficients, operator application, and boundary helpers. \\
+\file{tests/test_grid_operator.py} &
+Focused \code{unittest} coverage for grids, coefficients, manufactured-function checks, and boundaries. \\
+\file{reports/03_solver/tickets/ticket_02_grid_operator.tex} &
+Formal LaTeX study-report source. \\
+\file{reports/03_solver/tickets/ticket_02_grid_operator.pdf} &
+Formal PDF compiled from the LaTeX source. \\
+\bottomrule
+\end{longtable}
+
+\section{Code-Level Function Explanations}
+
+\begin{longtable}{P{0.39\textwidth}L{0.53\textwidth}}
+\toprule
+Function or class & Purpose and important behavior \\
+\midrule
+\endhead
+\code{uniform\_spot\_grid} &
+Builds \(S_i=i\Delta S\) for \(i=0,\ldots,M\). It validates \(S_{\max}>0\) and \(M\geq2\). \\
+\code{uniform\_tau\_grid} &
+Builds \(\tau_n=n\Delta\tau\) for \(n=0,\ldots,N\). It validates \(T\geq0\) and \(N\geq1\). \(T=0\) is allowed. \\
+\code{interior\_indices} &
+Returns \(1,\ldots,M-1\), making the boundary/interior convention explicit. \\
+\code{BlackScholesOperatorCoefficients} &
+Frozen dataclass holding lower, diagonal, upper, and interior spot arrays. \\
+\code{black\_scholes\_operator\_coefficients} &
+Computes \(a_i\), \(b_i\), and \(c_i\) on interior nodes using central differences. It rejects non-increasing, nonuniform, or \(dS\)-mismatched spot grids. \\
+\code{apply\_black\_scholes\_operator} &
+Applies the tridiagonal operator to a full value vector and returns interior values only. \\
+\code{european\_put\_boundaries} &
+Returns \((K e^{-r\tau},0)\), the simple European put boundary pair. \\
+\code{american\_put\_boundaries} &
+Returns \((K,0)\), the simple American put boundary pair. \\
+\code{european\_call\_boundaries} &
+Returns \((0,\max(S_{\max}e^{-q\tau}-Ke^{-r\tau},0))\). \\
+\code{american\_call\_boundaries} &
+Returns \((0,\max(0,S_{\max}-K,S_{\max}e^{-q\tau}-Ke^{-r\tau}))\). \\
+\bottomrule
+\end{longtable}
+
+All helpers validate the domain inputs needed for this ticket: positive strike, nonnegative
+\(\tau\), positive \(S_{\max}\), nonnegative volatility, positive \(\Delta S\), and one-dimensional
+spot/value vectors where required. The operator helper additionally validates that the spot grid
+is strictly increasing and uniformly spaced consistently with the supplied \(\Delta S\).
+
+\section{Testing Strategy}
+
+The test suite is designed to prove the local behavior of Ticket 2, not the future solver. The
+main categories are:
+\begin{longtable}{L{0.25\textwidth}L{0.31\textwidth}L{0.32\textwidth}}
+\toprule
+Test category & What it proves & What it does not prove \\
+\midrule
+\endhead
+Spot grid tests &
+Endpoint, spacing, and length are correct. &
+Whether \(S_{\max}\) is large enough for all option cases. \\
+Tau grid tests &
+Endpoint, spacing, length, and \(T=0\) behavior are correct. &
+Any time-stepping accuracy. \\
+Invalid grid tests &
+Bad grid sizes are rejected clearly. &
+A complete production input-validation policy. \\
+Operator grid validation tests &
+Non-increasing grids, nonuniform grids, and \(dS\)-mismatched grids are rejected. &
+Any future nonuniform-grid method. \\
+Interior-index tests &
+Boundary nodes are excluded from the PDE interior. &
+Correct future matrix assembly by itself. \\
+Coefficient shape tests &
+Coefficient arrays align with interior nodes. &
+Correct time-step matrices. \\
+Manual coefficient test &
+The lower, diagonal, and upper formulas match a hand calculation. &
+Full PDE-solver convergence. \\
+Manufactured-function tests &
+\(L_h(1)=-r\) and \(L_h(S)=-qS\) hold on the grid. &
+Option-pricing accuracy for kinked payoffs. \\
+Boundary helper tests &
+Simple put/call boundary formulas are implemented consistently. &
+Boundary right-hand-side adjustment in CN. \\
+\bottomrule
+\end{longtable}
+
+\section{Test Results and Interpretation}
+
+The exact test command was:
+\begin{lstlisting}[language=bash]
+PYTHONPYCACHEPREFIX=/private/tmp/codex_pycache PYTHONPATH=src python3 -m unittest discover -s tests
+\end{lstlisting}
+
+Final observed result:
+\begin{lstlisting}
+Ran 25 tests in 0.002s
+
+OK
+\end{lstlisting}
+
+This means the existing Ticket 1 tests and the new Ticket 2 grid/operator tests passed in the
+current Python runtime. It gives evidence that the local grid helpers, coefficient formulas,
+operator application, stronger operator-grid validation, and boundary-value helpers behave as
+expected for the tested cases.
+
+It does not mean the CN solver is correct, because there is no CN solver yet. It also does not
+mean the American obstacle logic is correct, because there is no PSOR or American projection yet.
+The correct interpretation is narrow: Ticket 2 has a tested numerical setup layer for later
+solver validation.
+
+\section{Limitations}
+
+Ticket 2 has deliberate limits:
+\begin{itemize}
+  \item no Crank-Nicolson time stepping;
+  \item no PSOR;
+  \item no American option solve;
+  \item no linear complementarity solve;
+  \item no boundary extraction;
+  \item no Greeks;
+  \item no experiments or generated result tables;
+  \item no datasets, stress maps, or neural-network files;
+  \item no proof that a chosen \(S_{\max}\), \(M\), or \(N\) is sufficient for production analysis.
+\end{itemize}
+
+The boundary helpers are only formulas for boundary values. They are not the complete boundary
+adjustments that a CN right-hand side will need. That distinction should remain visible in Ticket
+3.
+
+\section{Lessons Learned / Study Notes}
+
+The first lesson is that a finite-difference method is mostly bookkeeping before it is linear
+algebra. If the grid and interior indices are wrong, a later solver can look sophisticated while
+still solving the wrong discrete problem.
+
+The second lesson is that the Black-Scholes operator has financial meaning. Diffusion comes from
+volatility, drift comes from \(r-q\), and discounting comes from \(-rU\). The signs matter.
+A wrong sign in the drift term can reverse dividend behavior and damage later American call
+validation.
+
+The third lesson is that boundary nodes are not ordinary solved nodes. They are imposed values
+that help the interior equations near the edge of the truncated domain. Later solver reports
+should continue to distinguish boundary behavior from interior PDE behavior.
+
+The fourth lesson is that simple manufactured functions are useful. Checking \(L_h(1)=-r\) and
+\(L_h(S)=-qS\) is easier to understand than a full option price, but it still catches important
+operator mistakes.
+
+The fifth lesson is to keep validation layered. Ticket 2 passing is good news for the grid and
+operator layer. It is not evidence that CN/PSOR, free-boundary extraction, or Greeks are correct.
+
+\section{Link to Ticket 3}
+
+Ticket 3 should build the European Crank-Nicolson validation mode. It can reuse:
+\begin{itemize}
+  \item \code{uniform\_spot\_grid} and \code{uniform\_tau\_grid} for the numerical domain;
+  \item \code{interior\_indices} for the solved PDE nodes;
+  \item \code{black\_scholes\_operator\_coefficients} for the spatial operator;
+  \item boundary helpers for European call and put validation cases;
+  \item Ticket 1 closed-form prices as benchmark values.
+\end{itemize}
+
+Ticket 3 should compare finite-difference European prices against closed-form Black-Scholes
+prices before any American projection is added. It still should not implement PSOR, American
+option solving, boundary extraction, Greeks, experiments beyond the reviewed validation scope,
+datasets, stress maps, or neural networks unless a later approved ticket explicitly asks for them.
+
+\section{Reproducibility Record}
+
+\subsection{Files Changed}
+
+\begin{longtable}{P{0.48\textwidth}L{0.44\textwidth}}
+\toprule
+Path & Status in this report task \\
+\midrule
+\endhead
+\file{src/american_risk_surfaces/solvers/grid.py} &
+Created for grid and interior-index helpers; module docstring identifies Ticket 02. \\
+\file{src/american_risk_surfaces/solvers/operator.py} &
+Created for operator coefficients and boundary helpers; module docstring identifies Ticket 02. \\
+\file{tests/test_grid_operator.py} &
+Created for Ticket 2 \code{unittest} coverage. \\
+\file{reports/03_solver/tickets/ticket_02_grid_operator.tex} &
+Created as the formal LaTeX report source. \\
+\file{reports/03_solver/tickets/ticket_02_grid_operator.pdf} &
+Compiled from the LaTeX report source. \\
+\bottomrule
+\end{longtable}
+
+\subsection{Commands}
+
+Test command:
+\begin{lstlisting}[language=bash]
+PYTHONPYCACHEPREFIX=/private/tmp/codex_pycache PYTHONPATH=src python3 -m unittest discover -s tests
+\end{lstlisting}
+
+Compile command for Python syntax:
+\begin{lstlisting}[language=bash]
+PYTHONPYCACHEPREFIX=/private/tmp/codex_pycache PYTHONPATH=src python3 -m compileall -q src tests
+\end{lstlisting}
+
+LaTeX compile command:
+\begin{lstlisting}[language=bash]
+HOME=/private/tmp FC_CACHEDIR=/private/tmp/fontconfig-cache latexmk -xelatex -interaction=nonstopmode -halt-on-error -outdir=/private/tmp/ticket02_latex reports/03_solver/tickets/ticket_02_grid_operator.tex
+\end{lstlisting}
+
+PDF verification used \code{pdfinfo} and rendered page images with \code{pdftoppm}. The PDF is a
+LaTeX-generated formal report on A4 paper with one-inch margins, page numbers, tables, monospace
+commands and paths, and LaTeX math.
+
+\end{document}
