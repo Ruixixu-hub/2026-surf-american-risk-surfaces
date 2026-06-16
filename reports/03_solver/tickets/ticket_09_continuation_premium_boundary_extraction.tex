@@ -1,0 +1,516 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{fontspec}
+\IfFontExistsTF{Times New Roman}
+  {\setmainfont{Times New Roman}}
+  {\IfFontExistsTF{TeX Gyre Termes}{\setmainfont{TeX Gyre Termes}}{\setmainfont{Times}}}
+\usepackage{newtxmath}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+\usepackage{fancyhdr}
+\usepackage{microtype}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.65em}
+\setlength{\emergencystretch}{3em}
+\setlist[itemize]{leftmargin=1.4em,itemsep=0.2em,topsep=0.2em}
+\setlist[enumerate]{leftmargin=1.6em,itemsep=0.2em,topsep=0.2em}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small Ticket 09 Study Report}
+\rhead{\small Continuation Premium and Boundary Extraction}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  columns=fullflexible,
+  keepspaces=true,
+  rulecolor=\color{black!30},
+  xleftmargin=0.5em,
+  xrightmargin=0.5em
+}
+
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\file}[1]{\path{#1}}
+\newcommand{\func}[1]{\path{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash\ttfamily\footnotesize}p{#1}}
+
+\title{\textbf{Ticket 09 Study Report: Continuation Premium and Boundary Extraction}\\
+\large SURF2026 American Option Risk Surfaces}
+\author{Codex-assisted implementation report}
+\date{June 16, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Ticket 09 is the first project ticket where free-boundary extraction is intentionally in scope.
+It uses existing American CN/PSOR outputs and computes the continuation premium
+\(U-\Phi\), where \(U\) is the American option value and \(\Phi\) is the payoff. The extraction
+layer then looks for option-type-aware transitions between exercise-like and continuation-like
+regions. This report explains the method for beginner researchers who know Python and data work
+but are still learning American option free-boundary diagnostics.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Role of Ticket 09 in the Whole Project}
+
+Tickets 01 through 04 built the pricing machinery: payoff functions, Black-Scholes utilities,
+finite-difference grids, European Crank--Nicolson validation, and the American CN/PSOR core.
+Tickets 05 through 07 validated American put, no-dividend American call, and dividend-paying
+American call behavior. Ticket 08 then checked obstacle and complementarity diagnostics without
+extracting a boundary.
+
+Ticket 09 is the natural next layer. It takes the stored American value grid and asks:
+\begin{itemize}
+  \item Where does the value equal payoff, up to a stated threshold?
+  \item Where does the value become strictly greater than payoff?
+  \item Can we record the transition as an approximate boundary without pretending it is exact?
+\end{itemize}
+
+The output is a boundary-extraction diagnostic, not a new pricing algorithm. The solver core is
+unchanged.
+
+\section{Theory and Methodology Connection}
+
+The documented source basis for Ticket 09 is internal:
+\begin{itemize}
+  \item the planning report, which places boundary extraction after solver validation and
+  complementarity diagnostics;
+  \item the literature map, which emphasizes that boundary extraction should use continuation
+  premium rather than visual guessing;
+  \item the formulation note, especially the sections on continuation premium and free-boundary
+  extraction;
+  \item the solver validation plan, especially its boundary extraction validation guidance;
+  \item the Ticket 04 through Ticket 08 implementation reports and tests.
+\end{itemize}
+
+No BibTeX file is created for this ticket. The report does not invent external bibliographic
+details. It connects to the project documents' classical finite-difference, LCP, PSOR, and
+free-boundary methodology.
+
+\section{Continuation Premium \(U-\Phi\)}
+
+For an American option, the value \(U(S,\tau)\) should not fall below the immediate exercise
+payoff \(\Phi(S)\). Define the continuation premium:
+\[
+P_{\mathrm{cont}}(S,\tau) = U(S,\tau) - \Phi(S).
+\]
+
+In plain language, this is the extra value from holding the option instead of exercising
+immediately. The interpretation is:
+\begin{itemize}
+  \item \(P_{\mathrm{cont}} \approx 0\): the value is close to payoff, so the node is
+  exercise-like;
+  \item \(P_{\mathrm{cont}} > 0\): waiting has extra value, so the node is continuation-like;
+  \item the free boundary is approximated where the premium crosses from near zero to positive.
+\end{itemize}
+
+The word ``approximately'' matters. A finite-difference grid has spacing error, PSOR tolerance,
+and a discrete threshold. Ticket 09 therefore reports the threshold and no-boundary reasons.
+
+\section{Why Boundary Extraction Comes After Diagnostics}
+
+Boundary extraction is more fragile than a price comparison. A price can look reasonable while
+the obstacle or complementarity conditions fail. That is why Ticket 08 came first: it checked that
+the representative American put and dividend-paying American call results satisfy the LCP
+diagnostics at interior nodes.
+
+Ticket 09 uses that groundwork. It does not re-solve the option and does not recompute LCP
+residuals. It reads the stored value grid, computes \(U-\Phi\), and extracts approximate transition
+points. If future diagnostics fail, boundary estimates should be treated with suspicion.
+
+\section{Put Search Direction}
+
+For an American put, early exercise is expected at low spot prices. When the stock is very low,
+the put is deep in the money, and immediate exercise can be attractive. Therefore the search rule
+is:
+\begin{enumerate}
+  \item move from low \(S\) toward high \(S\);
+  \item identify the low-\(S\) exercise-like run where \(P_{\mathrm{cont}}\le\epsilon\);
+  \item identify the next continuation-like run where \(P_{\mathrm{cont}}>\epsilon\);
+  \item interpolate the threshold crossing between the last exercise-like node and first
+  continuation-like node.
+\end{enumerate}
+
+The far high-\(S\) tail of a put can also have very small option value and therefore very small
+premium. Ticket 09 does not treat that far tail as the exercise boundary. It uses the option-type
+search direction to find the economically relevant low-spot transition.
+
+\section{Dividend-Call Search Direction}
+
+For a dividend-paying American call, early exercise can become meaningful at high spot prices.
+Exercising early sacrifices optionality, but it may let the holder own the stock before dividends
+reduce its value. Therefore the search rule is:
+\begin{enumerate}
+  \item move from high \(S\) toward lower \(S\);
+  \item identify the high-\(S\) exercise-like run where \(P_{\mathrm{cont}}\le\epsilon\);
+  \item identify the adjacent continuation-like run below it;
+  \item interpolate the threshold crossing between the continuation-like and exercise-like nodes.
+\end{enumerate}
+
+The low-\(S\) tail of an out-of-the-money call can also have tiny value and tiny premium. Ticket
+09 ignores that low-spot tail for call boundary extraction, because the dividend-call exercise
+region of interest is the high-spot side.
+
+\section{Threshold and Interpolation Choices}
+
+Ticket 09 uses the default threshold
+\[
+\epsilon = 10^{-6}.
+\]
+The rule is:
+\[
+\text{exercise-like if } P_{\mathrm{cont}}(S_i,\tau) \le \epsilon,\qquad
+\text{continuation-like if } P_{\mathrm{cont}}(S_i,\tau) > \epsilon.
+\]
+
+If a clean transition exists between adjacent nodes \(S_i\) and \(S_{i+1}\), Ticket 09 uses
+linear interpolation:
+\[
+S_f
+= S_i
++ \frac{\epsilon - P_i}{P_{i+1}-P_i}
+\left(S_{i+1}-S_i\right),
+\]
+where \(P_i=P_{\mathrm{cont}}(S_i,\tau)\). This is a practical grid diagnostic, not an exact
+analytical boundary formula.
+
+Boundary extraction decisions use interior spot nodes to reduce imposed-boundary artifacts.
+Full-grid premium profiles are still stored and plotted for study purposes.
+
+\section{No-Boundary Metadata}
+
+Ticket 09 does not silently return a missing value. Each time row records a reason when no
+boundary is extracted:
+
+\begin{longtable}{P{0.36\textwidth}L{0.50\textwidth}}
+\toprule
+Reason & Meaning \\
+\midrule
+\endhead
+\path{maturity_row_ambiguous} & At \(\tau=0\), value equals payoff everywhere, so the whole row is exercise-like by construction. \\
+\path{all_continuation_like} & No interior node has premium below the threshold. \\
+\path{all_exercise_like} & Every interior node is threshold-exercise-like. \\
+\path{expected_exercise_side_absent} & The option-type side where exercise is expected does not show threshold-exercise behavior. \\
+\path{no_clean_transition} & The observed pattern is not a stable transition under the extraction rule. \\
+\path{insufficient_interior_nodes} & There are not enough interior nodes to bracket a transition. \\
+\bottomrule
+\end{longtable}
+
+\section{Continuation Premium Versus American-Minus-European Value}
+
+Continuation premium is not the same as American-minus-European value.
+\[
+P_{\mathrm{cont}} = U_{\mathrm{American}} - \Phi.
+\]
+American-minus-European value is:
+\[
+U_{\mathrm{American}} - U_{\mathrm{European}}.
+\]
+
+The first quantity compares the American value to immediate exercise. It is the right quantity
+for obstacle and boundary extraction. The second compares the American contract to a European
+contract. It is useful for validation, especially in Tickets 05 through 07, but it is not the
+boundary-extraction object.
+
+\section{Implementation Design Decisions}
+
+\begin{longtable}{L{0.30\textwidth}L{0.58\textwidth}}
+\toprule
+Decision & Reason \\
+\midrule
+\endhead
+Create a diagnostics module & Boundary extraction is a diagnostic layer on solver outputs, not part of the solver core. \\
+Use Ticket 04 result objects & The stored value grid, payoff, spot grid, and tau grid already contain the needed data. \\
+Keep solver files unchanged & Ticket 09 should not introduce a new pricing algorithm or alter CN/PSOR logic. \\
+Use full grids for profiles & Full profiles help students see the premium shape across the domain. \\
+Use interior nodes for extraction & Interior extraction avoids treating imposed boundary values as solved boundary locations. \\
+Record no-boundary reasons & Missing boundaries are informative, especially for the no-dividend call control. \\
+Include no-dividend control & It checks that the extractor does not force a high-spot call boundary when \(q=0\). \\
+\bottomrule
+\end{longtable}
+
+\section{Code-Level Function Explanations}
+
+\begin{longtable}{P{0.35\textwidth}L{0.53\textwidth}}
+\toprule
+Function or class & Role \\
+\midrule
+\endhead
+\func{BoundaryPoint} & Stores one time-level boundary estimate or no-boundary reason. \\
+\func{BoundaryCurve} & Stores all time-level boundary points plus value, payoff, and premium grids. \\
+\func{BoundaryExtractionSummary} & Stores whole-curve counts, boundary ranges, and status. \\
+\func{continuation_premium} & Computes \(U-\Phi\) for one row or a full value grid. \\
+\func{linear_interpolate_threshold_crossing} & Estimates the threshold-crossing spot between adjacent nodes. \\
+\func{extract_boundary_at_time} & Applies the option-type search rule to one premium row. \\
+\func{extract_boundary_curve} & Applies boundary extraction over all time-to-maturity rows. \\
+\func{summarize_boundary_curve} & Converts all boundary points into summary counts and ranges. \\
+\func{selected_time_profile_rows} & Exports full-grid premium rows at selected time fractions for study and plotting. \\
+\func{run_boundary_cases} & Runs the three Ticket 09 experiment cases and prepares CSV/figure artifacts. \\
+\bottomrule
+\end{longtable}
+
+\section{Extraction Cases and Parameters}
+
+\begin{longtable}{L{0.24\textwidth}L{0.10\textwidth}L{0.08\textwidth}L{0.08\textwidth}L{0.08\textwidth}L{0.08\textwidth}L{0.09\textwidth}L{0.08\textwidth}L{0.08\textwidth}}
+\toprule
+Case & Option & \(K\) & \(T\) & \(r\) & \(q\) & \(\sigma\) & \(M\) & \(N\) \\
+\midrule
+\endhead
+Put medium & put & 1.0 & 1.0 & 0.05 & 0.02 & 0.20 & 120 & 120 \\
+Dividend call & call & 1.0 & 1.0 & 0.05 & 0.08 & 0.20 & 120 & 120 \\
+No-dividend call & call & 1.0 & 1.0 & 0.05 & 0.00 & 0.20 & 120 & 120 \\
+\bottomrule
+\end{longtable}
+
+All cases use \(S_{\max}=4.0\) and threshold \(10^{-6}\). The no-dividend call control is not a
+repeat of Ticket 06 price validation. It is a boundary-extraction control.
+
+\section{Boundary Result Tables and Interpretation}
+
+\subsection{Boundary Summary}
+
+\begin{longtable}{L{0.25\textwidth}L{0.12\textwidth}L{0.13\textwidth}L{0.13\textwidth}L{0.12\textwidth}L{0.12\textwidth}}
+\toprule
+Case & Direction & Found rows & No-boundary rows & Min boundary & Max boundary \\
+\midrule
+\endhead
+Put medium & low-to-high & 120 & 1 & 0.766754 & 0.934082 \\
+Dividend call & high-to-low & 120 & 1 & 1.066165 & 1.266630 \\
+No-dividend call & high-to-low & 0 & 121 & n/a & n/a \\
+\bottomrule
+\end{longtable}
+
+The put and dividend-call cases find boundaries for every positive-\(\tau\) row. The maturity row
+is marked ambiguous because \(U=\Phi\) everywhere at \(\tau=0\). The no-dividend call control finds
+no boundary, which is the desired behavior for a control case.
+
+\subsection{No-Boundary Reason Counts}
+
+\begin{longtable}{L{0.28\textwidth}L{0.12\textwidth}L{0.12\textwidth}L{0.18\textwidth}L{0.14\textwidth}}
+\toprule
+Case & Maturity & All cont. & Expected side absent & No clean transition \\
+\midrule
+\endhead
+Put medium & 1 & 0 & 0 & 0 \\
+Dividend call & 1 & 0 & 0 & 0 \\
+No-dividend call & 1 & 0 & 120 & 0 \\
+\bottomrule
+\end{longtable}
+
+The control case reports \path{expected_exercise_side_absent} for positive time rows. In plain
+language, the high-\(S\) side of the no-dividend call does not show an exercise-like transition.
+
+\subsection{Selected By-Time Rows}
+
+\begin{longtable}{L{0.25\textwidth}L{0.07\textwidth}L{0.09\textwidth}L{0.12\textwidth}L{0.16\textwidth}L{0.14\textwidth}}
+\toprule
+Case & Step & \(\tau\) & Found & Boundary spot & Reason \\
+\midrule
+\endhead
+put & 0 & 0.00000 & false & n/a & maturity ambiguous \\
+put & 1 & 0.00833 & true & 0.934082 & -- \\
+put & 60 & 0.50000 & true & 0.800004 & -- \\
+put & 120 & 1.00000 & true & 0.766754 & -- \\
+dividend call & 0 & 0.00000 & false & n/a & maturity ambiguous \\
+dividend call & 1 & 0.00833 & true & 1.066165 & -- \\
+dividend call & 60 & 0.50000 & true & 1.200001 & -- \\
+dividend call & 120 & 1.00000 & true & 1.266630 & -- \\
+no-dividend call & 1 & 0.00833 & false & n/a & expected side absent \\
+no-dividend call & 120 & 1.00000 & false & n/a & expected side absent \\
+\bottomrule
+\end{longtable}
+
+These rows are selected for readability. The full by-time CSV contains 363 rows: three cases times
+121 time rows.
+
+\section{Figure Interpretation}
+
+Figure~\ref{fig:put-boundary} plots the American put boundary over time-to-maturity. The boundary
+is below the strike and moves gradually on the tested grid.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.82\textwidth]{results/01_solver_validation/figures/ticket_09_american_put_boundary_curve.png}
+\caption{Ticket 09 American put boundary curve extracted from continuation premium.}
+\label{fig:put-boundary}
+\end{figure}
+
+Figure~\ref{fig:call-boundary} plots the dividend-paying American call boundary. It appears above
+the strike in this representative \(q=0.08\) case.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.82\textwidth]{results/01_solver_validation/figures/ticket_09_dividend_call_boundary_curve.png}
+\caption{Ticket 09 dividend-paying American call boundary curve extracted from continuation premium.}
+\label{fig:call-boundary}
+\end{figure}
+
+Figure~\ref{fig:premium-profiles} shows selected premium profiles. These curves help students see
+why the boundary is a threshold-crossing diagnostic rather than a visual guess.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{results/01_solver_validation/figures/ticket_09_continuation_premium_profiles.png}
+\caption{Ticket 09 continuation-premium profiles at selected time-to-maturity levels.}
+\label{fig:premium-profiles}
+\end{figure}
+
+Figure~\ref{fig:status} records whether a boundary was found at each time row. The no-dividend
+call control stays at ``not found'' for positive time rows.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.86\textwidth]{results/01_solver_validation/figures/ticket_09_boundary_found_status.png}
+\caption{Ticket 09 boundary-found status by case and time-to-maturity row.}
+\label{fig:status}
+\end{figure}
+
+\section{Testing Strategy}
+
+\begin{longtable}{L{0.30\textwidth}L{0.30\textwidth}L{0.28\textwidth}}
+\toprule
+Test category & What it proves & What it does not prove \\
+\midrule
+\endhead
+Premium calculation & \(U-\Phi\) is computed with correct broadcasting. & Boundary accuracy. \\
+Synthetic put boundary & Low-spot put search direction works on a controlled transition. & Real put convergence. \\
+Synthetic call boundary & High-spot dividend-call search direction works on a controlled transition. & Real call convergence. \\
+No-boundary metadata & Missing boundaries are explained rather than hidden. & That every future missing boundary is harmless. \\
+Interpolation & The threshold crossing formula is predictable. & Higher-order boundary accuracy. \\
+Real put and call smoke cases & Existing solver outputs produce boundary rows and nonnegative premiums. & Full grid/domain sensitivity. \\
+No-dividend control & The extractor does not force a high-spot call boundary for \(q=0\). & Ticket 06 theorem validation. \\
+CSV and figure artifacts & Reproducible tables and useful figures are produced. & Scientific proof by plotting. \\
+Scope and docstrings & Ticket 09 files identify the ticket and avoid Greeks, stress maps, datasets, and neural work. & Later-ticket functionality. \\
+\bottomrule
+\end{longtable}
+
+\section{Test Results and Interpretation}
+
+The Ticket 09 implementation followed a test-first workflow. The first red run failed because
+\file{src/american_risk_surfaces/diagnostics/boundary.py} and
+\file{experiments/06_boundary_extraction.py} did not exist yet. After implementation, the targeted
+Ticket 09 test command reported:
+
+\begin{lstlisting}[language=bash]
+Ran 17 tests in 0.611s
+OK
+\end{lstlisting}
+
+The full test command reported:
+\begin{lstlisting}[language=bash]
+Ran 104 tests in 1.824s
+OK
+\end{lstlisting}
+
+This means the Ticket 09 tests passed together with all earlier Ticket 01--08 tests. It does not
+mean the extracted boundaries are exact analytical free boundaries.
+
+\section{Implementation Pitfalls and Debugging Notes}
+
+\begin{longtable}{L{0.25\textwidth}L{0.25\textwidth}L{0.22\textwidth}L{0.16\textwidth}}
+\toprule
+Recorded item or pitfall & Symptom & Fix or guard & Beginner lesson \\
+\midrule
+\endhead
+Expected TDD red run & New tests failed because the Ticket 09 module and experiment did not exist. & Add the planned module and experiment. & Red tests confirm new behavior is actually being tested. \\
+Malformed targeted unittest command & The dotted test-module form could not import because \file{tests/} is not a package. & Use unittest discovery with the tests directory and filename pattern. & Match test commands to repo layout. \\
+Overly strict transition rule & Real rows looked like exercise-like, continuation-like, exercise-like because far tails can have tiny premium. & Use option-type search direction and require a minimum continuation block near the expected exercise side. & Boundary extraction needs financial direction, not only boolean pattern matching. \\
+Confusing premium types & American-minus-European value is tempting to plot. & Use \(U-\Phi\) for boundary extraction. & Boundary extraction uses payoff comparison, not European comparison. \\
+Forcing a control boundary & A no-dividend call may have tiny low-spot premium. & Search high-to-low for calls and report expected-side absence for \(q=0\). & Negative controls are valuable. \\
+Overclaiming exactness & A smooth-looking curve can feel authoritative. & Report threshold, interpolation, and limitations. & Numerical boundaries are estimates with metadata. \\
+\bottomrule
+\end{longtable}
+
+Future coding/test reports should continue to include implementation pitfalls when failed tests,
+debugging discoveries, or workflow corrections occur.
+
+\section{Limitations}
+
+\begin{longtable}{L{0.34\textwidth}L{0.54\textwidth}}
+\toprule
+Not included in Ticket 09 & Reason \\
+\midrule
+\endhead
+New pricing algorithm & Ticket 09 reads existing American CN/PSOR outputs only. \\
+Greeks & Delta and Gamma belong to Ticket 10. \\
+Greek masks near boundary & Masking depends on later Greek diagnostics. \\
+Stress maps & Regime sweeps are later validation work. \\
+Datasets and neural networks & Labels and models require a more mature validated solver pipeline. \\
+Exact free-boundary accuracy claim & The current output is threshold-based and grid-dependent. \\
+Full grid/domain sensitivity & This ticket uses representative \(M=N=120\) cases only. \\
+\bottomrule
+\end{longtable}
+
+\section{Lessons Learned / Study Notes}
+
+The first lesson is that a free boundary is not drawn by eye. It should come from a defined
+quantity, here the continuation premium \(U-\Phi\).
+
+The second lesson is that search direction matters. Put boundaries and dividend-call boundaries
+live on different sides of the spot domain.
+
+The third lesson is that missing boundaries are data, not failure by default. The no-dividend
+American call control should not have a forced high-spot exercise boundary.
+
+The fourth lesson is that thresholds must be reported. A boundary extracted with \(\epsilon=10^{-6}\)
+is not the same claim as a boundary extracted with a much larger threshold.
+
+The fifth lesson is to keep later tickets separate. Boundary extraction is now allowed, but Greeks,
+stress maps, datasets, and neural-network labels are still out of scope.
+
+\section{Link to Ticket 10}
+
+Ticket 10 should compute Delta and Gamma diagnostics. It can use the Ticket 09 boundary curves to
+define careful reporting bands near the free boundary, but it should not treat the current
+boundary estimates as exact analytical truth. Greek diagnostics should remain honest about payoff
+kinks, threshold effects, and boundary-near numerical instability.
+
+\section{Reproducibility Record}
+
+\begin{longtable}{L{0.30\textwidth}L{0.58\textwidth}}
+\toprule
+Item & Record \\
+\midrule
+\endhead
+Boundary module & \file{src/american_risk_surfaces/diagnostics/boundary.py}. \\
+Experiment & \file{experiments/06_boundary_extraction.py}. \\
+Tests & \file{tests/test_boundary_extraction.py}. \\
+Summary CSV & \file{results/01_solver_validation/tables/ticket_09_boundary_extraction_summary.csv}. \\
+By-time CSV & \file{results/01_solver_validation/tables/ticket_09_boundary_by_time.csv}. \\
+Selected-times CSV & \file{results/01_solver_validation/tables/ticket_09_boundary_selected_times.csv}. \\
+Figures & \file{results/01_solver_validation/figures/ticket_09_american_put_boundary_curve.png};
+\file{results/01_solver_validation/figures/ticket_09_dividend_call_boundary_curve.png};
+\file{results/01_solver_validation/figures/ticket_09_continuation_premium_profiles.png};
+\file{results/01_solver_validation/figures/ticket_09_boundary_found_status.png}. \\
+Report source & \file{reports/03_solver/tickets/ticket_09_continuation_premium_boundary_extraction.tex}. \\
+Report PDF & \file{reports/03_solver/tickets/ticket_09_continuation_premium_boundary_extraction.pdf}. \\
+\bottomrule
+\end{longtable}
+
+Commands used:
+\begin{lstlisting}[language=bash]
+PYTHONPYCACHEPREFIX=/private/tmp/codex_pycache PYTHONPATH=src MPLCONFIGDIR=/private/tmp/matplotlib-cache FC_CACHEDIR=/private/tmp/fontconfig-cache python3 experiments/06_boundary_extraction.py
+PYTHONPYCACHEPREFIX=/private/tmp/codex_pycache PYTHONPATH=src MPLCONFIGDIR=/private/tmp/matplotlib-cache FC_CACHEDIR=/private/tmp/fontconfig-cache python3 -m unittest discover -s tests
+PYTHONPYCACHEPREFIX=/private/tmp/codex_pycache PYTHONPATH=src python3 -m compileall -q src tests experiments
+\end{lstlisting}
+
+\end{document}
