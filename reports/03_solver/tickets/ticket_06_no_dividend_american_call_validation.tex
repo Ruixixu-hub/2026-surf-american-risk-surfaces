@@ -1,0 +1,579 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{fontspec}
+\IfFontExistsTF{Times New Roman}
+  {\setmainfont{Times New Roman}}
+  {\IfFontExistsTF{TeX Gyre Termes}{\setmainfont{TeX Gyre Termes}}{\setmainfont{Times}}}
+\usepackage{newtxmath}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+\usepackage{fancyhdr}
+\usepackage{microtype}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.65em}
+\setlength{\emergencystretch}{3em}
+\setlist[itemize]{leftmargin=1.4em,itemsep=0.2em,topsep=0.2em}
+\setlist[enumerate]{leftmargin=1.6em,itemsep=0.2em,topsep=0.2em}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small Ticket 06 Study Report}
+\rhead{\small No-Dividend American Call Validation}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  columns=fullflexible,
+  keepspaces=true,
+  rulecolor=\color{black!30},
+  xleftmargin=0.5em,
+  xrightmargin=0.5em
+}
+
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\file}[1]{\path{#1}}
+\newcommand{\func}[1]{\path{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash\ttfamily\footnotesize}p{#1}}
+
+\title{\textbf{Ticket 06 Study Report: No-Dividend American Call Validation}\\
+\large SURF2026 American Option Risk Surfaces}
+\author{Codex-assisted implementation report}
+\date{June 16, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Ticket 06 validates a special but important American option theorem: under the standard
+Black-Scholes assumptions with no dividends, a standard American call should match the
+corresponding European call. This ticket uses the Ticket 04 American CN/PSOR solver as-is,
+sets \(q=0\), compares against the Ticket 01 European Black-Scholes call utility, records
+obstacle and PSOR convergence diagnostics, and creates two validation figures. The purpose is
+to check that the American exercise machinery does not create artificial early-exercise value.
+This report is written for beginner researchers with accounting, data, machine-learning, and
+Python experience who are still learning American option pricing and numerical validation.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Role of Ticket 06 in the Whole Solver Project}
+
+The project is building a validated classical CN/PSOR benchmark before moving toward boundary
+diagnostics, Greeks, stress regimes, datasets, or neural surrogate models. The previous solver
+tickets created the layers needed for this validation ladder:
+\begin{itemize}
+  \item Ticket 01 implemented payoff functions and European Black-Scholes closed-form utilities.
+  \item Ticket 02 implemented uniform grids, finite-difference operator helpers, and boundary
+        value helpers.
+  \item Ticket 03 validated European Crank-Nicolson time stepping against closed-form prices.
+  \item Ticket 04 implemented the reusable American CN/PSOR obstacle core.
+  \item Ticket 05 validated American put behavior in a representative early-exercise case.
+\end{itemize}
+
+Ticket 06 checks a different American option behavior. It asks whether the same American
+CN/PSOR machinery avoids inventing early exercise when theory says early exercise should not be
+valuable. This is a validation ticket, not a new solver ticket. No core solver source file is
+changed, and no free-boundary extraction, Greeks, stress maps, datasets, or neural-network files
+are introduced.
+
+\section{Theory and Methodology/Literature Connection}
+
+The documented source basis for Ticket 06 is internal:
+\begin{itemize}
+  \item \file{reports/01_literature/literature_map.md};
+  \item \file{reports/02_math/formulation_note.md};
+  \item \file{reports/03_solver/solver_validation_plan.md};
+  \item \file{reports/03_solver/solver_implementation_tickets.md};
+  \item the Ticket 01 through Ticket 05 reports and code.
+\end{itemize}
+
+The literature map identifies the no-dividend American call theorem as a key validation check.
+The formulation note states that when \(q=0\), a standard American call should match the
+European call under the usual Black-Scholes assumptions. The solver validation plan places this
+check after European closed-form validation and before the later dividend-paying call work.
+
+No BibTeX file is created for Ticket 06. The project documents mention classical
+finite-difference, LCP, and PSOR methodology as background, but this report does not invent
+external bibliographic details that are not verified in the project documents.
+
+\section{No-Dividend American Call Theorem in Plain Language}
+
+A call option gives the holder the right to buy the underlying asset for strike \(K\). Its payoff
+is
+\begin{equation}
+  \Phi_{\mathrm{call}}(S) = \max(S-K,0).
+\end{equation}
+
+An American call can be exercised before maturity. A European call can be exercised only at
+maturity. At first glance, the American call seems like it must be more valuable because it gives
+the holder more flexibility.
+
+For a standard call with no dividends, however, early exercise is not optimal under the usual
+Black-Scholes assumptions. Exercising early gives up remaining optionality. It also requires
+paying the strike earlier than necessary. With \(q=0\), there is no dividend benefit from owning
+the stock earlier. Therefore, the extra American exercise right should have no positive value:
+\begin{equation}
+  C_{\mathrm{American}}(S; q=0) = C_{\mathrm{European}}(S; q=0).
+  \label{eq:no-dividend-call-theorem}
+\end{equation}
+
+This is not saying American calls are always equal to European calls. Dividend-paying calls are
+different because dividends can make early stock ownership valuable. Ticket 06 is only the
+no-dividend control case.
+
+\section{Why Ticket 06 Follows American Put Validation}
+
+Ticket 05 tested the American put case, where early exercise can be financially meaningful. The
+American put should dominate payoff and can exceed the European put. Ticket 06 tests the opposite
+kind of sanity check: an American option path is active, PSOR projection is active, and the payoff
+obstacle is present, but theory says the exercise feature should not create genuine value.
+
+This is a powerful check because a solver can pass \(U \geq \Phi\) and still be wrong. If a
+no-dividend American call is meaningfully above the European call, the solver may be creating
+artificial early exercise. That could come from a wrong call payoff, a wrong call boundary value,
+a hidden nonzero dividend yield, a bad boundary adjustment, or projection logic that distorts the
+continuation solution.
+
+\section{Validation Criteria}
+
+\subsection{American Equals European When q = 0}
+
+The main Ticket 06 criterion is approximate equality:
+\begin{equation}
+  U_{\mathrm{American\ call}}(S,T; q=0)
+  \approx C_{\mathrm{European}}(S,T; q=0).
+\end{equation}
+
+The experiment reports the maximum absolute error and RMSE over the target moneyness region
+\[
+  0.4 \leq S/K \leq 1.8.
+\]
+This target region follows the solver validation plan. It focuses attention on the region that is
+likely to matter later for risk surfaces.
+
+\subsection{Obstacle Condition}
+
+Even though early exercise should not be optimal, the American solver must still respect the
+payoff obstacle:
+\begin{equation}
+  U(S,\tau) \geq \Phi_{\mathrm{call}}(S)
+\end{equation}
+at all grid nodes and time levels. Ticket 06 reports the minimum obstacle gap and maximum
+obstacle violation.
+
+\subsection{No False Early-Exercise Premium}
+
+The American-minus-European difference is interpreted as a no-false-early-exercise diagnostic:
+\begin{equation}
+  U_{\mathrm{American\ call}}(S,T) - C_{\mathrm{European}}(S,T).
+\end{equation}
+For \(q=0\), this should remain close to zero. Small positive or negative values can occur from
+finite-difference and boundary approximation error. The report does not treat roundoff-scale or
+small discretization-scale differences as financial early exercise.
+
+\subsection{PSOR Convergence Metadata}
+
+Every time step returns PSOR metadata. Ticket 06 reports whether all steps converged, how many
+steps were solved, the maximum and mean iteration counts, and the maximum final update. This
+matters because a price comparison is not credible if the LCP solves did not converge.
+
+\section{What Ticket 06 Is Not}
+
+Ticket 06 is not dividend-paying American call validation. It uses \(q=0\) only. Positive
+dividend yields belong to a later ticket because they can make early exercise meaningful at high
+spot values.
+
+Ticket 06 is also not boundary extraction. It does not compute a continuation premium curve, does
+not locate an exercise boundary, and does not label any figure with a boundary. The theorem-error
+figure shows American-minus-European pricing error only.
+
+\section{Implementation Design Decisions}
+
+\begin{longtable}{L{0.28\textwidth}L{0.60\textwidth}}
+\toprule
+Decision & Reason \\
+\midrule
+\endhead
+Use the Ticket 04 solver as-is &
+Ticket 06 is a validation layer. Solver edits are out of scope unless a genuine bug is found. \\
+Set \(q=0.0\) in every case &
+The no-dividend theorem only applies to standard no-dividend calls. \\
+Use \(K=1\), \(S_{\max}=4K\), and \(S/K\in[0.4,1.8]\) &
+These follow the normalized-strike workflow and target region used in earlier tickets. \\
+Use medium and fine grids &
+This gives a light refinement check without turning Ticket 06 into a full grid/domain sensitivity
+study. \\
+Write CSV tables &
+Tables make the validation evidence reproducible and easy to inspect. \\
+Generate two figures &
+The value comparison shows overlap visually; the theorem-error figure shows the small numerical
+difference directly. \\
+\bottomrule
+\end{longtable}
+
+\section{Code-Level Function Explanations}
+
+{\small
+\begin{longtable}{L{0.38\textwidth}L{0.50\textwidth}}
+\toprule
+Function & Role \\
+\midrule
+\endhead
+\func{run_validation_cases} &
+Runs the medium and fine no-dividend American call cases, builds validation rows, selected-spot
+rows, and figure metadata. \\
+\func{summarize_no_dividend_call_case} &
+Computes theorem-error metrics, obstacle diagnostics, and PSOR convergence summaries for one
+solver result. \\
+\func{selected_spot_rows} &
+Reports payoff, European call, American call, American-minus-European, and American-minus-payoff
+at selected moneyness points. \\
+\func{nearest_spot_index} &
+Chooses the nearest grid node to a target spot so selected-spot rows are reproducible. \\
+\func{write_csv} &
+Writes stable CSV artifacts with fixed column ordering. \\
+\func{create_value_comparison_figure} &
+Creates the American call, European call, and payoff comparison figure if matplotlib is available. \\
+\func{create_theorem_error_figure} &
+Creates the American-minus-European error figure if matplotlib is available. \\
+\code{main} &
+Runs the full Ticket 06 experiment and writes CSV and figure artifacts. \\
+\bottomrule
+\end{longtable}
+}
+
+\section{Validation Result Tables and Interpretation}
+
+\subsection{Validation Cases}
+
+{\small
+\begin{longtable}{@{}L{0.16\textwidth}L{0.07\textwidth}L{0.07\textwidth}L{0.07\textwidth}L{0.07\textwidth}L{0.09\textwidth}L{0.07\textwidth}L{0.07\textwidth}@{}}
+\toprule
+Case & \(K\) & \(T\) & \(r\) & \(q\) & \(\sigma\) & \(M\) & \(N\) \\
+\midrule
+\endhead
+Medium & 1.0 & 1.0 & 0.05 & 0.00 & 0.20 & 120 & 120 \\
+Fine & 1.0 & 1.0 & 0.05 & 0.00 & 0.20 & 180 & 180 \\
+\bottomrule
+\end{longtable}
+}
+
+\subsection{American-Versus-European Error Summary}
+
+{\small
+\begin{longtable}{@{}L{0.13\textwidth}L{0.16\textwidth}L{0.14\textwidth}L{0.14\textwidth}L{0.14\textwidth}L{0.12\textwidth}@{}}
+\toprule
+Case & Max abs error & RMSE & Min Am. - Eur. & Max Am. - Eur. & Max-error spot \\
+\midrule
+\endhead
+Medium & \(2.7817\times10^{-4}\) & \(1.1977\times10^{-4}\) & \(-2.7817\times10^{-4}\) & \(4.3704\times10^{-5}\) & 0.966667 \\
+Fine & \(1.2357\times10^{-4}\) & \(5.3375\times10^{-5}\) & \(-1.2357\times10^{-4}\) & \(1.9771\times10^{-5}\) & 0.977778 \\
+\bottomrule
+\end{longtable}
+}
+
+The fine-grid maximum absolute error and RMSE are smaller than the medium-grid values. The
+American-minus-European differences are small finite-difference errors rather than evidence of
+meaningful early exercise. The maximum positive American-minus-European value is below
+\(4.4\times10^{-5}\) on the medium grid and below \(2.0\times10^{-5}\) on the fine grid.
+
+\subsection{Obstacle Summary}
+
+\begin{longtable}{@{}L{0.16\textwidth}L{0.18\textwidth}L{0.22\textwidth}@{}}
+\toprule
+Case & Min obstacle gap & Max obstacle violation \\
+\midrule
+\endhead
+Medium & 0 & 0 \\
+Fine & 0 & 0 \\
+\bottomrule
+\end{longtable}
+
+The obstacle diagnostics show no violation in the generated value grids. This confirms that the
+American solver respected \(U\geq\Phi\), but it does not by itself prove the no-dividend theorem.
+That is why the European comparison is the central Ticket 06 check.
+
+\subsection{PSOR Convergence Metadata}
+
+\begin{longtable}{@{}L{0.14\textwidth}L{0.18\textwidth}L{0.15\textwidth}L{0.18\textwidth}L{0.22\textwidth}@{}}
+\toprule
+Case & All steps converged & Step count & Max iterations & Max final update \\
+\midrule
+\endhead
+Medium & True & 120 & 13 & \(9.2800\times10^{-9}\) \\
+Fine & True & 180 & 15 & \(7.3158\times10^{-9}\) \\
+\bottomrule
+\end{longtable}
+
+Every PSOR step converged in both validation cases. The final updates are below the intended
+tolerance scale, so the reported price comparisons are not hiding a visible PSOR convergence
+failure.
+
+\subsection{Selected Spot Price Comparison}
+
+{\footnotesize
+\begin{longtable}{@{}L{0.10\textwidth}L{0.10\textwidth}L{0.12\textwidth}L{0.13\textwidth}L{0.13\textwidth}L{0.13\textwidth}L{0.13\textwidth}@{}}
+\toprule
+Case & \(S/K\) & Payoff & European call & American call & Am. - Eur. & Am. - payoff \\
+\midrule
+\endhead
+Medium & 0.5 & 0 & 0.000024 & 0.000032 & 0.000008 & 0.000032 \\
+Medium & 0.8 & 0 & 0.018594 & 0.018498 & \(-0.000096\) & 0.018498 \\
+Medium & 1.0 & 0 & 0.104506 & 0.104230 & \(-0.000276\) & 0.104230 \\
+Medium & 1.2 & 0.200000 & 0.261690 & 0.261573 & \(-0.000118\) & 0.061573 \\
+Medium & 1.5 & 0.500000 & 0.549701 & 0.549700 & \(-0.000001\) & 0.049700 \\
+Fine & 0.488889 & 0 & 0.000016 & 0.000018 & 0.000003 & 0.000018 \\
+Fine & 0.8 & 0 & 0.018594 & 0.018551 & \(-0.000043\) & 0.018551 \\
+Fine & 1.0 & 0 & 0.104506 & 0.104384 & \(-0.000122\) & 0.104384 \\
+Fine & 1.2 & 0.200000 & 0.261690 & 0.261638 & \(-0.000052\) & 0.061638 \\
+Fine & 1.488889 & 0.488889 & 0.538692 & 0.538691 & \(-0.000001\) & 0.049802 \\
+\bottomrule
+\end{longtable}
+}
+
+The selected spot rows make the theorem check easier to read. Around the money, the American and
+European call values are very close. The American-minus-payoff column remains positive because a
+call can have time value even when early exercise is not optimal.
+
+\subsection{Medium-to-Fine Comparison}
+
+The largest selected-spot medium-to-fine value difference reported by the experiment is
+\(0.0110089\). This number is driven by nearest-grid selection near \(S/K=1.5\): the medium grid
+uses exactly \(S=1.5\), while the fine grid's nearest node is \(S=1.4888889\). It is useful as a
+simple audit value, but it is not the same thing as an interpolated convergence study.
+
+\section{Figure Interpretation}
+
+Figure~\ref{fig:value-comparison} plots the fine-grid American call value, European call value,
+and payoff over moneyness. The American and European value curves visually overlap in the target
+region. The payoff line sits below the option value in the continuation-value region, which is
+normal for a call with time remaining.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.82\textwidth]{results/01_solver_validation/figures/ticket_06_no_dividend_american_call_value_comparison.png}
+\caption{Ticket 06 no-dividend American call value, European call value, and payoff comparison.}
+\label{fig:value-comparison}
+\end{figure}
+
+Figure~\ref{fig:theorem-error} plots American call value minus European call value. The error is
+small, crosses near zero, and remains at the finite-difference scale reported in the CSV table.
+This figure visualizes theorem error only. It does not mark or infer any exercise boundary.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.82\textwidth]{results/01_solver_validation/figures/ticket_06_no_dividend_american_call_theorem_error.png}
+\caption{Ticket 06 American-minus-European call error for the no-dividend theorem check.}
+\label{fig:theorem-error}
+\end{figure}
+
+\section{Testing Strategy}
+
+\begin{longtable}{L{0.27\textwidth}L{0.31\textwidth}L{0.30\textwidth}}
+\toprule
+Test category & What it proves & What it does not prove \\
+\midrule
+\endhead
+Script/artifact tests &
+The experiment runs and writes expected CSV and PNG artifacts. &
+Full validation across all market regimes. \\
+CSV schema tests &
+The result tables have stable columns for later reporting. &
+That every future diagnostic has already been designed. \\
+\(q=0\) tests &
+Every validation row uses the no-dividend setting. &
+Dividend-paying call behavior. \\
+Obstacle tests &
+The American value does not fall below payoff within tolerance. &
+That early exercise is economically present. \\
+European equality tests &
+American call values are close to European Black-Scholes calls. &
+A formal convergence proof. \\
+No-false-premium tests &
+Positive American-minus-European values remain small. &
+Positive-dividend call validation. \\
+PSOR metadata tests &
+All default time steps converged and expose iteration/update summaries. &
+Convergence for every possible grid or relaxation parameter. \\
+Nearest-grid test &
+Selected spot reporting is predictable. &
+Interpolation accuracy. \\
+Figure tests &
+Meaningful PNGs are created when matplotlib is available. &
+That figures alone validate the solver. \\
+Scope and docstring tests &
+Ticket 06 files identify their ticket and do not introduce forbidden APIs/files. &
+Future tickets that intentionally add diagnostics. \\
+\bottomrule
+\end{longtable}
+
+\section{Test Results and Interpretation}
+
+The test command was:
+\begin{lstlisting}[language=bash]
+PYTHONPYCACHEPREFIX=/private/tmp/codex_pycache PYTHONPATH=src MPLCONFIGDIR=/private/tmp/matplotlib-cache FC_CACHEDIR=/private/tmp/fontconfig-cache python3 -m unittest discover -s tests
+\end{lstlisting}
+
+Observed result during Ticket 06 implementation:
+\begin{lstlisting}
+Ran 63 tests
+
+OK
+\end{lstlisting}
+
+The experiment command was:
+\begin{lstlisting}[language=bash]
+PYTHONPYCACHEPREFIX=/private/tmp/codex_pycache PYTHONPATH=src MPLCONFIGDIR=/private/tmp/matplotlib-cache FC_CACHEDIR=/private/tmp/fontconfig-cache python3 experiments/03_no_dividend_american_call_validation.py
+\end{lstlisting}
+
+The experiment wrote two validation rows, ten selected-spot rows, and two PNG figures.
+
+\section{Implementation Pitfalls and Debugging Notes}
+
+{\small
+\begin{longtable}{@{}L{0.22\textwidth}L{0.24\textwidth}L{0.22\textwidth}L{0.18\textwidth}@{}}
+\toprule
+Recorded item or pitfall & Symptom & Fix or guard & Beginner lesson \\
+\midrule
+\endhead
+Expected TDD red run &
+The new tests failed with \code{FileNotFoundError} because the Ticket 06 experiment script did
+not exist yet. &
+Create \file{experiments/03_no_dividend_american_call_validation.py}. &
+A red test confirms the test is aimed at the new artifact. \\
+Nearest-grid threshold too strict &
+The selected medium-to-fine value difference was \(0.0110089\), just above an initial \(0.01\)
+test threshold. &
+Keep the theorem-error improvement strict, but allow a modest nearest-node selected-spot
+difference below \(0.012\). &
+Nearest-node tables are audits, not interpolated convergence studies. \\
+Accidentally using \(q>0\) &
+The theorem would no longer apply. &
+Validate every Ticket 06 case and row has \(q=0.0\). &
+Always check assumptions that define a theorem. \\
+Overclaiming exact equality &
+Finite-difference values can be slightly above or below closed form. &
+Report max absolute error and RMSE instead of claiming exact equality. &
+Numerical validation is tolerance-based. \\
+Confusing this with dividend-call validation &
+Positive dividends can change the financial conclusion. &
+State clearly that positive \(q\) belongs to a later ticket. &
+Control cases and target cases answer different questions. \\
+Ignoring PSOR metadata &
+A small price error could hide failed iterations. &
+Report convergence status, iteration counts, and final update values. &
+Numerical credibility includes solver-status evidence. \\
+\bottomrule
+\end{longtable}
+}
+
+\section{Limitations}
+
+\begin{longtable}{L{0.34\textwidth}L{0.54\textwidth}}
+\toprule
+Not included in Ticket 06 & Reason \\
+\midrule
+\endhead
+Dividend-paying American call validation & Positive-dividend calls belong to a later ticket. \\
+American put validation & Already covered in Ticket 05. \\
+Free-boundary extraction & Ticket 06 does not infer or label exercise boundaries. \\
+Continuation-premium module & Boundary-oriented diagnostics are later work. \\
+Greeks & Delta and Gamma diagnostics are later work. \\
+Stress maps, datasets, neural networks & These require a more complete validated solver pipeline. \\
+Full grid/domain sensitivity & The current medium-to-fine comparison is preliminary only. \\
+External reference tables & The benchmark here is the Ticket 01 European Black-Scholes call utility. \\
+\bottomrule
+\end{longtable}
+
+\section{Lessons Learned / Study Notes}
+
+The first lesson is that American option validation is not only about finding cases where early
+exercise matters. It is also about checking cases where early exercise should not matter.
+
+The second lesson is that \(U\geq\Phi\) is necessary but not sufficient. A no-dividend American
+call can satisfy the obstacle and still be suspicious if it is materially above the European call.
+
+The third lesson is that theorem checks require the theorem assumptions. Here, \(q=0\) is not a
+minor parameter; it is the condition that makes the American and European call values equal.
+
+The fourth lesson is that selected-spot rows are useful for human reading, while target-region
+error metrics are better for numerical validation. Both are helpful, but they answer different
+questions.
+
+\section{Link to the Next Ticket}
+
+The next call-validation ticket should move from the no-dividend control case to dividend-paying
+American calls. With positive dividends, early exercise can become financially meaningful at high
+spot prices. That future ticket should not reuse Ticket 06's equality conclusion; it should build
+new validation criteria for the dividend-paying regime.
+
+\section{Reproducibility Record}
+
+\subsection{Files Created}
+
+\begin{longtable}{P{0.54\textwidth}L{0.38\textwidth}}
+\toprule
+Path & Role in Ticket 06 \\
+\midrule
+\endhead
+\file{experiments/03_no_dividend_american_call_validation.py} &
+Runs the no-dividend American call validation cases and writes CSV/figure artifacts. \\
+\file{tests/test_no_dividend_american_call_validation.py} &
+Focused unittest coverage for Ticket 06 artifacts, metrics, scope, and docstrings. \\
+\file{results/01_solver_validation/tables/ticket_06_no_dividend_american_call_validation.csv} &
+Validation summary table. \\
+\file{results/01_solver_validation/tables/ticket_06_no_dividend_american_call_selected_spots.csv} &
+Selected moneyness price comparison table. \\
+\file{results/01_solver_validation/figures/ticket_06_no_dividend_american_call_value_comparison.png} &
+American call, European call, and payoff comparison figure. \\
+\file{results/01_solver_validation/figures/ticket_06_no_dividend_american_call_theorem_error.png} &
+American-minus-European theorem-error figure. \\
+\file{reports/03_solver/tickets/ticket_06_no_dividend_american_call_validation.tex} &
+Formal LaTeX study-report source. \\
+\file{reports/03_solver/tickets/ticket_06_no_dividend_american_call_validation.pdf} &
+Formal PDF compiled from the LaTeX source. \\
+\bottomrule
+\end{longtable}
+
+\subsection{Commands}
+
+Test command:
+\begin{lstlisting}[language=bash]
+PYTHONPYCACHEPREFIX=/private/tmp/codex_pycache PYTHONPATH=src MPLCONFIGDIR=/private/tmp/matplotlib-cache FC_CACHEDIR=/private/tmp/fontconfig-cache python3 -m unittest discover -s tests
+\end{lstlisting}
+
+Experiment command:
+\begin{lstlisting}[language=bash]
+PYTHONPYCACHEPREFIX=/private/tmp/codex_pycache PYTHONPATH=src MPLCONFIGDIR=/private/tmp/matplotlib-cache FC_CACHEDIR=/private/tmp/fontconfig-cache python3 experiments/03_no_dividend_american_call_validation.py
+\end{lstlisting}
+
+Compile command:
+\begin{lstlisting}[language=bash]
+PYTHONPYCACHEPREFIX=/private/tmp/codex_pycache PYTHONPATH=src python3 -m compileall -q src tests experiments
+\end{lstlisting}
+
+LaTeX compile command:
+\begin{lstlisting}[language=bash]
+HOME=/private/tmp FC_CACHEDIR=/private/tmp/fontconfig-cache latexmk -xelatex -interaction=nonstopmode -halt-on-error -outdir=/private/tmp/ticket06_latex reports/03_solver/tickets/ticket_06_no_dividend_american_call_validation.tex
+\end{lstlisting}
+
+PDF verification uses \code{pdfinfo} and page rendering with \code{pdftoppm}. Raw Git status is
+intentionally not included in this formal PDF report.
+
+\end{document}
