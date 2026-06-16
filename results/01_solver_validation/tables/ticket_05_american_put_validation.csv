@@ -1,0 +1,3 @@
+case_name,option_type,K,T,r,q,sigma,Smax,M,N,all_psor_steps_converged,psor_step_count,max_psor_iterations,mean_psor_iterations,max_final_update,min_obstacle_gap,max_obstacle_violation,min_american_minus_european,max_american_minus_european,medium_to_fine_reference,figure_created
+medium,put,1,1,0.05,0.02,0.2,4,120,120,True,120,10,6.99166666667,9.99713786753e-09,0,0,-3.72407396192e-14,0.0487705754993,0.0111111111111,False
+fine,put,1,1,0.05,0.02,0.2,4,180,180,True,180,10,6.15555555556,9.99186264283e-09,0,0,-3.72407396192e-14,0.0487705754993,0.0111111111111,True

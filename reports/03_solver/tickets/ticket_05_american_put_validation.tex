@@ -1,0 +1,558 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{fontspec}
+\IfFontExistsTF{Times New Roman}
+  {\setmainfont{Times New Roman}}
+  {\IfFontExistsTF{TeX Gyre Termes}{\setmainfont{TeX Gyre Termes}}{\setmainfont{Times}}}
+\usepackage{newtxmath}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{listings}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+\usepackage{fancyhdr}
+\usepackage{microtype}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.65em}
+\setlist[itemize]{leftmargin=1.4em,itemsep=0.2em,topsep=0.2em}
+\setlist[enumerate]{leftmargin=1.6em,itemsep=0.2em,topsep=0.2em}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small Ticket 05 Study Report}
+\rhead{\small American Put Validation}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  columns=fullflexible,
+  keepspaces=true,
+  rulecolor=\color{black!30},
+  xleftmargin=0.5em,
+  xrightmargin=0.5em
+}
+
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\file}[1]{\path{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash\ttfamily\footnotesize}p{#1}}
+
+\title{\textbf{Ticket 05 Study Report: American Put Validation}\\
+\large SURF2026 American Option Risk Surfaces}
+\author{Codex-assisted implementation report}
+\date{June 16, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Ticket 05 uses the Ticket 04 American CN/PSOR solver to validate American put behavior in a
+representative Black-Scholes-with-dividends case. The ticket produces validation tables, selected
+spot checks, obstacle and convergence summaries, and a value-versus-payoff figure. This is a
+validation ticket, not a new solver ticket. It does not implement boundary extraction, Greeks,
+stress maps, datasets, neural-network files, or American call validation.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Role of Ticket 05 in the Whole Solver Project}
+
+Tickets 01 through 04 built the solver foundation in layers. Ticket 01 implemented payoff and
+European Black-Scholes utilities. Ticket 02 implemented finite-difference grids and the
+Black-Scholes spatial operator. Ticket 03 validated European Crank-Nicolson time stepping against
+closed-form European prices. Ticket 04 added the PSOR/LCP core needed for the American payoff
+obstacle.
+
+Ticket 05 is the first validation ticket for a genuinely American option case. It does not add a
+new pricing algorithm. Instead, it uses the Ticket 04 American CN/PSOR solver and asks whether the
+American put outputs look financially and numerically credible in a representative setup.
+
+The role of this ticket is evidence gathering:
+\begin{itemize}
+  \item check that computed American put values remain above payoff;
+  \item check that computed American put values are at least European put values;
+  \item summarize PSOR convergence metadata;
+  \item inspect selected spot prices in the main region of interest;
+  \item compare medium and fine grids lightly, without claiming full grid sensitivity.
+\end{itemize}
+
+This ticket intentionally stops before free-boundary extraction. It may report the obstacle gap
+\(U-\Phi\), because that is a validation diagnostic. It does not turn that gap into a boundary
+location.
+
+\section{Theory and Methodology Connection}
+
+The documented source basis for Ticket 05 is internal:
+\begin{itemize}
+  \item \file{reports/01_literature/literature_map.md};
+  \item \file{reports/02_math/formulation_note.md};
+  \item \file{reports/03_solver/solver_validation_plan.md};
+  \item \file{reports/03_solver/tickets/ticket_04_psor_lcp_core.tex}.
+\end{itemize}
+
+The literature map identifies American option pricing as an obstacle problem. The formulation note
+expresses the American option conditions as a variational inequality and then as a linear
+complementarity problem after discretization. The solver validation plan states that American put
+validation should include obstacle checks, continuation-premium or obstacle-gap sanity checks,
+selected prices, and convergence evidence.
+
+No BibTeX file is created in Ticket 05. The project documents mention classical finite-difference,
+LCP, and PSOR methodology, including Brennan-Schwartz as background, but this ticket does not
+invent external bibliographic details. It uses the internal literature map, formulation note, and
+solver validation plan as the verified source basis.
+
+\section{Why American Put Validation Follows the PSOR/LCP Core}
+
+A European validation run checks the continuation PDE. An American put validation run checks the
+continuation PDE plus the early-exercise constraint. The American constraint is
+\begin{equation}
+  U(S,\tau) \geq \Phi_{\mathrm{put}}(S),
+  \qquad
+  \Phi_{\mathrm{put}}(S)=\max(K-S,0).
+\end{equation}
+
+Ticket 04 built the PSOR machinery that enforces this constraint at each Crank-Nicolson step.
+Ticket 05 comes next because the solver core must now be used in a realistic put case, with
+reported evidence rather than only smoke tests.
+
+For beginner researchers, the distinction is important:
+\begin{itemize}
+  \item Ticket 04 asks: can the code enforce the obstacle in a reusable solver core?
+  \item Ticket 05 asks: when that core is used for an American put, do the prices and diagnostics
+        obey the basic financial checks?
+\end{itemize}
+
+\section{American Put Financial Intuition}
+
+An American put gives the holder the right to sell the underlying asset for strike \(K\) at any
+time up to maturity. When the spot \(S\) is low, the payoff \(K-S\) is high. Early exercise can
+therefore be attractive for puts, especially when the put is deep in the money.
+
+The American put should be at least as valuable as:
+\begin{itemize}
+  \item immediate exercise payoff, because the holder can exercise now;
+  \item the European put, because the American holder has every European exercise choice plus the
+        extra right to exercise early.
+\end{itemize}
+
+These two inequalities are not a complete proof of pricing accuracy, but they are essential
+financial sanity checks. If either inequality fails materially, the American solver should not be
+trusted for later boundary, Greek, stress-map, dataset, or neural-surrogate work.
+
+\section{Validation Criteria}
+
+\subsection{Obstacle Condition}
+
+For the American put, the value grid should satisfy
+\begin{equation}
+  U_{n,i} \geq \Phi_i
+\end{equation}
+at every tested time and spot node. Ticket 05 reports
+\begin{align}
+  \min_{n,i}(U_{n,i}-\Phi_i), \\
+  \max_{n,i}\max(\Phi_i-U_{n,i},0).
+\end{align}
+The first quantity is the minimum obstacle gap. The second is the maximum obstacle violation.
+
+\subsection{American Versus European Put}
+
+The American put should also satisfy
+\begin{equation}
+  U^{\mathrm{American}}(S,T)
+  \geq
+  P^{\mathrm{European}}(S,T)
+\end{equation}
+up to numerical tolerance. Ticket 05 compares final American values against the Ticket 01
+European Black-Scholes put utility.
+
+\subsection{Convergence Metadata}
+
+Each PSOR time step returns metadata. Ticket 05 reports whether all steps converged, how many
+PSOR iterations were needed, and the maximum final update. This matters because an obstacle check
+alone can miss a solver that stopped too early.
+
+\subsection{Selected Spots and Medium-to-Fine Comparison}
+
+Selected spot checks use \(S/K\) values \(0.5\), \(0.8\), \(1.0\), \(1.2\), and \(1.5\). These
+make the table readable for students because each row corresponds to a familiar moneyness point.
+The medium-to-fine comparison is intentionally light: it compares selected prices from
+\(M=N=120\) and \(M=N=180\). Full grid and domain sensitivity belongs to a later ticket.
+
+\section{Obstacle Gap Is Not Boundary Extraction}
+
+Ticket 05 reports the obstacle gap
+\begin{equation}
+  G(S,\tau)=U(S,\tau)-\Phi(S).
+\end{equation}
+
+This gap is useful because it directly checks the obstacle condition. If \(G<0\), the solver has
+violated the American payoff constraint. If \(G=0\) at some grid points, those points may be
+consistent with immediate exercise.
+
+However, Ticket 05 does not extract a free boundary. Boundary extraction requires option-type
+specific search direction, thresholds, interpolation, and missing-boundary metadata. That is
+planned for a later ticket. In this report, obstacle gap means validation evidence only.
+
+\section{Implementation Design Decisions}
+
+\begin{longtable}{L{0.28\textwidth}L{0.60\textwidth}}
+\toprule
+Decision & Reason \\
+\midrule
+\endhead
+Use Ticket 04 solver as-is &
+Ticket 05 is a validation layer. Solver changes are out of scope unless a genuine bug is found. \\
+Use \(K=1\), \(S_{\max}=4\), \(T=1\), \(r=0.05\), \(q=0.02\), \(\sigma=0.20\) &
+These values match earlier ticket defaults and the validation plan's normalized-strike workflow. \\
+Use medium and fine grids &
+This gives a preliminary refinement check without turning Ticket 05 into full grid/domain
+sensitivity. \\
+Write CSV artifacts &
+Tables are easy to inspect, test, and reuse in reports. \\
+Create one figure &
+An American put validation ticket benefits from one visual comparison of American value, payoff,
+and European value. \\
+Avoid boundary extraction language &
+Obstacle gap reporting is allowed, but boundary location inference is explicitly out of scope. \\
+\bottomrule
+\end{longtable}
+
+\section{Code-Level Function Explanations}
+
+\begin{longtable}{P{0.38\textwidth}L{0.54\textwidth}}
+\toprule
+Function & Purpose \\
+\midrule
+\endhead
+\code{run\_validation\_cases} &
+Runs the medium and fine American put cases, returns validation rows, selected-spot rows, and
+artifact metadata. \\
+\code{summarize\_american\_put\_case} &
+Builds one obstacle, European-comparison, and PSOR convergence summary row. \\
+\code{selected\_spot\_rows} &
+Reports payoff, European put, American put, American-minus-European, and American-minus-payoff at
+selected moneyness points. \\
+\code{nearest\_spot\_index} &
+Selects the nearest grid point to a requested spot. It does not interpolate. \\
+\code{write\_csv} &
+Writes rows with stable column order. \\
+\code{create\_value\_vs\_payoff\_figure} &
+Creates the validation figure if matplotlib is available. \\
+\code{main} &
+Runs the experiment and writes the CSV/figure artifacts. \\
+\bottomrule
+\end{longtable}
+
+\section{Validation Result Tables and Interpretation}
+
+\subsection{Validation Cases}
+
+{\small
+\begin{longtable}{@{}L{0.16\textwidth}L{0.07\textwidth}L{0.07\textwidth}L{0.07\textwidth}L{0.07\textwidth}L{0.09\textwidth}L{0.07\textwidth}L{0.07\textwidth}@{}}
+\toprule
+Case & \(K\) & \(T\) & \(r\) & \(q\) & \(\sigma\) & \(M\) & \(N\) \\
+\midrule
+\endhead
+Medium & 1.0 & 1.0 & 0.05 & 0.02 & 0.20 & 120 & 120 \\
+Fine & 1.0 & 1.0 & 0.05 & 0.02 & 0.20 & 180 & 180 \\
+\bottomrule
+\end{longtable}
+}
+
+\subsection{Obstacle and European Comparison Summary}
+
+{\small
+\begin{longtable}{@{}L{0.13\textwidth}L{0.14\textwidth}L{0.16\textwidth}L{0.19\textwidth}L{0.19\textwidth}@{}}
+\toprule
+Case & Min gap & Max violation & Min Am. - Eur. & Max Am. - Eur. \\
+\midrule
+\endhead
+Medium & 0 & 0 & \(-3.7241\times10^{-14}\) & 0.0487706 \\
+Fine & 0 & 0 & \(-3.7241\times10^{-14}\) & 0.0487706 \\
+\bottomrule
+\end{longtable}
+}
+
+The minimum American-minus-European value is a tiny negative roundoff-scale value. It is not a
+financially meaningful violation. The American put value dominates the European put across the
+tested grid up to numerical tolerance.
+
+\subsection{Convergence Metadata}
+
+\begin{longtable}{@{}L{0.14\textwidth}L{0.18\textwidth}L{0.15\textwidth}L{0.18\textwidth}L{0.22\textwidth}@{}}
+\toprule
+Case & All steps converged & Step count & Max iterations & Max final update \\
+\midrule
+\endhead
+Medium & True & 120 & 10 & \(9.9971\times10^{-9}\) \\
+Fine & True & 180 & 10 & \(9.9919\times10^{-9}\) \\
+\bottomrule
+\end{longtable}
+
+Every PSOR step converged in both validation cases. The maximum final updates are just below the
+requested tolerance scale, which is expected for an iterative method that stops when the update
+falls below tolerance.
+
+\subsection{Selected Spot Price Comparison}
+
+{\footnotesize
+\begin{longtable}{@{}L{0.10\textwidth}L{0.10\textwidth}L{0.12\textwidth}L{0.13\textwidth}L{0.13\textwidth}L{0.13\textwidth}L{0.13\textwidth}@{}}
+\toprule
+Case & \(S/K\) & Payoff & European put & American put & Am. - Eur. & Am. - payoff \\
+\midrule
+\endhead
+Medium & 0.5 & 0.500000 & 0.461146 & 0.500000 & 0.038854 & 0 \\
+Medium & 0.8 & 0.200000 & 0.182378 & 0.200381 & 0.018003 & 0.000381 \\
+Medium & 1.0 & 0 & 0.063301 & 0.066301 & 0.003001 & 0.066301 \\
+Medium & 1.2 & 0 & 0.015602 & 0.015984 & 0.000381 & 0.015984 \\
+Medium & 1.5 & 0 & 0.001228 & 0.001254 & 0.000026 & 0.001254 \\
+Fine & 0.488889 & 0.511111 & 0.472032 & 0.511111 & 0.039079 & 0 \\
+Fine & 0.8 & 0.200000 & 0.182378 & 0.200606 & 0.018228 & 0.000606 \\
+Fine & 1.0 & 0 & 0.063301 & 0.066469 & 0.003168 & 0.066469 \\
+Fine & 1.2 & 0 & 0.015602 & 0.016054 & 0.000451 & 0.016054 \\
+Fine & 1.488889 & 0 & 0.001358 & 0.001386 & 0.000028 & 0.001386 \\
+\bottomrule
+\end{longtable}
+}
+
+The selected spot table shows the expected pattern: the American put is never below payoff and is
+above the European put. At low spot values, the American value can equal payoff exactly on the
+chosen grid node. This is an obstacle validation observation, not a boundary extraction claim.
+
+\subsection{Medium-to-Fine Comparison}
+
+The largest selected-spot medium-to-fine difference recorded by the experiment is \(0.0111111\).
+This value is driven by nearest-grid selection at \(S/K=0.5\): the medium grid includes \(S=0.5\),
+while the fine grid's nearest point is \(S=0.4888889\). This is a useful reminder that selected
+spot tables using nearest nodes are simple and auditable, but they are not a full interpolation or
+convergence study.
+
+\section{Figure Interpretation}
+
+Figure~\ref{fig:value-payoff} plots the fine-grid American put value, the payoff, and the
+European put value over moneyness \(S/K\). The figure is evidence for three basic visual checks:
+\begin{itemize}
+  \item the American value does not fall below payoff;
+  \item the American value is above the European put value;
+  \item the curves have the expected put shape, with value decreasing as spot increases.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.82\textwidth]{results/01_solver_validation/figures/ticket_05_american_put_value_vs_payoff.png}
+\caption{Ticket 05 American put value, payoff, and European put comparison. The plot is a validation visual, not a boundary-extraction plot.}
+\label{fig:value-payoff}
+\end{figure}
+
+\section{Testing Strategy}
+
+\begin{longtable}{L{0.26\textwidth}L{0.32\textwidth}L{0.30\textwidth}}
+\toprule
+Test category & What it proves & What it does not prove \\
+\midrule
+\endhead
+Script/artifact test &
+The experiment runs and writes the expected CSV and figure files. &
+Full financial validation across regimes. \\
+CSV schema tests &
+The result tables have stable, expected columns. &
+That every metric is sufficient for later tickets. \\
+Obstacle tests &
+American values dominate payoff within tolerance. &
+Complementarity residual accuracy. \\
+European comparison tests &
+American puts dominate European puts within tolerance. &
+External benchmark agreement for American prices. \\
+PSOR metadata tests &
+Default cases converged and expose iteration/update summaries. &
+Convergence for all possible grids and parameters. \\
+Nearest-grid test &
+Selected spot reporting is predictable. &
+Interpolation accuracy. \\
+Figure test &
+The meaningful validation PNG is created when matplotlib is available. &
+That the figure alone validates the solver. \\
+Scope tests &
+No boundary extraction, Greeks, stress maps, datasets, or neural APIs/files are introduced. &
+Future tickets that intentionally add those features. \\
+Docstring test &
+New Python files identify Ticket 05. &
+Completeness of the research report. \\
+\bottomrule
+\end{longtable}
+
+\section{Test Results and Interpretation}
+
+The test command was:
+\begin{lstlisting}[language=bash]
+PYTHONPYCACHEPREFIX=/private/tmp/codex_pycache PYTHONPATH=src MPLCONFIGDIR=/private/tmp/matplotlib-cache python3 -m unittest discover -s tests
+\end{lstlisting}
+
+Observed result during Ticket 05 implementation:
+\begin{lstlisting}
+Ran 50 tests
+
+OK
+\end{lstlisting}
+
+The experiment command was:
+\begin{lstlisting}[language=bash]
+PYTHONPYCACHEPREFIX=/private/tmp/codex_pycache PYTHONPATH=src MPLCONFIGDIR=/private/tmp/matplotlib-cache python3 experiments/02_american_put_validation.py
+\end{lstlisting}
+
+The experiment wrote two validation rows, ten selected-spot rows, and one value-versus-payoff PNG.
+
+\section{Implementation Pitfalls and Debugging Notes}
+
+{\small
+\begin{longtable}{@{}L{0.21\textwidth}L{0.24\textwidth}L{0.22\textwidth}L{0.19\textwidth}@{}}
+\toprule
+Recorded item or pitfall & Symptom & Fix or guard & Beginner lesson \\
+\midrule
+\endhead
+Expected TDD red run &
+The new tests failed with \code{FileNotFoundError} because the Ticket 05 experiment script did not
+exist yet. &
+Create \file{experiments/02_american_put_validation.py}. &
+A red test proves the tests are aimed at the new artifact. \\
+Relative metadata paths &
+Two tests failed because the script returned relative artifact paths while tests expected absolute
+paths. &
+Root output paths at the project directory and return absolute metadata paths. &
+Tests can reveal reproducibility details, not only finance logic. \\
+Font cache warning &
+Matplotlib emitted a fontconfig cache warning in the sandboxed runtime. &
+Use writable \code{MPLCONFIGDIR} and \code{FC\_CACHEDIR} locations. &
+Report-generation code may need environment hygiene. \\
+Overclaiming from one case &
+One representative case could be mistaken for full solver validation. &
+State that this is preliminary American put validation only. &
+Validation evidence has a scope. \\
+Confusing obstacle gap with boundary extraction &
+\(U-\Phi\) may tempt a reader to infer a free boundary. &
+Report gap values but do not infer, label, or extract a boundary. &
+Diagnostics and boundary extraction are different tasks. \\
+Ignoring European comparison &
+Checking only \(U\geq\Phi\) would miss a weak American value. &
+Compare against the Ticket 01 European put utility. &
+American value should include the European exercise right plus early exercise. \\
+Ignoring PSOR non-convergence &
+Obstacle values alone could hide slow or failed PSOR steps. &
+Report all-step convergence, iterations, and final updates. &
+Numerical credibility includes solver status metadata. \\
+Using too coarse a grid &
+A coarse grid can create misleading selected-spot values. &
+Include medium and fine grids, and label this as a light check. &
+Grid checks should be layered and honest. \\
+\bottomrule
+\end{longtable}
+}
+
+\section{Limitations}
+
+\begin{longtable}{L{0.34\textwidth}L{0.54\textwidth}}
+\toprule
+Not included in Ticket 05 & Reason \\
+\midrule
+\endhead
+Boundary extraction & Planned for a later ticket; this report does not infer a free-boundary
+location. \\
+Complementarity residual module & Planned diagnostic work after core validation layers. \\
+Greeks & Delta and Gamma diagnostics are later work. \\
+Stress maps, datasets, neural networks & These require a more complete validated solver pipeline. \\
+No-dividend American call validation & Belongs to Ticket 06. \\
+Dividend-paying American call validation & Belongs to a later call-validation ticket. \\
+Full grid/domain sensitivity & The current medium-to-fine comparison is preliminary only. \\
+External American reference prices & This ticket uses internal financial inequalities and solver metadata, not external benchmark
+tables. \\
+\bottomrule
+\end{longtable}
+
+\section{Lessons Learned / Study Notes}
+
+The first lesson is that American put validation should not rely on one number. The value must be
+checked against payoff, against the European put, and against PSOR convergence metadata.
+
+The second lesson is that obstacle gap is a validation diagnostic. It helps confirm that the
+American constraint is respected, but it should not be turned into a boundary claim without the
+later extraction logic.
+
+The third lesson is that selected-spot tables are excellent for learning because they translate a
+surface into familiar moneyness points. They are not a replacement for full convergence and domain
+sensitivity studies.
+
+The fourth lesson is that figures should support an argument. The Ticket 05 figure shows the
+relationship among American value, European value, and payoff. It is not decorative and does not
+label a free boundary.
+
+\section{Link to Ticket 06}
+
+Ticket 06 should validate the no-dividend American call theorem. Under the standard
+Black-Scholes assumptions with \(q=0\), a standard American call should match the corresponding
+European call. That check is different from Ticket 05: it tests whether the American exercise
+logic avoids inventing early exercise where theory says it should not occur.
+
+\section{Reproducibility Record}
+
+\subsection{Files Created}
+
+\begin{longtable}{P{0.54\textwidth}L{0.38\textwidth}}
+\toprule
+Path & Role in Ticket 05 \\
+\midrule
+\endhead
+\file{experiments/02_american_put_validation.py} &
+Runs the American put validation cases and writes CSV/figure artifacts. \\
+\file{tests/test_american_put_validation.py} &
+Focused unittest coverage for Ticket 05 artifacts, metrics, scope, and docstrings. \\
+\file{results/01_solver_validation/tables/ticket_05_american_put_validation.csv} &
+Validation summary table. \\
+\file{results/01_solver_validation/tables/ticket_05_american_put_selected_spots.csv} &
+Selected moneyness price comparison table. \\
+\file{results/01_solver_validation/figures/ticket_05_american_put_value_vs_payoff.png} &
+American put value, payoff, and European put comparison figure. \\
+\file{reports/03_solver/tickets/ticket_05_american_put_validation.tex} &
+Formal LaTeX study-report source. \\
+\file{reports/03_solver/tickets/ticket_05_american_put_validation.pdf} &
+Formal PDF compiled from the LaTeX source. \\
+\bottomrule
+\end{longtable}
+
+\subsection{Commands}
+
+Test command:
+\begin{lstlisting}[language=bash]
+PYTHONPYCACHEPREFIX=/private/tmp/codex_pycache PYTHONPATH=src MPLCONFIGDIR=/private/tmp/matplotlib-cache python3 -m unittest discover -s tests
+\end{lstlisting}
+
+Experiment command:
+\begin{lstlisting}[language=bash]
+PYTHONPYCACHEPREFIX=/private/tmp/codex_pycache PYTHONPATH=src MPLCONFIGDIR=/private/tmp/matplotlib-cache python3 experiments/02_american_put_validation.py
+\end{lstlisting}
+
+Compile command:
+\begin{lstlisting}[language=bash]
+PYTHONPYCACHEPREFIX=/private/tmp/codex_pycache PYTHONPATH=src python3 -m compileall -q src tests experiments
+\end{lstlisting}
+
+LaTeX compile command:
+\begin{lstlisting}[language=bash]
+HOME=/private/tmp FC_CACHEDIR=/private/tmp/fontconfig-cache latexmk -xelatex -interaction=nonstopmode -halt-on-error -outdir=/private/tmp/ticket05_latex reports/03_solver/tickets/ticket_05_american_put_validation.tex
+\end{lstlisting}
+
+PDF verification uses \code{pdfinfo} and page rendering with \code{pdftoppm}. Raw Git status is
+intentionally not included in this formal PDF report.
+
+\end{document}
