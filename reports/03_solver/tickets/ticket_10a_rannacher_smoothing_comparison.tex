@@ -1,0 +1,476 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{fontspec}
+\IfFontExistsTF{Times New Roman}
+  {\setmainfont{Times New Roman}}
+  {\IfFontExistsTF{TeX Gyre Termes}{\setmainfont{TeX Gyre Termes}}{\setmainfont{Times}}}
+\usepackage{newtxmath}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+\usepackage{fancyhdr}
+\usepackage{microtype}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.65em}
+\setlength{\emergencystretch}{3em}
+\setlist[itemize]{leftmargin=1.4em,itemsep=0.2em,topsep=0.2em}
+\setlist[enumerate]{leftmargin=1.6em,itemsep=0.2em,topsep=0.2em}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small Ticket 10A Study Report}
+\rhead{\small Rannacher Smoothing Comparison Gate}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  columns=fullflexible,
+  keepspaces=true,
+  rulecolor=\color{black!30},
+  xleftmargin=0.5em,
+  xrightmargin=0.5em
+}
+
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\file}[1]{\path{#1}}
+\newcommand{\func}[1]{\path{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash\ttfamily\footnotesize}p{#1}}
+
+\title{\textbf{Ticket 10A Study Report: Rannacher Smoothing Comparison Gate}\\
+\large SURF2026 American Option Risk Surfaces}
+\author{Codex-assisted implementation report}
+\date{June 16, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Ticket 10A adds a controlled Rannacher smoothing comparison after the Ticket 10 Delta and
+Gamma diagnostics. It does not replace the validated Ticket 04 American CN/PSOR baseline.
+Instead, it creates a named Rannacher variant that uses two backward-Euler half-substeps over
+the first ordinary time interval, then resumes ordinary CN/PSOR. The experiment compares
+baseline and smoothed results for price levels, PSOR convergence, threshold-based boundary
+curves, and finite-difference Gamma diagnostics. The gate conclusion for the representative
+American put and dividend-paying American call cases is: keep the baseline for now. The
+smoothed variant changed prices and boundaries only slightly, but it did not improve the
+headline strict-mask Gamma metrics in this run.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Role of Ticket 10A in the Whole Solver Project}
+
+Tickets 01 through 10 built a validation ladder before this comparison gate:
+\begin{itemize}
+  \item Ticket 01 created payoff and Black--Scholes closed-form utilities.
+  \item Tickets 02 and 03 built the grid, spatial operator, and European CN validation mode.
+  \item Ticket 04 implemented the American CN/PSOR obstacle core.
+  \item Tickets 05 through 07 validated American put, no-dividend American call, and dividend-paying American call behavior.
+  \item Ticket 08 added obstacle and complementarity diagnostics.
+  \item Ticket 09 extracted approximate free-boundary curves from \(U-\Phi\).
+  \item Ticket 10 computed finite-difference Delta and Gamma diagnostics and warned that Gamma is fragile near payoff kinks, maturity, and extracted boundary regions.
+\end{itemize}
+
+Ticket 10A asks whether a Rannacher-style startup damping step improves those fragile Greek
+diagnostics enough to justify using it later. It is a comparison gate, not a new default solver.
+The baseline solver in \file{src/american_risk_surfaces/solvers/cn_psor.py} remains unchanged.
+
+\section{Theory and Methodology Connection}
+
+The documented source basis for this ticket is internal:
+\begin{itemize}
+  \item the literature map identifies Rannacher smoothing as a classical finite-difference stabilization idea near payoff kinks;
+  \item the formulation note explains American option values, payoff obstacles, and Greeks;
+  \item the solver validation plan requires an explicit unsmoothed-versus-smoothed comparison before smoothing is adopted;
+  \item Ticket 09 and Ticket 10 provide boundary and Greek diagnostic tools used by this comparison.
+\end{itemize}
+
+No BibTeX file is created. The report does not invent external bibliographic details. It uses
+the project documents as the source basis and treats Rannacher smoothing as a numerical
+time-stepping device, not an economic model change.
+
+\section{Rannacher Smoothing in Plain Language}
+
+Crank--Nicolson is accurate and stable for smooth solutions, but option payoffs are not smooth at
+the strike. At maturity the value equals payoff, so the first time steps start from a kinked
+function. Gamma is a second derivative, so it can amplify that kink into noisy or exaggerated
+curvature.
+
+Rannacher smoothing handles this by beginning with a few backward-Euler substeps. Backward Euler
+is more damping than Crank--Nicolson. The idea is:
+\begin{enumerate}
+  \item begin at maturity payoff;
+  \item take a small number of implicit backward-Euler steps to damp the kink;
+  \item continue with ordinary Crank--Nicolson after the startup interval.
+\end{enumerate}
+
+This should not be used just to make a plot look smoother. It must be checked against prices,
+boundaries, and solver convergence.
+
+\section{Why This Comes After Greek Diagnostics}
+
+Ticket 10 first measured the baseline Delta and Gamma behavior. That made the problem visible:
+Gamma can be fragile near maturity, payoff kinks, and extracted boundaries. Ticket 10A then tests
+one targeted numerical remedy. This order matters. Without Ticket 10's diagnostics, smoothing
+could become a vague aesthetic preference. With Ticket 10's diagnostics, smoothing can be judged
+using evidence.
+
+\section{Backward-Euler Substeps Versus Crank--Nicolson}
+
+The ordinary American CN/PSOR step solves a linear complementarity problem based on
+\[
+A_{\mathrm{CN}} = I - \frac{1}{2}\Delta\tau L_h,
+\]
+with a right-hand side containing
+\[
+\left(I + \frac{1}{2}\Delta\tau L_h\right)U^n.
+\]
+
+The Ticket 10A startup substep instead uses backward Euler:
+\[
+A_{\mathrm{BE}} = I - \delta\tau L_h.
+\]
+For each substep, the interior LCP is
+\[
+A_{\mathrm{BE}}u \ge b,\qquad u\ge \Phi,\qquad
+(u-\Phi)^\top(A_{\mathrm{BE}}u-b)=0,
+\]
+where \(b\) is the previous value vector adjusted for the new-time boundary values. Ticket 10A's
+default is two equal substeps over the first ordinary interval:
+\[
+\delta\tau=\frac{\Delta\tau}{2}.
+\]
+
+\section{Implementation Design Decisions}
+
+\begin{longtable}{P{0.32\textwidth}L{0.50\textwidth}}
+\toprule
+Decision & Reason \\
+\midrule
+\endhead
+\path{rannacher.py} is separate & Prevents silent changes to the validated Ticket 04 baseline solver. \\
+Two half-substeps & Matches the planned Rannacher gate and keeps the comparison simple. \\
+\path{rannacher_substeps=0} delegates to baseline & Provides an explicit off switch and a testable equivalence path. \\
+Reuse Ticket 04 PSOR & Keeps projection logic identical to the American obstacle core. \\
+Reuse Ticket 09 and 10 diagnostics & Boundary and Gamma comparisons use existing validated diagnostic layers. \\
+Gate recommendation is conservative & Smoothing is adopted only if it improves Greeks without material price or boundary distortion. \\
+\bottomrule
+\end{longtable}
+
+\section{Code-Level Function Explanations}
+
+\begin{longtable}{P{0.36\textwidth}L{0.46\textwidth}}
+\toprule
+Function or class & Purpose \\
+\midrule
+\endhead
+\func{RannacherSmoothingMetadata} & Records whether smoothing is enabled, number and size of substeps, separated PSOR metadata, convergence status, and obstacle violation. \\
+\func{RannacherCNPSORResult} & Wraps a standard \func{AmericanCNPSORResult} with Rannacher-specific metadata. \\
+\func{backward_euler_psor_step} & Solves one implicit-Euler American LCP using the existing PSOR projection solver. \\
+\func{rannacher_crank_nicolson_psor_price} & Runs two backward-Euler half-substeps, stores the first main time row, then continues with ordinary CN/PSOR. \\
+\file{experiments/08_rannacher_smoothing_comparison.py} & Runs baseline and smoothed representative cases, writes CSV comparisons, and creates figures. \\
+\bottomrule
+\end{longtable}
+
+\section{Comparison Cases and Parameters}
+
+\begin{longtable}{P{0.25\textwidth}P{0.12\textwidth}L{0.43\textwidth}}
+\toprule
+Case & Type & Parameters \\
+\midrule
+\endhead
+\path{american_put_medium} & put & \(K=1.0\), \(T=1.0\), \(r=0.05\), \(q=0.02\), \(\sigma=0.20\), \(S_{\max}=4.0\), \(M=N=120\). \\
+\path{dividend_call_medium} & call & \(K=1.0\), \(T=1.0\), \(r=0.05\), \(q=0.08\), \(\sigma=0.20\), \(S_{\max}=4.0\), \(M=N=120\). \\
+\bottomrule
+\end{longtable}
+
+\begin{longtable}{P{0.32\textwidth}L{0.46\textwidth}}
+\toprule
+Scheme setting & Value \\
+\midrule
+\endhead
+Ordinary time interval & \(\Delta\tau=1/120=0.00833333333333\). \\
+Rannacher substeps & \(2\). \\
+Substep size & \(0.00416666666667\). \\
+Post-startup method & Ordinary CN/PSOR for the remaining main time intervals. \\
+Baseline behavior & Unchanged Ticket 04 American CN/PSOR solver. \\
+\bottomrule
+\end{longtable}
+
+\section{Price Comparison Tables and Interpretation}
+
+\begin{longtable}{P{0.24\textwidth}P{0.14\textwidth}P{0.14\textwidth}P{0.14\textwidth}P{0.16\textwidth}}
+\toprule
+Case & Max abs price diff & RMSE diff & Max-diff spot & Gate \\
+\midrule
+\endhead
+\path{american_put_medium} & \(1.66937904909\times 10^{-6}\) & \(4.19362587648\times 10^{-7}\) & \(1.000000\) & \path{KEEP_BASELINE_FOR_NOW} \\
+\path{dividend_call_medium} & \(1.72323866424\times 10^{-6}\) & \(4.26128419836\times 10^{-7}\) & \(1.033333\) & \path{KEEP_BASELINE_FOR_NOW} \\
+\bottomrule
+\end{longtable}
+
+The price differences are very small in both representative cases. This means the Rannacher
+startup does not materially distort the price level in this run. However, price similarity alone
+does not justify adopting smoothing. The Greek and boundary comparisons must also support the
+change.
+
+\begin{longtable}{P{0.24\textwidth}P{0.12\textwidth}P{0.12\textwidth}P{0.14\textwidth}P{0.14\textwidth}P{0.14\textwidth}}
+\toprule
+Case & \(S/K\) & Payoff & Baseline & Rannacher & Difference \\
+\midrule
+\endhead
+\path{american_put_medium} & 0.8 & 0.200000 & 0.200381130316 & 0.200380822124 & \(-3.0819\times10^{-7}\) \\
+\path{american_put_medium} & 1.0 & 0.000000 & 0.066301330539 & 0.066299661160 & \(-1.6694\times10^{-6}\) \\
+\path{american_put_medium} & 1.2 & 0.000000 & 0.015983679585 & 0.015982898743 & \(-7.8084\times10^{-7}\) \\
+\path{dividend_call_medium} & 0.8 & 0.000000 & 0.008367161513 & 0.008366693230 & \(-4.6828\times10^{-7}\) \\
+\path{dividend_call_medium} & 1.0 & 0.000000 & 0.065131176799 & 0.065129465900 & \(-1.7109\times10^{-6}\) \\
+\path{dividend_call_medium} & 1.2 & 0.200000 & 0.203695017872 & 0.203694325038 & \(-6.9283\times10^{-7}\) \\
+\bottomrule
+\end{longtable}
+
+\section{Boundary Comparison Tables and Interpretation}
+
+\begin{longtable}{P{0.28\textwidth}P{0.13\textwidth}P{0.13\textwidth}P{0.13\textwidth}P{0.14\textwidth}}
+\toprule
+Case & Matched rows & Max shift & Mean shift & Status \\
+\midrule
+\endhead
+\path{american_put_medium} & 120 & 0.000540799953 & \(1.09039294769\times10^{-5}\) & \path{COMPARABLE} \\
+\path{dividend_call_medium} & 120 & 0.000663055353 & \(1.48912617221\times10^{-5}\) & \path{COMPARABLE} \\
+\bottomrule
+\end{longtable}
+
+The threshold-based boundary curves remain close. This is reassuring, but it is not proof of
+exact free-boundary accuracy. Boundary extraction inherits the Ticket 09 threshold and grid
+uncertainty. The important gate point is that smoothing did not create an obvious boundary
+distortion in these cases.
+
+\section{Greek Comparison Tables and Interpretation}
+
+\begin{longtable}{P{0.27\textwidth}P{0.16\textwidth}P{0.16\textwidth}P{0.16\textwidth}P{0.13\textwidth}}
+\toprule
+Case & Baseline full max \(|\Gamma|\) & Rannacher full max \(|\Gamma|\) & Baseline strict max \(|\Gamma|\) & Strict change \\
+\midrule
+\endhead
+\path{american_put_medium} & 30.000000 & 30.000000 & 3.180018866 & \(+0.000266535\) \\
+\path{dividend_call_medium} & 30.000000 & 30.000000 & 2.679887372 & \(+0.000341023\) \\
+\bottomrule
+\end{longtable}
+
+The full-grid maximum \(|\Gamma|\) is unchanged because the strongest values remain at fragile
+regions such as maturity or kink bands. The strict-mask Gamma metric is slightly higher after
+smoothing in both cases. This does not mean Rannacher smoothing is bad in general. It means this
+particular comparison does not provide enough evidence to adopt it as the default or even as the
+preferred Greek-diagnostic path.
+
+\section{PSOR Convergence Comparison}
+
+Both baseline and Rannacher runs converged for both representative cases. The Rannacher variant
+records the startup backward-Euler PSOR solves separately from the later CN/PSOR solves. This is
+important because a smoothed variant would be risky if it improved Gamma while causing hidden
+non-convergence. That did not occur here.
+
+\begin{longtable}{P{0.28\textwidth}P{0.18\textwidth}P{0.18\textwidth}P{0.18\textwidth}}
+\toprule
+Case & Baseline converged & Rannacher converged & Obstacle violation \\
+\midrule
+\endhead
+\path{american_put_medium} & True & True & 0 for both methods \\
+\path{dividend_call_medium} & True & True & 0 for both methods \\
+\bottomrule
+\end{longtable}
+
+\section{Figure Interpretation}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.92\textwidth]{results/01_solver_validation/figures/ticket_10a_value_profiles.png}
+  \caption{Baseline and Rannacher final value profiles nearly overlap for both cases.}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.92\textwidth]{results/01_solver_validation/figures/ticket_10a_price_difference_profiles.png}
+  \caption{Smoothed-minus-baseline price differences are very small across moneyness.}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.92\textwidth]{results/01_solver_validation/figures/ticket_10a_gamma_profiles.png}
+  \caption{Gamma profiles show why the comparison is a diagnostic gate rather than a visual smoothing exercise.}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.92\textwidth]{results/01_solver_validation/figures/ticket_10a_gamma_full_vs_strict.png}
+  \caption{Full-grid and strict-mask max \(|\Gamma|\) over time for baseline and Rannacher runs.}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.92\textwidth]{results/01_solver_validation/figures/ticket_10a_boundary_curve_comparison.png}
+  \caption{Threshold-based boundary curves are close, but remain approximate diagnostics.}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.92\textwidth]{results/01_solver_validation/figures/ticket_10a_psor_iterations.png}
+  \caption{PSOR iteration counts remain well behaved for baseline and Rannacher solves.}
+\end{figure}
+
+\section{Testing Strategy}
+
+\begin{longtable}{P{0.34\textwidth}L{0.47\textwidth}}
+\toprule
+Test category & Interpretation \\
+\midrule
+\endhead
+Backward-Euler PSOR step & Checks shape, obstacle projection, boundary placement, and convergence metadata. \\
+Rannacher result shape & Verifies that the smoothed result preserves the baseline grid and value-grid shape. \\
+Zero substeps & Confirms that \path{rannacher_substeps=0} delegates to baseline behavior. \\
+Obstacle checks & Confirms smoothed put and dividend-call values remain above payoff. \\
+Price closeness & Checks that smoothed and baseline prices remain finite and close on representative cases. \\
+Boundary and Greek diagnostics & Verifies that Ticket 09 and Ticket 10 diagnostics run on both result types. \\
+Artifact checks & Confirms CSV columns and figure files are created. \\
+Scope checks & Rejects stress-map, dataset, neural-network, or machine-learning-label scope creep. \\
+\bottomrule
+\end{longtable}
+
+\section{Test Results and Interpretation}
+
+The final integrated command was:
+\begin{lstlisting}
+PYTHONPYCACHEPREFIX=/private/tmp/codex_pycache PYTHONPATH=src MPLCONFIGDIR=/private/tmp/matplotlib-cache FC_CACHEDIR=/private/tmp/fontconfig-cache python3 -m unittest discover -s tests
+\end{lstlisting}
+
+Result:
+\begin{lstlisting}
+Ran 135 tests in 2.901s
+OK
+\end{lstlisting}
+
+The Ticket 10A-focused test file also passed:
+\begin{lstlisting}
+Ran 14 tests in 0.895s
+OK
+\end{lstlisting}
+
+These tests show that the named Rannacher variant, comparison experiment, CSV artifacts, and
+figures are reproducible in the current environment. They do not prove that Rannacher smoothing
+is globally better. That would require grid/domain sensitivity and broader parameter testing.
+
+\section{Implementation Pitfalls and Debugging Notes}
+
+Actual recorded implementation iterations:
+\begin{longtable}{P{0.24\textwidth}L{0.24\textwidth}L{0.24\textwidth}L{0.17\textwidth}}
+\toprule
+Event & Symptom & Fix & Beginner lesson \\
+\midrule
+\endhead
+Initial TDD red run & Full suite reported 9 errors because \path{rannacher.py} and the Ticket 10A experiment did not exist yet. & Implemented the new module and experiment files. & Red tests are useful when they fail for the expected missing capability. \\
+Focused module invocation & \path{python -m unittest tests.test_rannacher_smoothing...} failed because \path{tests/} is not a package. & Used unittest discovery with \path{-s tests -p test_rannacher_smoothing.py}. & Test invocation style must match repository structure. \\
+\bottomrule
+\end{longtable}
+
+Likely traps to watch for in future Rannacher work:
+\begin{longtable}{P{0.34\textwidth}L{0.46\textwidth}}
+\toprule
+Pitfall & Why it matters \\
+\midrule
+\endhead
+Silently changing the baseline solver & It would invalidate earlier validation tickets and hide the comparison. \\
+Claiming smoothing is better because plots look smoother & The gate must check prices, boundaries, Greeks, and convergence. \\
+Ignoring price shifts & A smoother Gamma is not acceptable if prices move materially. \\
+Ignoring boundary shifts & Boundary curves are approximate, but large shifts are still warning signs. \\
+Comparing different grids or parameters & The comparison would mix smoothing effects with discretization effects. \\
+Using smoothed Greeks as dataset labels too early & Dataset and neural-surface work is out of scope and requires later validation. \\
+\bottomrule
+\end{longtable}
+
+\section{Gate Conclusion with Evidence}
+
+The gate conclusion for Ticket 10A is:
+\[
+\boxed{\text{\code{KEEP\_BASELINE\_FOR\_NOW}}}
+\]
+
+Evidence:
+\begin{itemize}
+  \item price differences are very small, around \(1.7\times10^{-6}\);
+  \item boundary shifts are small, below \(7\times10^{-4}\);
+  \item PSOR convergence remains clean;
+  \item strict-mask Gamma does not improve in either representative case.
+\end{itemize}
+
+Therefore, the Rannacher variant is useful as a named comparison tool, but the project should not
+adopt it as the default or claim that it improves Greek diagnostics yet. A later grid/domain
+sensitivity ticket can revisit this decision with a broader evidence base.
+
+\section{Limitations}
+
+\begin{longtable}{P{0.32\textwidth}L{0.48\textwidth}}
+\toprule
+Limitation & Explanation \\
+\midrule
+\endhead
+Only two representative cases & The comparison is not full grid/domain sensitivity. \\
+Only one smoothing setting & The default uses two half-substeps; other choices are not explored. \\
+Boundary curves are threshold-based & Boundary shifts inherit Ticket 09 extraction uncertainty. \\
+Greek masks are diagnostic & Strict-mask Gamma is useful, but not an analytical proof. \\
+No stress maps or datasets & Ticket 10A intentionally avoids later machine-learning or stress-surface work. \\
+\bottomrule
+\end{longtable}
+
+\section{Lessons Learned / Study Notes}
+
+For beginner researchers, the main lesson is that numerical smoothing is a trade-off. It may damp
+payoff-kink artifacts, but it is not automatically better. A careful comparison asks:
+\begin{itemize}
+  \item Did prices stay close?
+  \item Did obstacle and PSOR convergence remain clean?
+  \item Did approximate boundaries shift?
+  \item Did Gamma actually improve under the chosen diagnostic mask?
+\end{itemize}
+
+In this ticket, prices and boundaries stayed close, but Gamma did not improve. That is a valid
+and useful result.
+
+\section{Link to the Next Ticket}
+
+The next ticket should continue the validation ladder without treating Ticket 10A as a default
+solver change. A natural next step is grid/domain sensitivity: compare solver outputs across
+mesh sizes and domain cutoffs before using Greeks, boundaries, or prices as downstream research
+features.
+
+\section{Reproducibility Record}
+
+\begin{longtable}{P{0.35\textwidth}L{0.45\textwidth}}
+\toprule
+Item & Record \\
+\midrule
+\endhead
+New source file & \file{src/american_risk_surfaces/solvers/rannacher.py}. \\
+New experiment & \file{experiments/08_rannacher_smoothing_comparison.py}. \\
+New test file & \file{tests/test_rannacher_smoothing.py}. \\
+CSV outputs & Four files under \file{results/01_solver_validation/tables/} with prefix \path{ticket_10a}. \\
+Figure outputs & Six files under \file{results/01_solver_validation/figures/} with prefix \path{ticket_10a}. \\
+Report outputs & This \LaTeX{} source and compiled PDF under \file{reports/03_solver/tickets/}. \\
+\bottomrule
+\end{longtable}
+
+\end{document}

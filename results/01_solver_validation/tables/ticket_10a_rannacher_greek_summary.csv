@@ -1,0 +1,3 @@
+case_name,option_type,baseline_max_abs_gamma,rannacher_max_abs_gamma,baseline_max_abs_gamma_strict,rannacher_max_abs_gamma_strict,baseline_boundary_near_node_count,rannacher_boundary_near_node_count,baseline_strict_negative_gamma_count,rannacher_strict_negative_gamma_count,strict_gamma_change,full_gamma_change
+american_put_medium,put,30,30,3.18001886582,3.18028540059,480,480,0,0,0.000266534763685,0
+dividend_call_medium,call,30,30,2.6798873723,2.68022839491,480,480,0,0,0.000341022615359,0

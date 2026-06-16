@@ -1,0 +1,13 @@
+case_name,option_type,target_moneyness,nearest_spot,actual_moneyness,payoff,baseline_value,rannacher_value,rannacher_minus_baseline
+american_put_medium,put,0.5,0.5,0.5,0.5,0.5,0.5,0
+american_put_medium,put,0.8,0.8,0.8,0.2,0.200381130316,0.200380822124,-3.08192378257e-07
+american_put_medium,put,1,1,1,0,0.0663013305386,0.0662996611596,-1.66937904909e-06
+american_put_medium,put,1.2,1.2,1.2,0,0.0159836795853,0.0159828987428,-7.8084250563e-07
+american_put_medium,put,1.5,1.5,1.5,0,0.00125380408386,0.00125381308249,8.99862965739e-09
+american_put_medium,put,2,2,2,0,1.08348288672e-05,1.08407961494e-05,5.96728222477e-09
+dividend_call_medium,call,0.5,0.5,0.5,0,6.33053817484e-06,6.33328940264e-06,2.75122780327e-09
+dividend_call_medium,call,0.8,0.8,0.8,0,0.00836716151341,0.00836669322968,-4.68283734525e-07
+dividend_call_medium,call,1,1,1,0,0.0651311767989,0.0651294658995,-1.71089938203e-06
+dividend_call_medium,call,1.2,1.2,1.2,0.2,0.203695017872,0.203694325038,-6.92834778576e-07
+dividend_call_medium,call,1.5,1.5,1.5,0.5,0.5,0.5,0
+dividend_call_medium,call,2,2,2,1,1,1,0

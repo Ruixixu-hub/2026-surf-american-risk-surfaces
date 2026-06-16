@@ -1,0 +1,3 @@
+case_name,option_type,baseline_found_boundary_count,rannacher_found_boundary_count,matched_boundary_count,max_abs_boundary_shift,mean_abs_boundary_shift,first_baseline_boundary_tau,first_rannacher_boundary_tau,boundary_status
+american_put_medium,put,120,120,120,0.000540799952805,1.09039294769e-05,0.00833333333333,0.00833333333333,COMPARABLE
+dividend_call_medium,call,120,120,120,0.00066305535332,1.48912617221e-05,0.00833333333333,0.00833333333333,COMPARABLE
