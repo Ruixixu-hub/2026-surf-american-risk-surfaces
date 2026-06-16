@@ -1,0 +1,491 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{fontspec}
+\IfFontExistsTF{Times New Roman}
+  {\setmainfont{Times New Roman}}
+  {\IfFontExistsTF{TeX Gyre Termes}{\setmainfont{TeX Gyre Termes}}{\setmainfont{Times}}}
+\usepackage{newtxmath}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+\usepackage{fancyhdr}
+\usepackage{microtype}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.65em}
+\setlength{\emergencystretch}{3em}
+\setlist[itemize]{leftmargin=1.4em,itemsep=0.2em,topsep=0.2em}
+\setlist[enumerate]{leftmargin=1.6em,itemsep=0.2em,topsep=0.2em}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small Ticket 08 Study Report}
+\rhead{\small Obstacle and Complementarity Diagnostics}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  columns=fullflexible,
+  keepspaces=true,
+  rulecolor=\color{black!30},
+  xleftmargin=0.5em,
+  xrightmargin=0.5em
+}
+
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\file}[1]{\path{#1}}
+\newcommand{\func}[1]{\path{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash\ttfamily\footnotesize}p{#1}}
+
+\title{\textbf{Ticket 08 Study Report: Obstacle and Complementarity Diagnostics}\\
+\large SURF2026 American Option Risk Surfaces}
+\author{Codex-assisted implementation report}
+\date{June 16, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Ticket 08 adds a diagnostic layer for American CN/PSOR results. It does not introduce a new
+pricing algorithm. Instead, it reconstructs the discrete linear complementarity problem solved at
+each American time step and checks the obstacle gap, equation gap, and complementarity product on
+interior spot nodes. The diagnostics are applied to the representative American put case from the
+validation ladder and the positive-dividend American call case from Ticket 07. This report is
+written for beginner researchers with accounting, data, machine-learning, and Python experience
+who are still learning obstacle problems, LCP diagnostics, and CN/PSOR validation.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Role of Ticket 08 in the Whole Solver Project}
+
+Tickets 01 through 07 built the pricing and validation ladder: analytic Black-Scholes utilities,
+finite-difference grids, European Crank--Nicolson validation, American CN/PSOR solving,
+American put validation, no-dividend American call validation, and dividend-paying American call
+validation. Ticket 08 adds a diagnostic layer on top of those American solver outputs.
+
+The key purpose is to check more than price levels. A numerical American option result can look
+reasonable and still fail the LCP logic. Ticket 08 therefore asks:
+\begin{itemize}
+  \item Does the value stay above payoff?
+  \item Does the reconstructed equation inequality hold?
+  \item Is the product of the two LCP gaps close to zero?
+  \item Did the PSOR iterations converge while these diagnostics were computed?
+\end{itemize}
+
+This ticket is not boundary extraction. It does not locate a free boundary, does not create
+Greeks, does not create stress maps, does not create datasets, and does not modify the solver.
+
+\section{Theory and Methodology/Literature Connection}
+
+The documented source basis for Ticket 08 is internal:
+\begin{itemize}
+  \item \file{reports/01_literature/literature_map.md};
+  \item \file{reports/02_math/formulation_note.md};
+  \item \file{reports/03_solver/solver_validation_plan.md};
+  \item \file{reports/03_solver/solver_implementation_tickets.md};
+  \item the Ticket 01 through Ticket 07 implementation reports.
+\end{itemize}
+
+The formulation note explains that American exercise turns the pricing problem into a
+variational inequality and, after discretization, a linear complementarity problem. The solver
+validation plan explicitly calls for obstacle violation and complementarity residual reporting.
+The implementation ticket file says the diagnostics must keep boundary nodes separate from
+interior LCP residuals and must not hide maximum residuals behind averages.
+
+No BibTeX file is created for Ticket 08. The report uses the internal project documents as the
+verified source basis and avoids inventing external bibliographic details.
+
+\section{Obstacle, Equation Gap, and Complementarity in Plain Language}
+
+For an American option, the value \(U\) must be at least the payoff \(\Phi\):
+\begin{equation}
+  U \geq \Phi.
+\end{equation}
+This is the payoff obstacle. If a computed American value falls below payoff, the holder would be
+better off exercising immediately, so the numerical value is financially invalid.
+
+The CN/PSOR solver also solves a continuation equation at every time step. In matrix form the
+interior-node LCP is:
+\begin{equation}
+  A u \geq b,\qquad u \geq \Phi,\qquad
+  (u-\Phi)^\top(Au-b)=0.
+\end{equation}
+
+The two gaps have plain meanings:
+\begin{itemize}
+  \item \(u-\Phi\): how far the value is above immediate exercise;
+  \item \(Au-b\): how far the discrete equation inequality is from binding.
+\end{itemize}
+
+Complementarity says that each interior node should be in one of two modes. In a continuation-like
+node, \(u>\Phi\) and the equation should be close to equality. In an exercise-like node,
+\(u=\Phi\) and the equation inequality can be positive. The product of the two gaps should
+therefore be close to zero.
+
+\section{Why Diagnostics Come After Put and Call Validation}
+
+Ticket 08 comes after Tickets 05, 06, and 07 because diagnostics need solver outputs to inspect.
+Those earlier tickets established representative American put and call cases:
+\begin{itemize}
+  \item American put: early exercise can matter and the value should dominate payoff and European
+        put values.
+  \item No-dividend American call: the American value should approximately match the European
+        call when \(q=0\).
+  \item Dividend-paying American call: positive dividend yield can create meaningful
+        American-minus-European value.
+\end{itemize}
+
+Ticket 08 does not repeat those price-validation arguments. It checks whether the American
+solver outputs also satisfy the internal LCP conditions expected from the CN/PSOR formulation.
+
+\section{LCP Diagnostic Formulas}
+
+For each time step and each interior spot node, Ticket 08 computes:
+\begin{align}
+  \text{value gap} &= u - \Phi,\\
+  \text{equation gap} &= Au - b,\\
+  \text{obstacle violation} &= \max(\Phi-u,0),\\
+  \text{equation violation} &= \max(b-Au,0),\\
+  \text{complementarity product} &= (u-\Phi)(Au-b).
+\end{align}
+
+\begin{longtable}{L{0.28\textwidth}L{0.60\textwidth}}
+\toprule
+Quantity & Beginner meaning \\
+\midrule
+\endhead
+Value gap & Positive means the option value is above immediate exercise. Zero means the value is
+at the payoff obstacle. \\
+Equation gap & Positive means the equation inequality has slack. Near zero means the continuation
+equation is binding. \\
+Obstacle violation & Any positive value means the computed option value fell below payoff. \\
+Equation violation & Any positive value means the reconstructed matrix inequality \(Au\geq b\)
+was violated. \\
+Complementarity product & Should be close to zero. A large value means the node is neither cleanly
+continuation-like nor exercise-like under the LCP conditions. \\
+\bottomrule
+\end{longtable}
+
+\section{Diagnostics Versus Boundary Extraction}
+
+Ticket 08 deliberately avoids boundary extraction. It computes value gaps and diagnostic node
+counts, but it does not search for a transition location, does not interpolate an exercise
+boundary, and does not label any figure with a boundary. Terms such as exercise-like and
+continuation-like are local diagnostic classifications only.
+
+This distinction matters. Diagnostics answer: ``does the computed value satisfy the LCP
+conditions?'' Boundary extraction asks: ``where is the transition curve?'' The second question
+requires a separate algorithm and belongs to a later ticket.
+
+\section{Implementation Design Decisions}
+
+\begin{longtable}{L{0.30\textwidth}L{0.58\textwidth}}
+\toprule
+Decision & Reason \\
+\midrule
+\endhead
+Create \file{src/american_risk_surfaces/diagnostics/lcp.py} &
+Diagnostics are separate from the solver core, keeping pricing logic and validation logic
+independent. \\
+Use interior nodes only &
+Boundary nodes are imposed values, not unknowns solved by the LCP. Including them would pollute
+the residual. \\
+Reconstruct the Ticket 04 matrix form &
+The diagnostic must check the same \(A\) and \(b\) that the solver used, including new-time
+boundary adjustments. \\
+Report maxima and minima &
+Maximum residuals reveal localized failures that averages can hide. \\
+Use representative put and dividend-call cases &
+The ticket checks diagnostics on two important American regimes without becoming a full grid
+sensitivity study. \\
+Use three simple figures &
+Obstacle violation, equation violation, and complementarity product each answer a different
+diagnostic question. \\
+\bottomrule
+\end{longtable}
+
+\section{Code-Level Function Explanations}
+
+\begin{longtable}{L{0.38\textwidth}L{0.50\textwidth}}
+\toprule
+Function or class & Role \\
+\midrule
+\endhead
+\func{LCPGapArrays} & Stores the five interior-node gap arrays for one time step. \\
+\func{ReconstructedLCPStep} & Stores \(u\), \(\Phi\), \(Au\), \(b\), and gaps for one time step. \\
+\func{StepDiagnosticRow} & Stores scalar metrics for one time step, including PSOR metadata. \\
+\func{LCPDiagnosticSummary} & Stores whole-result maxima, tolerances, convergence status, and
+diagnostic status. \\
+\func{compute_lcp_gap_arrays} & Computes value gap, equation gap, violations, and complementarity
+product from arrays. \\
+\func{reconstruct_lcp_step} & Rebuilds the interior-node LCP for one stored American CN/PSOR step. \\
+\func{summarize_lcp_step} & Converts reconstructed arrays into scalar diagnostics and node counts. \\
+\func{diagnose_lcp_result} & Runs reconstruction and summary over every PSOR time step. \\
+\func{run_diagnostic_cases} & Runs the representative experiment cases and prepares CSV/figure
+metadata. \\
+\bottomrule
+\end{longtable}
+
+\section{Diagnostic Cases and Parameters}
+
+\begin{longtable}{@{}L{0.16\textwidth}L{0.10\textwidth}L{0.07\textwidth}L{0.07\textwidth}L{0.07\textwidth}L{0.07\textwidth}L{0.09\textwidth}L{0.07\textwidth}L{0.07\textwidth}@{}}
+\toprule
+Case & Option & \(K\) & \(T\) & \(r\) & \(q\) & \(\sigma\) & \(M\) & \(N\) \\
+\midrule
+\endhead
+Put medium & put & 1.0 & 1.0 & 0.05 & 0.02 & 0.20 & 120 & 120 \\
+Dividend call & call & 1.0 & 1.0 & 0.05 & 0.08 & 0.20 & 120 & 120 \\
+\bottomrule
+\end{longtable}
+
+Both cases use \(S_{\max}=4.0\). The purpose is diagnostic correctness and interpretation, not
+full grid or domain sensitivity.
+
+\section{Diagnostic Result Tables and Interpretation}
+
+\subsection{Summary Diagnostics}
+
+{\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}L{0.12\textwidth}L{0.07\textwidth}L{0.10\textwidth}L{0.10\textwidth}L{0.11\textwidth}L{0.11\textwidth}L{0.08\textwidth}@{}}
+\toprule
+Case & Status & Max obstacle & Max equation & Max comp. product & Max final update & Max iter. \\
+\midrule
+\endhead
+Put & PASS & 0 & \(1.5566\times10^{-9}\) & \(6.6483\times10^{-11}\) & \(9.9971\times10^{-9}\) & 10 \\
+Call & PASS & 0 & \(2.1442\times10^{-9}\) & \(2.3796\times10^{-11}\) & \(9.4309\times10^{-9}\) & 10 \\
+\bottomrule
+\end{longtable}
+}
+
+Both cases pass the Ticket 08 diagnostic thresholds. The maximum obstacle violation is zero in
+both cases. Equation violations are about \(10^{-9}\), and complementarity products are about
+\(10^{-11}\). These numbers are below the diagnostic thresholds of \(10^{-6}\) for equation
+violation and complementarity product.
+
+\subsection{Node Classification Summary}
+
+\begin{longtable}{@{}L{0.24\textwidth}L{0.18\textwidth}L{0.20\textwidth}L{0.18\textwidth}@{}}
+\toprule
+Case & Max exercise-like nodes & Max continuation-like nodes & Max ambiguous nodes \\
+\midrule
+\endhead
+american\_put\_medium & 113 & 51 & 0 \\
+dividend\_call\_medium & 114 & 25 & 0 \\
+\bottomrule
+\end{longtable}
+
+The node classifications are diagnostic labels only. They show that nodes can be separated into
+exercise-like and continuation-like categories under the stated tolerances. They do not locate a
+free boundary.
+
+\subsection{Selected By-Step Rows}
+
+{\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}L{0.18\textwidth}L{0.06\textwidth}L{0.08\textwidth}L{0.08\textwidth}L{0.10\textwidth}L{0.10\textwidth}L{0.10\textwidth}L{0.08\textwidth}L{0.08\textwidth}@{}}
+\toprule
+Case & Step & \(\tau\) & Iter. & Final update & Max eq. viol. & Max comp. & Ex-like & Cont-like \\
+\midrule
+\endhead
+put & 1 & 0.00833 & 10 & \(3.3486\times10^{-9}\) & \(3.3576\times10^{-11}\) & \(9.5176\times10^{-13}\) & 113 & 6 \\
+put & 60 & 0.50000 & 7 & \(1.7795\times10^{-9}\) & \(1.6431\times10^{-10}\) & \(6.3703\times10^{-12}\) & 86 & 33 \\
+put & 120 & 1.00000 & 6 & \(8.8380\times10^{-9}\) & \(1.0091\times10^{-9}\) & \(6.4760\times10^{-11}\) & 68 & 51 \\
+call & 1 & 0.00833 & 10 & \(5.8695\times10^{-9}\) & \(1.2219\times10^{-9}\) & \(1.2466\times10^{-12}\) & 114 & 5 \\
+call & 60 & 0.50000 & 7 & \(4.5496\times10^{-9}\) & \(4.2995\times10^{-10}\) & \(1.2760\times10^{-11}\) & 98 & 21 \\
+call & 120 & 1.00000 & 7 & \(3.8139\times10^{-9}\) & \(1.1096\times10^{-9}\) & \(1.3338\times10^{-11}\) & 94 & 25 \\
+\bottomrule
+\end{longtable}
+}
+
+The selected rows show that diagnostics remain small early, halfway through, and at final
+maturity horizon. The full by-step CSV contains all 240 rows.
+
+\section{Figure Interpretation}
+
+Figure~\ref{fig:obstacle} plots maximum obstacle violation by time step. Both cases remain at
+zero on the generated grid, showing that the stored American values do not fall below payoff.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.82\textwidth]{results/01_solver_validation/figures/ticket_08_lcp_obstacle_violation_by_step.png}
+\caption{Ticket 08 maximum obstacle violation by time step.}
+\label{fig:obstacle}
+\end{figure}
+
+Figure~\ref{fig:equation} plots maximum equation violation by time step. The values remain near
+the PSOR tolerance scale and well below the Ticket 08 review threshold.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.82\textwidth]{results/01_solver_validation/figures/ticket_08_lcp_equation_violation_by_step.png}
+\caption{Ticket 08 maximum equation violation by time step.}
+\label{fig:equation}
+\end{figure}
+
+Figure~\ref{fig:complementarity} plots maximum absolute complementarity product by time step.
+Small values indicate that nodes are close to the LCP alternatives: either continuation-like or
+exercise-like.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.82\textwidth]{results/01_solver_validation/figures/ticket_08_lcp_complementarity_by_step.png}
+\caption{Ticket 08 maximum absolute complementarity product by time step.}
+\label{fig:complementarity}
+\end{figure}
+
+\section{Testing Strategy}
+
+\begin{longtable}{L{0.28\textwidth}L{0.30\textwidth}L{0.30\textwidth}}
+\toprule
+Test category & What it proves & What it does not prove \\
+\midrule
+\endhead
+Manual gap arrays & Basic formulas and signs are correct on small arrays. & Full solver
+diagnostics. \\
+Toy LCP classification & Exercise-like and continuation-like counts behave as intended. & Boundary
+location. \\
+Interior reconstruction & Boundary nodes are excluded from residual arrays. & Boundary values are
+economically perfect. \\
+American put diagnostics & Representative put residuals are finite and small. & Full put grid
+sensitivity. \\
+Dividend-call diagnostics & Representative positive-dividend call residuals are finite and small. &
+Full dividend sensitivity. \\
+CSV artifact tests & Experiment outputs have stable schemas. & That later reports need no extra
+columns. \\
+Figure tests & Meaningful diagnostic figures are created when matplotlib is available. & That plots
+alone prove correctness. \\
+Scope tests & Ticket 08 does not introduce forbidden APIs/files. & Future tickets that intentionally
+add those features. \\
+\bottomrule
+\end{longtable}
+
+\section{Test Results and Interpretation}
+
+The final unittest command was:
+\begin{lstlisting}[language=bash]
+PYTHONPYCACHEPREFIX=/private/tmp/codex_pycache PYTHONPATH=src MPLCONFIGDIR=/private/tmp/matplotlib-cache FC_CACHEDIR=/private/tmp/fontconfig-cache python3 -m unittest discover -s tests
+\end{lstlisting}
+
+Observed result:
+\begin{lstlisting}
+Ran 87 tests
+
+OK
+\end{lstlisting}
+
+The Ticket 08 experiment command was:
+\begin{lstlisting}[language=bash]
+PYTHONPYCACHEPREFIX=/private/tmp/codex_pycache PYTHONPATH=src MPLCONFIGDIR=/private/tmp/matplotlib-cache FC_CACHEDIR=/private/tmp/fontconfig-cache python3 experiments/05_obstacle_complementarity_diagnostics.py
+\end{lstlisting}
+
+It wrote two summary rows, 240 by-step rows, and three PNG figures.
+
+\section{Implementation Pitfalls and Debugging Notes}
+
+\begin{longtable}{@{}L{0.23\textwidth}L{0.24\textwidth}L{0.22\textwidth}L{0.19\textwidth}@{}}
+\toprule
+Recorded item or pitfall & Symptom & Fix or guard & Beginner lesson \\
+\midrule
+\endhead
+Expected TDD red run & The new tests failed because \file{diagnostics/lcp.py} and the Ticket 08
+experiment script did not exist yet. & Add the diagnostics package and experiment script. & A red
+test confirms the tests target new behavior. \\
+Malformed targeted unittest command & \file{tests.test_lcp_diagnostics} could not import because
+\file{tests/} is not a package. & Use unittest discovery with \code{-s tests} and \code{-k}. &
+Match test commands to the repository's import layout. \\
+Wrong equation-gap sign & Reporting \(b-Au\) as the gap would reverse the LCP inequality. & Define
+equation gap as \(Au-b\) and equation violation as \(\max(b-Au,0)\). & Sign conventions must be
+written down before interpreting residuals. \\
+Including boundary nodes & Boundary values are imposed, not solved by the interior LCP. & Slice all
+diagnostic arrays with \code{1:-1}. & Residuals should match the unknowns solved by PSOR. \\
+Overinterpreting classifications & Exercise-like counts can look like an exercise region. & State
+that counts are diagnostic labels only. & Diagnostics are not boundary extraction. \\
+Ignoring PSOR convergence & Small gaps are less meaningful if the LCP solve did not converge. &
+Report PSOR iterations, final update, and convergence status. & Solver metadata is part of
+diagnostic credibility. \\
+\bottomrule
+\end{longtable}
+
+\section{Limitations}
+
+\begin{longtable}{L{0.34\textwidth}L{0.54\textwidth}}
+\toprule
+Not included in Ticket 08 & Reason \\
+\midrule
+\endhead
+New pricing algorithm & The ticket diagnoses existing American CN/PSOR outputs only. \\
+Free-boundary extraction & Boundary location belongs to a later ticket. \\
+Continuation-premium boundary module & Ticket 08 uses local gaps only, not transition extraction. \\
+Greeks & Delta and Gamma diagnostics are later work. \\
+Stress maps, datasets, neural networks & These require a more complete validated solver pipeline. \\
+Full grid/domain sensitivity & The two medium-grid cases are representative diagnostics, not a
+convergence study. \\
+Formal proof of complementarity convergence & The report gives numerical diagnostic evidence only. \\
+\bottomrule
+\end{longtable}
+
+\section{Lessons Learned / Study Notes}
+
+The first lesson is that obstacle validity is necessary but not sufficient. A value can stay
+above payoff while still failing the equation side of the LCP.
+
+The second lesson is that complementarity is a local either-or condition. At each interior node,
+either the option behaves like a continuation PDE point, or it sits on the payoff obstacle.
+
+The third lesson is that boundary nodes should not be included in LCP residuals. They are imposed
+by boundary conditions and are not unknowns solved by PSOR.
+
+The fourth lesson is that diagnostic plots should answer diagnostic questions. Ticket 08 uses
+figures for obstacle violation, equation violation, and complementarity product; it avoids
+figures that could be mistaken for boundary extraction.
+
+\section{Link to the Next Ticket}
+
+Ticket 08 provides the reusable diagnostic layer needed before boundary extraction. The next
+ticket can use value and complementarity evidence with more confidence, but it must still define
+its own boundary extraction rules, thresholds, interpolation choices, and reporting language.
+
+\section{Reproducibility Record}
+
+\begin{longtable}{L{0.30\textwidth}L{0.58\textwidth}}
+\toprule
+Item & Record \\
+\midrule
+\endhead
+Diagnostics package & \file{src/american_risk_surfaces/diagnostics/lcp.py}. \\
+Experiment & \file{experiments/05_obstacle_complementarity_diagnostics.py}. \\
+Tests & \file{tests/test_lcp_diagnostics.py}. \\
+Summary CSV & \file{results/01_solver_validation/tables/ticket_08_lcp_diagnostics_summary.csv}. \\
+By-step CSV & \file{results/01_solver_validation/tables/ticket_08_lcp_diagnostics_by_step.csv}. \\
+Figures & \file{results/01_solver_validation/figures/ticket_08_lcp_obstacle_violation_by_step.png};
+\file{results/01_solver_validation/figures/ticket_08_lcp_equation_violation_by_step.png};
+\file{results/01_solver_validation/figures/ticket_08_lcp_complementarity_by_step.png}. \\
+Report source & \file{reports/03_solver/tickets/ticket_08_obstacle_complementarity_diagnostics.tex}. \\
+Report PDF & \file{reports/03_solver/tickets/ticket_08_obstacle_complementarity_diagnostics.pdf}. \\
+\bottomrule
+\end{longtable}
+
+Commands used:
+\begin{lstlisting}[language=bash]
+PYTHONPYCACHEPREFIX=/private/tmp/codex_pycache PYTHONPATH=src MPLCONFIGDIR=/private/tmp/matplotlib-cache FC_CACHEDIR=/private/tmp/fontconfig-cache python3 experiments/05_obstacle_complementarity_diagnostics.py
+PYTHONPYCACHEPREFIX=/private/tmp/codex_pycache PYTHONPATH=src MPLCONFIGDIR=/private/tmp/matplotlib-cache FC_CACHEDIR=/private/tmp/fontconfig-cache python3 -m unittest discover -s tests
+PYTHONPYCACHEPREFIX=/private/tmp/codex_pycache PYTHONPATH=src python3 -m compileall -q src tests experiments
+\end{lstlisting}
+
+\end{document}
