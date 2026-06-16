@@ -1,0 +1,359 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{fontspec}
+\IfFontExistsTF{Times New Roman}
+  {\setmainfont{Times New Roman}}
+  {\IfFontExistsTF{TeX Gyre Termes}{\setmainfont{TeX Gyre Termes}}{\setmainfont{Times}}}
+\usepackage{newtxmath}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+\usepackage{fancyhdr}
+\usepackage{microtype}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.65em}
+\setlength{\emergencystretch}{3em}
+\setlist[itemize]{leftmargin=1.4em,itemsep=0.2em,topsep=0.2em}
+\setlist[enumerate]{leftmargin=1.6em,itemsep=0.2em,topsep=0.2em}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small Ticket 11 Study Report}
+\rhead{\small Grid and Domain Sensitivity}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  columns=fullflexible,
+  keepspaces=true,
+  rulecolor=\color{black!30},
+  xleftmargin=0.5em,
+  xrightmargin=0.5em
+}
+
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\file}[1]{\path{#1}}
+\newcommand{\func}[1]{\path{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash\ttfamily\footnotesize}p{#1}}
+
+\title{\textbf{Ticket 11 Study Report: Grid and Domain Sensitivity}\\
+\large SURF2026 American Option Risk Surfaces}
+\author{Codex-assisted implementation report}
+\date{June 16, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Ticket 11 studies whether representative American CN/PSOR outputs are stable when the grid
+resolution and finite spot-domain cutoff change. It uses the baseline Ticket 04 solver, not the
+Ticket 10A Rannacher variant. The study compares selected prices, continuation-premium boundary
+curves, LCP diagnostics, PSOR iterations, and finite-difference Gamma diagnostics for an American
+put and a dividend-paying American call. The evidence is encouraging for this preliminary ladder:
+obstacle violations remain zero, complementarity diagnostics remain near solver tolerance, and
+the proportional domain extension from \(S_{\max}=4\) to \(6\) does not change selected target
+region values. The report is intentionally cautious because three grid levels are not a formal
+convergence proof.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Role of Ticket 11 in the Solver Project}
+
+Earlier tickets built the validation ladder: European closed-form utilities, grids and operators,
+European CN validation, American CN/PSOR, American put and call validation, LCP diagnostics,
+boundary extraction, Delta/Gamma diagnostics, and a Rannacher smoothing comparison. Ticket 10A
+concluded \path{KEEP_BASELINE_FOR_NOW}, so Ticket 11 uses the baseline CN/PSOR solver.
+
+Ticket 11 answers a different question: do representative prices, boundaries, and diagnostics
+remain stable when we change \(M\), \(N\), and \(S_{\max}\)? This is required before stress maps,
+dataset construction, or neural surrogate modelling.
+
+\section{Theory and Methodology Connection}
+
+The documented source basis is internal: the planning report, literature map, formulation note,
+solver validation plan, and prior Ticket 01--10A reports. The solver validation plan explicitly
+places grid refinement and domain sensitivity before stress maps and neural work. No BibTeX file
+is created, and no external bibliographic details are invented.
+
+\section{Grid Sensitivity in Plain Language}
+
+A finite-difference solver replaces a continuous PDE problem with values on a grid. A coarse grid
+can miss important behavior near the strike or exercise boundary. Grid sensitivity checks whether
+the result changes less as the grid is refined.
+
+In this ticket:
+\[
+M=N\in\{80,120,180\},\qquad S_{\max}=4.
+\]
+The finest grid, \(M=N=180\), is used as the numerical reference for selected comparisons.
+
+\section{Domain Cutoff Sensitivity in Plain Language}
+
+The Black--Scholes spot domain is theoretically unbounded, but the code solves on
+\([0,S_{\max}]\). If \(S_{\max}\) is too small, the artificial upper boundary can distort prices
+or boundaries inside the region we care about.
+
+Ticket 11 tests:
+\[
+S_{\max}\in\{4,5,6\}.
+\]
+The domain cases use proportional \(M\) values:
+\[
+(S_{\max},M,N)\in\{(4,120,120),(5,150,120),(6,180,120)\}.
+\]
+This keeps \(\Delta S\approx 1/30\) comparable while changing the domain cutoff.
+
+\section{Why Ticket 11 Follows Ticket 10A}
+
+Rannacher smoothing is useful only if it is clearly reported and improves diagnostics without
+distorting prices or boundaries. Ticket 10A did not find a clear Gamma benefit, so Ticket 11 does
+not silently switch methods. This keeps the sensitivity study tied to the already validated
+baseline solver.
+
+\section{Sensitivity Design and Chosen Configurations}
+
+\begin{longtable}{P{0.24\textwidth}P{0.18\textwidth}L{0.40\textwidth}}
+\toprule
+Study & Cases & Purpose \\
+\midrule
+\endhead
+Grid sensitivity & \(M=N=80,120,180\), \(S_{\max}=4\) & Check refinement behavior while holding the domain fixed. \\
+Domain sensitivity & \(S_{\max}=4,5,6\), \(M=120,150,180\), \(N=120\) & Check upper-boundary influence while keeping \(\Delta S\) comparable. \\
+Option families & American put and dividend-paying American call & Reuse the representative cases from Tickets 05 and 07. \\
+\bottomrule
+\end{longtable}
+
+\section{Reference Configuration Choice}
+
+The reference is not an analytical truth. It is simply the finest or largest-domain configuration
+available inside Ticket 11:
+\begin{itemize}
+  \item grid reference: \(M=N=180\), \(S_{\max}=4\);
+  \item domain reference: \(S_{\max}=6\), \(M=180\), \(N=120\).
+\end{itemize}
+
+Every selected spot row reports actual moneyness. This matters because nearest-node comparisons
+can compare \(S/K=0.5\) on one grid with \(S/K=0.4888889\) on another grid.
+
+\section{Price Stability Results}
+
+\begin{longtable}{P{0.27\textwidth}P{0.15\textwidth}P{0.14\textwidth}P{0.16\textwidth}P{0.16\textwidth}}
+\toprule
+Case & \(M,N\) or \(S_{\max}\) & Reference & Max selected diff & RMSE selected diff \\
+\midrule
+\endhead
+\path{american_put_grid_80} & 80 & grid 180 & 0.0111111 & 0.00454879 \\
+\path{american_put_grid_120} & 120 & grid 180 & 0.0111111 & 0.00453795 \\
+\path{american_put_grid_180} & 180 & grid 180 & 0 & 0 \\
+\path{dividend_call_grid_80} & 80 & grid 180 & 0.0111111 & 0.00454255 \\
+\path{dividend_call_grid_120} & 120 & grid 180 & 0.0111111 & 0.00453671 \\
+\path{dividend_call_grid_180} & 180 & grid 180 & 0 & 0 \\
+\path{american_put_domain_smax4} & 4 & domain 6 & 0 & 0 \\
+\path{dividend_call_domain_smax4} & 4 & domain 6 & 0 & 0 \\
+\bottomrule
+\end{longtable}
+
+The largest grid selected-spot difference is driven by nearest-node matching at \(S/K=0.5\). For
+example, the \(M=180\) grid's nearest spot to \(0.5K\) is \(0.4888889K\), while the coarser grids
+hit \(0.5K\) exactly. This is a useful warning for beginner researchers: a selected-spot table is
+not the same thing as interpolation-based convergence analysis.
+
+The domain sensitivity rows show no selected target-region price change for these configurations.
+Because \(\Delta S\) and \(N\) are held comparable, this suggests that \(S_{\max}=4K\) is not
+distorting the selected target region for these representative cases.
+
+\section{Boundary Stability Results}
+
+\begin{longtable}{P{0.28\textwidth}P{0.15\textwidth}P{0.17\textwidth}P{0.17\textwidth}}
+\toprule
+Case & Reference & Max selected boundary shift & Interpretation \\
+\midrule
+\endhead
+\path{american_put_grid_80} & grid 180 & 0.0255974 & Coarse boundary visibly differs from reference. \\
+\path{american_put_grid_120} & grid 180 & 0.0219485 & Boundary difference remains but is moderate. \\
+\path{dividend_call_grid_80} & grid 180 & 0.0220919 & Coarse boundary differs from reference. \\
+\path{dividend_call_grid_120} & grid 180 & 0.0217417 & Moderate boundary difference. \\
+\path{american_put_domain_smax4} & domain 6 & 0 & Domain extension did not move selected boundaries. \\
+\path{dividend_call_domain_smax4} & domain 6 & 0 & Domain extension did not move selected boundaries. \\
+\bottomrule
+\end{longtable}
+
+Boundary curves remain financially plausible: put boundaries are below the strike, and
+dividend-call boundaries are above the strike. Grid-level shifts should not be overread as exact
+boundary convergence, because Ticket 09 extraction is threshold-based and nearest-time matching is
+used here.
+
+\section{LCP Diagnostic Stability Results}
+
+\begin{longtable}{P{0.29\textwidth}P{0.16\textwidth}P{0.16\textwidth}P{0.17\textwidth}}
+\toprule
+Case & Obstacle violation & Equation violation & Complementarity max \\
+\midrule
+\endhead
+\path{american_put_grid_80} & 0 & \(1.30\times10^{-9}\) & \(3.48\times10^{-11}\) \\
+\path{american_put_grid_180} & 0 & \(1.64\times10^{-9}\) & \(3.25\times10^{-11}\) \\
+\path{dividend_call_grid_80} & 0 & \(1.67\times10^{-9}\) & \(5.26\times10^{-11}\) \\
+\path{dividend_call_grid_180} & 0 & \(3.58\times10^{-9}\) & \(2.75\times10^{-11}\) \\
+\path{american_put_domain_smax6} & 0 & \(1.56\times10^{-9}\) & \(6.65\times10^{-11}\) \\
+\path{dividend_call_domain_smax6} & 0 & \(2.14\times10^{-9}\) & \(2.38\times10^{-11}\) \\
+\bottomrule
+\end{longtable}
+
+All PSOR steps converged across the Ticket 11 runs. LCP diagnostic magnitudes remain near solver
+tolerance, and no new obstacle violation appears under refinement or domain extension.
+
+\section{Greek Diagnostic Stability Results}
+
+\begin{longtable}{P{0.29\textwidth}P{0.17\textwidth}P{0.18\textwidth}P{0.15\textwidth}}
+\toprule
+Case & Full max \(|\Gamma|\) & Strict max \(|\Gamma|\) & Caution \\
+\midrule
+\endhead
+\path{american_put_grid_80} & 20 & 1.25684 & Coarse grid damps Gamma. \\
+\path{american_put_grid_180} & 45 & 4.39202 & Finer grid exposes sharper curvature. \\
+\path{dividend_call_grid_80} & 20 & 1.64950 & Coarse grid damps Gamma. \\
+\path{dividend_call_grid_180} & 45 & 3.83192 & Finer grid exposes sharper curvature. \\
+\path{american_put_domain_smax6} & 30 & 3.18002 & Domain-stable with same \(\Delta S\). \\
+\path{dividend_call_domain_smax6} & 30 & 2.67989 & Domain-stable with same \(\Delta S\). \\
+\bottomrule
+\end{longtable}
+
+The Gamma rows are diagnostic, not risk labels. The increasing full-grid maximum is expected
+because \(\Gamma\) is a second derivative and sharper grids resolve sharper kink/boundary
+features. This confirms Ticket 10's warning: Greek outputs require masking and careful
+interpretation.
+
+\section{Figure Interpretation}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.88\textwidth]{results/01_solver_validation/figures/ticket_11_price_vs_grid_size.png}
+  \caption{At-the-money selected prices versus grid size for the two representative cases.}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.88\textwidth]{results/01_solver_validation/figures/ticket_11_price_error_vs_reference.png}
+  \caption{Selected price differences relative to the chosen grid/domain reference.}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.88\textwidth]{results/01_solver_validation/figures/ticket_11_boundary_grid_comparison.png}
+  \caption{Approximate boundary curves across grid levels. These are threshold-based diagnostics, not exact analytical boundaries.}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.88\textwidth]{results/01_solver_validation/figures/ticket_11_domain_cutoff_comparison.png}
+  \caption{Domain-cutoff sensitivity is flat in the selected target region under comparable \(\Delta S\).}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.88\textwidth]{results/01_solver_validation/figures/ticket_11_lcp_diagnostic_stability.png}
+  \caption{LCP diagnostic quantities stay near solver tolerance across sensitivity settings.}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.88\textwidth]{results/01_solver_validation/figures/ticket_11_gamma_stability.png}
+  \caption{Gamma diagnostics are grid-sensitive, which is expected for second derivatives near non-smooth features.}
+\end{figure}
+
+\section{Testing Strategy and Results}
+
+Ticket 11 tests cover configuration construction, comparable domain spacing, nearest-grid spot
+matching, synthetic reference differences, small real solver runs, boundary/LCP/Greek diagnostic
+rows, CSV artifacts, figure artifacts, scope exclusions, and Ticket 11 docstrings.
+
+The focused Ticket 11 test command returned:
+\begin{lstlisting}
+Ran 13 tests in 1.439s
+OK
+\end{lstlisting}
+
+The full final suite is rerun after report generation and recorded in the chat completion.
+
+\section{Implementation Pitfalls and Debugging Notes}
+
+\begin{longtable}{P{0.25\textwidth}L{0.24\textwidth}L{0.24\textwidth}L{0.16\textwidth}}
+\toprule
+Event & Symptom & Fix & Lesson \\
+\midrule
+\endhead
+Initial red run & Ticket 11 tests failed because \path{sensitivity.py} and the experiment script did not exist. & Implemented the diagnostics module and experiment. & Red tests should fail for the intended missing capability. \\
+Intermediate run & Module tests passed, but experiment setup failed because \path{09_grid_domain_sensitivity.py} was still missing. & Added the experiment script and artifact writers. & Build feature layers in order: API first, then artifact orchestration. \\
+\bottomrule
+\end{longtable}
+
+Likely traps for future sensitivity work:
+\begin{itemize}
+  \item confusing grid refinement with domain enlargement;
+  \item comparing selected points without reporting actual moneyness;
+  \item overclaiming convergence from three grid levels;
+  \item treating Gamma outputs as stable labels;
+  \item creating stress maps before the validation ladder is reviewed.
+\end{itemize}
+
+\section{Limitations}
+
+\begin{longtable}{P{0.32\textwidth}L{0.48\textwidth}}
+\toprule
+Limitation & Explanation \\
+\midrule
+\endhead
+Only three grid levels & Enough for a preliminary sensitivity gate, not a formal convergence proof. \\
+Nearest-node comparison & Selected prices report actual moneyness, but interpolation is not implemented in this ticket. \\
+Representative cases only & The study covers one put and one dividend-paying call setup. \\
+Gamma remains fragile & Greek sensitivity is diagnostic and should not be exported as labels. \\
+No stress maps or datasets & Ticket 11 intentionally stops before risk-surface generation. \\
+\bottomrule
+\end{longtable}
+
+\section{Lessons Learned}
+
+For greenhand researchers, the main lesson is that numerical validation has layers. A price can
+look stable while a boundary or Gamma diagnostic still deserves caution. Ticket 11 shows why the
+project records selected spot values, actual moneyness, boundary shifts, LCP diagnostics, and
+Greek metrics together.
+
+\section{Link to the Next Ticket}
+
+The next ticket can assemble the solver-validation findings into a broader review gate. Stress
+maps, datasets, and neural surrogate work should still wait for human review of the full
+validation ladder.
+
+\section{Reproducibility Record}
+
+\begin{longtable}{P{0.35\textwidth}L{0.45\textwidth}}
+\toprule
+Item & Record \\
+\midrule
+\endhead
+Source & \file{src/american_risk_surfaces/diagnostics/sensitivity.py}. \\
+Experiment & \file{experiments/09_grid_domain_sensitivity.py}. \\
+Tests & \file{tests/test_grid_domain_sensitivity.py}. \\
+Tables & Five \path{ticket_11} CSVs under \file{results/01_solver_validation/tables/}. \\
+Figures & Six \path{ticket_11} PNGs under \file{results/01_solver_validation/figures/}. \\
+Report & This \LaTeX{} source and compiled PDF. \\
+\bottomrule
+\end{longtable}
+
+\end{document}
