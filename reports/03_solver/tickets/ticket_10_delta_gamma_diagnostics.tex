@@ -1,0 +1,427 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{fontspec}
+\IfFontExistsTF{Times New Roman}
+  {\setmainfont{Times New Roman}}
+  {\IfFontExistsTF{TeX Gyre Termes}{\setmainfont{TeX Gyre Termes}}{\setmainfont{Times}}}
+\usepackage{newtxmath}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+\usepackage{fancyhdr}
+\usepackage{microtype}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.65em}
+\setlength{\emergencystretch}{3em}
+\setlist[itemize]{leftmargin=1.4em,itemsep=0.2em,topsep=0.2em}
+\setlist[enumerate]{leftmargin=1.6em,itemsep=0.2em,topsep=0.2em}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small Ticket 10 Study Report}
+\rhead{\small Delta and Gamma Diagnostics}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  columns=fullflexible,
+  keepspaces=true,
+  rulecolor=\color{black!30},
+  xleftmargin=0.5em,
+  xrightmargin=0.5em
+}
+
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\file}[1]{\path{#1}}
+\newcommand{\func}[1]{\path{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash\ttfamily\footnotesize}p{#1}}
+
+\title{\textbf{Ticket 10 Study Report: Delta and Gamma Diagnostics}\\
+\large SURF2026 American Option Risk Surfaces}
+\author{Codex-assisted implementation report}
+\date{June 16, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Ticket 10 adds numerical Delta and Gamma diagnostics for American CN/PSOR value grids. It is
+not a new pricing algorithm. It reads validated American option value grids from the Ticket 04
+solver, uses the Ticket 09 boundary-extraction layer for diagnostic context, computes central
+finite-difference Greeks, and separates ordinary interior nodes from fragile regions near
+payoff kinks, maturity, and extracted free-boundary bands. This report is written for beginner
+researchers with accounting, Python, data, and machine-learning experience who are still learning
+option Greeks and finite-difference instability.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Role of Ticket 10 in the Whole Solver Project}
+
+Tickets 01 through 09 built the validation ladder before Greeks:
+\begin{itemize}
+  \item Ticket 01 created payoff and Black-Scholes closed-form utilities.
+  \item Tickets 02 and 03 built and validated the finite-difference European machinery.
+  \item Ticket 04 implemented the American CN/PSOR obstacle core.
+  \item Tickets 05 through 07 validated American put, no-dividend call, and dividend-paying call behavior.
+  \item Ticket 08 diagnosed obstacle and complementarity conditions.
+  \item Ticket 09 extracted approximate free-boundary curves from the continuation premium \(U-\Phi\).
+\end{itemize}
+
+Ticket 10 is deliberately after that sequence. Delta and Gamma are derivatives of the computed
+value surface. Derivatives amplify numerical noise, so the project first needed price validation,
+LCP diagnostics, and boundary context. Ticket 10 therefore asks: once the value grid is credible,
+what can we safely say about finite-difference Delta and Gamma, and where should we be cautious?
+
+\section{Theory and Methodology Connection}
+
+The documented source basis for this ticket is internal:
+\begin{itemize}
+  \item the literature map's warning that Greeks are delicate near payoff kinks and free boundaries;
+  \item the formulation note's definitions of Delta and Gamma;
+  \item the solver validation plan's requirement to report Delta bounds, Gamma fragility, kink masks, and boundary masks;
+  \item prior Ticket 04--09 reports, which establish the American solver, diagnostics, and boundary extraction.
+\end{itemize}
+
+No BibTeX file is created for Ticket 10. The report does not invent external bibliography.
+It uses the project documents as the source basis and treats Greek diagnostics as part of the
+larger American-option validation ladder.
+
+\section{Delta and Gamma in Plain Language}
+
+Delta measures how much the option value changes when the stock price changes a little:
+\[
+\Delta(S,\tau) = \frac{\partial U}{\partial S}(S,\tau).
+\]
+
+Gamma measures the curvature of the option value with respect to the stock price:
+\[
+\Gamma(S,\tau) = \frac{\partial^2 U}{\partial S^2}(S,\tau).
+\]
+
+For intuition:
+\begin{itemize}
+  \item a put Delta is usually between \(-1\) and \(0\);
+  \item a call Delta is usually between \(0\) and \(1\);
+  \item Gamma is usually more fragile than price or Delta because it is a second derivative.
+\end{itemize}
+
+In this ticket, Delta and Gamma are numerical diagnostics, not exact analytical Greeks. The
+project does not yet use them as machine-learning labels or production risk measures.
+
+\section{Finite-Difference Greek Formulas}
+
+On a uniform spot grid \(S_i=i\Delta S\), Ticket 10 uses central differences at interior nodes.
+For a value grid \(U_i^n \approx U(S_i,\tau_n)\), the Delta approximation is
+\[
+\Delta_i^n \approx \frac{U_{i+1}^n - U_{i-1}^n}{2\Delta S}.
+\]
+
+The Gamma approximation is
+\[
+\Gamma_i^n \approx \frac{U_{i+1}^n - 2U_i^n + U_{i-1}^n}{(\Delta S)^2}.
+\]
+
+Boundary nodes are reported as \(\mathrm{NaN}\). This is intentional. One-sided endpoint
+derivatives are possible, but they are not as comparable to the central interior formulas. Ticket
+10 chooses clarity over pretending endpoint Greeks are equally reliable.
+
+\begin{longtable}{P{0.25\textwidth}L{0.28\textwidth}L{0.35\textwidth}}
+\toprule
+Quantity & Formula & Meaning \\
+\midrule
+\endhead
+\path{Delta} & \(\left(U_{i+1}-U_{i-1}\right)/(2\Delta S)\) & First derivative; approximate spot sensitivity. \\
+\path{Gamma} & \(\left(U_{i+1}-2U_i+U_{i-1}\right)/(\Delta S)^2\) & Second derivative; approximate curvature. \\
+\path{Boundary nodes} & \(\mathrm{NaN}\) & Endpoint Greeks are excluded from headline diagnostics. \\
+\path{Strict mask} & finite Greeks away from caution bands & Used for cleaner interior summaries. \\
+\bottomrule
+\end{longtable}
+
+\section{Why Greeks Come After Boundary Extraction}
+
+The American exercise boundary is a non-smooth feature of the value surface. Near that transition,
+small changes in spot can move a node from continuation-like behavior to exercise-like behavior.
+That is exactly where Gamma can spike or become visually noisy.
+
+Ticket 09 extracted approximate boundary curves. Ticket 10 uses those curves only as diagnostic
+context. It does not claim the boundary is exact. It marks nearby nodes so the report can compare:
+\begin{itemize}
+  \item full-grid Greek summaries;
+  \item away-from-boundary summaries;
+  \item strict-interior summaries that also remove payoff-kink and maturity rows.
+\end{itemize}
+
+\section{Boundary-Near Instability}
+
+Boundary-near instability means the Greek estimate is influenced by the discrete exercise
+transition. In an American put, the transition typically appears on the low-spot side. In a
+dividend-paying American call, it may appear on the high-spot side. Ticket 10 uses the boundary
+points from Ticket 09 and marks nodes within two grid steps of each found boundary.
+
+This mask is not boundary extraction. Boundary extraction happened in Ticket 09. Ticket 10 uses
+the extracted boundary as a caution label for Greeks.
+
+\section{Payoff Kink and Maturity-Row Caution}
+
+At maturity, the option value equals payoff. Payoffs have kinks at the strike \(K\). A kink is a
+point where the slope changes abruptly. Delta can jump there, and Gamma can look like a large
+spike on a discrete grid.
+
+Ticket 10 marks:
+\begin{itemize}
+  \item nodes within two grid steps of \(S=K\);
+  \item the maturity row \(\tau=0\);
+  \item nodes within two grid steps of extracted boundary points.
+\end{itemize}
+
+\begin{longtable}{P{0.30\textwidth}L{0.50\textwidth}}
+\toprule
+Caution region & Why it matters \\
+\midrule
+\endhead
+\path{maturity row} & The value equals payoff, so the kink is strongest and Gamma can be large. \\
+\path{payoff-kink band} & Central differences straddle a non-smooth payoff slope change near \(S=K\). \\
+\path{boundary-near band} & Central differences may straddle exercise-like and continuation-like behavior. \\
+\path{domain boundary} & Endpoint formulas are excluded and reported as \(\mathrm{NaN}\). \\
+\bottomrule
+\end{longtable}
+
+\section{Implementation Design Decisions}
+
+\begin{longtable}{P{0.35\textwidth}L{0.47\textwidth}}
+\toprule
+Decision & Reason \\
+\midrule
+\endhead
+\path{src/american_risk_surfaces/diagnostics/greeks.py} & Keeps Greek diagnostics separate from the solver core. \\
+\path{central differences only} & Matches the uniform-grid finite-difference setup used in earlier tickets. \\
+\path{NaN boundary Greeks} & Avoids overstating endpoint derivative reliability. \\
+\path{Ticket 09 boundary mask} & Reuses existing boundary extraction without changing pricing algorithms. \\
+\path{strict interior mask} & Separates headline summaries from kink, boundary, maturity, and nonfinite nodes. \\
+\path{no Rannacher smoothing} & Smoothing is explicitly deferred to a later ticket. \\
+\bottomrule
+\end{longtable}
+
+\section{Code-Level Function Explanations}
+
+\begin{longtable}{P{0.35\textwidth}L{0.47\textwidth}}
+\toprule
+Function or class & Role \\
+\midrule
+\endhead
+\func{GreekArrays} & Stores Delta, Gamma, and finite masks. \\
+\func{GreekDiagnosticMasks} & Stores boundary-near, kink-near, maturity-row, and strict-interior masks. \\
+\func{GreekTimeDiagnosticRow} & Records by-time counts and Greek warnings. \\
+\func{GreekDiagnosticSummary} & Records whole-case summary metrics. \\
+\func{GreekDiagnostics} & Bundles arrays, masks, summary, and by-time rows. \\
+\func{finite_difference_delta} & Computes central Delta and sets boundary nodes to \(\mathrm{NaN}\). \\
+\func{finite_difference_gamma} & Computes central Gamma and sets boundary nodes to \(\mathrm{NaN}\). \\
+\func{payoff_kink_mask} & Marks nodes near \(S=K\). \\
+\func{boundary_near_mask} & Marks nodes near Ticket 09 extracted boundary points. \\
+\func{maturity_row_mask} & Marks the row where \(\tau=0\). \\
+\func{diagnose_greek_result} & Main API for producing Greek diagnostics from an American CN/PSOR result. \\
+\func{selected_greek_profile_rows} & Produces selected moneyness and tau rows for CSV/report review. \\
+\func{greek_by_time_rows} & Exposes the by-time diagnostic rows. \\
+\bottomrule
+\end{longtable}
+
+\section{Diagnostic Cases and Parameters}
+
+{\small
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{P{0.22\textwidth}P{0.08\textwidth}P{0.06\textwidth}P{0.06\textwidth}P{0.06\textwidth}P{0.06\textwidth}P{0.08\textwidth}P{0.08\textwidth}}
+\toprule
+Case & Type & \(K\) & \(T\) & \(r\) & \(q\) & \(\sigma\) & \(M=N\) \\
+\midrule
+\endhead
+\path{american_put_medium} & put & 1.0 & 1.0 & 0.05 & 0.02 & 0.20 & 120 \\
+\path{dividend_call_medium} & call & 1.0 & 1.0 & 0.05 & 0.08 & 0.20 & 120 \\
+\bottomrule
+\end{longtable}
+}
+
+Both cases use \(S_{\max}=4K\). The Greek report is not a grid-sensitivity study. Later tickets
+can vary grid size, domain size, smoothing settings, and dataset construction.
+
+\section{Greek Result Tables and Interpretation}
+
+The summary CSV contains two rows. The headline values below are from
+\file{results/01_solver_validation/tables/ticket_10_greek_diagnostics_summary.csv}.
+
+{\small
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{P{0.21\textwidth}P{0.07\textwidth}P{0.10\textwidth}P{0.10\textwidth}P{0.10\textwidth}P{0.12\textwidth}P{0.16\textwidth}}
+\toprule
+Case & Type & finite \(\Delta\) & finite \(\Gamma\) & max \(|\Gamma|\) & strict max \(|\Gamma|\) & Status \\
+\midrule
+\endhead
+\path{american_put_medium} & put & 14399 & 14399 & 30.0000 & 3.1800 & \path{PASS_WITH_CAUTIONS} \\
+\path{dividend_call_medium} & call & 14399 & 14399 & 30.0000 & 2.6799 & \path{PASS_WITH_CAUTIONS} \\
+\bottomrule
+\end{longtable}
+}
+
+The full-grid maximum \(|\Gamma|\) is \(30\) for both cases. This is not surprising: the
+maturity payoff kink creates a large second-difference response. After excluding maturity, kink,
+boundary-near, and endpoint nodes, the strict maximum \(|\Gamma|\) is much smaller. This is the
+main Ticket 10 lesson: do not hide the spike, but do not let it dominate the interpretation of
+stable interior Greeks either.
+
+\begin{longtable}{P{0.23\textwidth}P{0.14\textwidth}P{0.14\textwidth}P{0.14\textwidth}P{0.14\textwidth}}
+\toprule
+Case & boundary-near nodes & kink-near nodes & strict nodes & strict violations \\
+\midrule
+\endhead
+\path{american_put_medium} & 480 & 605 & 13243 & 0 lower, 0 upper, 0 negative \(\Gamma\) \\
+\path{dividend_call_medium} & 480 & 605 & 13231 & 0 lower, 0 upper, 0 negative \(\Gamma\) \\
+\bottomrule
+\end{longtable}
+
+Selected profile rows show the caution masks in action. For example, near the strike at early
+time, the put has \(\Gamma \approx 22.63\) at \(S/K=1.0\), and that row is marked as both
+boundary-near and kink-near. At \(S/K=1.2\), the same early-time put row has a tiny value and
+small Gamma and is marked strict-interior. For the dividend call, the strike row is kink-near,
+while the high-spot exercise-side region can be boundary-near.
+
+\section{Figure Interpretation}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.92\textwidth]{results/01_solver_validation/figures/ticket_10_american_put_delta_gamma_profiles.png}
+  \caption{American put Delta and Gamma profiles at selected time-to-maturity levels.}
+\end{figure}
+
+The put figure shows Delta mostly between \(-1\) and \(0\). Gamma is visibly largest near the
+payoff kink and transition regions, which is why the report uses caution masks.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.92\textwidth]{results/01_solver_validation/figures/ticket_10_dividend_call_delta_gamma_profiles.png}
+  \caption{Dividend-paying American call Delta and Gamma profiles at selected time-to-maturity levels.}
+\end{figure}
+
+The call figure shows Delta mostly between \(0\) and \(1\). Gamma again highlights curvature
+near the strike and transition behavior.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.92\textwidth]{results/01_solver_validation/figures/ticket_10_gamma_boundary_diagnostic.png}
+  \caption{Near-boundary versus away-from-boundary maximum Gamma magnitude.}
+\end{figure}
+
+This figure is a diagnostic comparison, not a proof of exact boundary accuracy. The boundary band
+comes from Ticket 09 and is threshold-based.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.92\textwidth]{results/01_solver_validation/figures/ticket_10_gamma_by_time.png}
+  \caption{Full-grid versus strict-mask maximum absolute Gamma over time.}
+\end{figure}
+
+The full-grid curve includes maturity and kink effects. The strict curve removes the main caution
+regions and better represents stable interior behavior.
+
+\section{Testing Strategy}
+
+\begin{longtable}{P{0.34\textwidth}L{0.45\textwidth}}
+\toprule
+Test category & What it proves \\
+\midrule
+\endhead
+Synthetic constant, linear, quadratic functions & Central differences reproduce known derivatives on a uniform grid. \\
+Shape and boundary tests & Delta and Gamma match value-grid shape and use \(\mathrm{NaN}\) at boundaries. \\
+Invalid input tests & Bad grids, bad value shapes, and bad diagnostic arguments raise \path{ValueError}. \\
+Mask tests & Kink, maturity, and boundary-near masks behave predictably. \\
+Real American put and dividend call tests & Diagnostics produce finite arrays and summaries on solver outputs. \\
+CSV and figure tests & The experiment writes stable artifacts with expected columns and nonempty figure files. \\
+Scope tests & No Rannacher smoothing, stress maps, datasets, or neural-network APIs are introduced. \\
+\bottomrule
+\end{longtable}
+
+\section{Test Results and Interpretation}
+
+The final test command is:
+\begin{lstlisting}
+PYTHONPYCACHEPREFIX=/private/tmp/codex_pycache PYTHONPATH=src MPLCONFIGDIR=/private/tmp/matplotlib-cache FC_CACHEDIR=/private/tmp/fontconfig-cache python3 -m unittest discover -s tests
+\end{lstlisting}
+
+The observed result after implementation was:
+\begin{lstlisting}
+Ran 121 tests in 2.198s
+OK
+\end{lstlisting}
+
+This means the new Ticket 10 tests passed along with prior tickets' tests in the current
+environment. It does not mean Gamma is analytically exact, and it does not validate later
+Rannacher smoothing, stress-map generation, dataset labels, or neural surrogate modeling.
+
+\section{Implementation Pitfalls and Debugging Notes}
+
+{\small
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{P{0.25\textwidth}L{0.23\textwidth}L{0.23\textwidth}L{0.17\textwidth}}
+\toprule
+Event or trap & Symptom & Fix or mitigation & Beginner lesson \\
+\midrule
+\endhead
+Initial TDD red run & 11 errors from missing \path{greeks.py} and \path{07_greek_diagnostics.py}. & Implemented the diagnostic module and experiment, then reran the suite. & A red test should fail for the expected missing behavior. \\
+Endpoint derivative misuse & Boundary Greeks can look precise when they are one-sided artifacts. & Boundary Delta/Gamma are reported as \(\mathrm{NaN}\). & Not every array cell deserves a Greek. \\
+Overinterpreting Gamma spikes & Full-grid max \(|\Gamma|\) reaches 30 near kink/maturity. & Report full and strict-mask Gamma separately. & Gamma spikes are information, not automatically bugs. \\
+Treating boundary estimates as exact & Boundary masks inherit Ticket 09 threshold choices. & Report them as caution context only. & A diagnostic mask is not analytical truth. \\
+Adding smoothing too early & Rannacher smoothing could reduce noise but change the experiment. & Deferred smoothing to a later named ticket. & Do not silently change the method to make plots nicer. \\
+Using Greeks as dataset labels too early & Diagnostic Greeks are tempting labels. & Report that dataset work is out of scope. & Validation comes before labels. \\
+\bottomrule
+\end{longtable}
+}
+
+\section{Limitations}
+
+\begin{longtable}{P{0.32\textwidth}L{0.50\textwidth}}
+\toprule
+Limitation & Meaning \\
+\midrule
+\endhead
+Representative cases only & The experiment uses one American put and one dividend-paying American call setup. \\
+No grid sensitivity & \(M=N=120\) is not a refinement study. \\
+No Rannacher smoothing & Gamma noise is reported, not smoothed away. \\
+Boundary masks are threshold-based & They inherit Ticket 09's approximate extraction logic. \\
+No dataset labels & Greeks are not exported as machine-learning training labels. \\
+No stress maps or neural work & Those belong to later project stages. \\
+\bottomrule
+\end{longtable}
+
+\section{Lessons Learned / Study Notes}
+
+\begin{itemize}
+  \item Delta is usually easier to interpret than Gamma because it is a first derivative.
+  \item Gamma is sensitive to non-smooth value features: payoff kink, maturity row, and exercise boundary.
+  \item A useful Greek diagnostic should show both full-grid behavior and masked interior behavior.
+  \item Masking is not hiding. It is labeling where the numerical derivative is fragile.
+  \item A large Gamma near \(S=K\) at maturity is expected for a kinked payoff.
+  \item The right response to noisy Gamma is careful reporting first, not immediate smoothing.
+\end{itemize}
+
+\section{Link to the Next Ticket}
+
+The next ticket should not treat these Greeks as final labels yet. A natural next step is the
+Rannacher smoothing comparison gate, where smoothed and unsmoothed prices, boundaries, Delta, and
+Gamma can be compared explicitly. After that, grid/domain sensitivity and dataset construction
+can be considered with clearer evidence.
+
+\end{document}
