@@ -1,0 +1,324 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{fontspec}
+\IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{\setmainfont{TeX Gyre Termes}}
+\IfFontExistsTF{Menlo}{\setmonofont{Menlo}}{\setmonofont{Latin Modern Mono}}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage[round,authoryear]{natbib}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+\usepackage{microtype}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.65em}
+\setlist[itemize]{leftmargin=1.4em}
+\newcommand{\file}[1]{\path{#1}}
+\newcommand{\code}[1]{\path{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small Pilot 01 Report}
+\rhead{\small Controlled Stress-Map Diagnostics}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\title{\textbf{Pilot 01 Report: Controlled Pilot Stress Maps}\\
+\large Validated Baseline American CN/PSOR Solver}
+\author{Codex-assisted pilot diagnostics report}
+\date{June 17, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This report documents the first controlled pilot stress-map experiment after the solver
+validation ladder and downstream design gate. The pilot uses the baseline American
+Crank--Nicolson / projected SOR solver only. It produces small diagnostic tables and figures for
+an American put family and a dividend-paying American call family. The outputs are pilot
+diagnostics, not production risk surfaces, training labels, broad parameter sweeps, or neural
+surrogate inputs.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Purpose of the Pilot}
+
+Ticket 12 concluded \code{PASS_SOLVER_VALIDATION_WITH_LIMITATIONS}. The downstream design gate
+then approved a small, human-reviewed pilot before any large-scale stress maps or data generation.
+This Pilot 01 report records that first narrow experiment.
+
+The purpose is practical: verify that the validated classical solver can produce interpretable
+stress-map style figures together with the metadata needed to read them safely. The pilot keeps
+the scope deliberately small. It checks option values, payoffs, continuation premium,
+exercise/continuation indicators, approximate boundary curves, PSOR convergence, LCP diagnostics,
+and masked Greek diagnostics.
+
+\section{Link to Prior Gates}
+
+The pilot follows the validation path documented in the Ticket 12 synthesis report and the
+downstream design gate. The theory basis remains the classical Black--Scholes PDE and American
+finite-difference/LCP setting \citep{black_scholes_1973,merton_1973,brennan_schwartz_1977,
+wilmott_howison_dewynne_1995}. The Rannacher comparison from Ticket 10A remains a comparison
+tool only \citep{rannacher_1984}; it is not used as the pilot default.
+
+\begin{longtable}{L{0.30\textwidth} L{0.54\textwidth}}
+\toprule
+Gate decision & Pilot implementation rule \\
+\midrule
+\endhead
+Use validated baseline solver & All runs use \code{american_crank_nicolson_psor_price}. \\
+Keep Rannacher optional & No Pilot 01 run uses the Rannacher solver. \\
+Use normalized strike & Every run uses \(K=1\). \\
+Use practical pilot grid & Main runs use \(S_{\max}=4\), \(M=N=120\). \\
+Include higher-grid check & Base put and base dividend call also run at \(M=N=180\). \\
+Keep outputs diagnostic & Manifest status is \code{pilot_diagnostic_only}. \\
+\bottomrule
+\end{longtable}
+
+\section{Solver and Grid Choice}
+
+The default solver is the Ticket 04 baseline American CN/PSOR solver. The pilot uses
+\[
+S_{\max}=4K,\qquad M=N=120
+\]
+for the main cases and \(M=N=180\) for the two higher-grid checks. The main interpretation region
+is \(S/K \in [0.4,1.8]\). The solver still computes on the full domain because the boundary
+conditions and diagnostics depend on the full grid.
+
+\section{Pilot Case Definitions}
+
+\begin{longtable}{L{0.25\textwidth} L{0.22\textwidth} L{0.38\textwidth}}
+\toprule
+Family & Base case & One-at-a-time variations \\
+\midrule
+\endhead
+American put & \(T=1\), \(r=0.05\), \(q=0.02\), \(\sigma=0.20\), \(S_{\max}=4\), \(M=N=120\). & \(\sigma=0.40\), \(r=0.03\), \(q=0.00\), plus \(M=N=180\) base check. \\
+Dividend-paying American call & \(T=1\), \(r=0.05\), \(q=0.08\), \(\sigma=0.20\), \(S_{\max}=4\), \(M=N=120\). & \(\sigma=0.40\), \(r=0.03\), \(q=0.03\), \(q=0.10\), plus \(M=N=180\) base check. \\
+\bottomrule
+\end{longtable}
+
+This is intentionally not a broad parameter sweep. It is a one-at-a-time pilot that a human
+reviewer can inspect.
+
+\section{Output Definitions}
+
+\begin{longtable}{L{0.28\textwidth} L{0.52\textwidth}}
+\toprule
+Output & Meaning \\
+\midrule
+\endhead
+Value grid \(U(S,\tau)\) & American option value from baseline CN/PSOR. \\
+Payoff \(\Phi(S)\) & Immediate exercise payoff. \\
+Continuation premium \(U-\Phi\) & Diagnostic amount by which the value exceeds payoff. \\
+Exercise indicator & \(1\) where \(U-\Phi \le 10^{-6}\), otherwise \(0\). \\
+Boundary curve & Threshold-based extraction from continuation premium. \\
+LCP diagnostics & Obstacle, equation, and complementarity checks from Ticket 08 logic. \\
+Delta/Gamma diagnostics & Finite-difference Greeks with boundary, kink, maturity, and strict masks. \\
+\bottomrule
+\end{longtable}
+
+\section{Diagnostic Requirements}
+
+Every run records solver, grid, parameter, boundary, and diagnostic metadata. The acceptance rule
+for pilot review is conservative:
+\[
+\text{PSOR converged},\quad
+\max(\Phi-U,0)\le 10^{-8},\quad
+\max(b-AU,0)\le 10^{-6},\quad
+\max |(U-\Phi)(AU-b)|\le 10^{-6}.
+\]
+
+All 11 Pilot 01 runs met this rule and were marked
+\code{ACCEPTABLE_FOR_PILOT_REVIEW}. This does not make the figures production risk surfaces. It
+means the small pilot is numerically coherent enough for human review.
+
+\section{Tables and Interpretation}
+
+\begin{longtable}{L{0.30\textwidth} L{0.18\textwidth} L{0.18\textwidth} L{0.20\textwidth}}
+\toprule
+Observed item & American put base & Dividend call base & Interpretation \\
+\midrule
+\endhead
+PSOR convergence & True & True & All time steps converged. \\
+Max obstacle violation & \(0\) & \(0\) & Payoff obstacle respected. \\
+Max equation violation & \(1.55664789392\times10^{-9}\) & \(2.14416621448\times10^{-9}\) & Near diagnostic tolerance. \\
+Max complementarity product & \(6.6483476629\times10^{-11}\) & \(2.37960951462\times10^{-11}\) & Small LCP product residual. \\
+Boundary found rows & 120 & 120 & Boundaries found for all positive-\(\tau\) rows. \\
+Strict max \(|\Gamma|\) & \(3.18001886582\) & \(2.6798873723\) & Greek diagnostics remain cautionary. \\
+\bottomrule
+\end{longtable}
+
+\begin{longtable}{L{0.26\textwidth} L{0.22\textwidth} L{0.22\textwidth} L{0.20\textwidth}}
+\toprule
+Higher-grid check & \(M=N=120\) boundary range & \(M=N=180\) boundary range & Reading \\
+\midrule
+\endhead
+American put base & \(0.766754\) to \(0.934082\) & \(0.777814\) to \(0.955653\) & Boundary estimates shift with grid and remain approximate. \\
+Dividend call base & \(1.066165\) to \(1.266630\) & \(1.044356\) to \(1.266615\) & Higher grid is a check, not a final convergence proof. \\
+\bottomrule
+\end{longtable}
+
+The generated tables are:
+\begin{itemize}
+  \item \file{results/02_pilot_stress_maps/tables/pilot_01_run_summary.csv};
+  \item \file{results/02_pilot_stress_maps/tables/pilot_01_diagnostic_summary.csv};
+  \item \file{results/02_pilot_stress_maps/tables/pilot_01_boundary_summary.csv};
+  \item \file{results/02_pilot_stress_maps/tables/pilot_01_selected_slices.csv};
+  \item \file{results/02_pilot_stress_maps/tables/pilot_01_output_manifest.csv}.
+\end{itemize}
+
+\section{Figures and Interpretation}
+
+Figure~\ref{fig:value_heatmaps} shows option values over the main interpretation region. These
+are the most direct pilot stress maps, but they should be read together with diagnostics rather
+than as standalone production surfaces.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.95\textwidth]{results/02_pilot_stress_maps/figures/pilot_01_base_value_heatmaps.png}
+\caption{Base American put and dividend-paying American call value heatmaps.}
+\label{fig:value_heatmaps}
+\end{figure}
+
+Figure~\ref{fig:premium_heatmaps} shows continuation premium \(U-\Phi\). The premium is central
+to obstacle interpretation and to the boundary extraction, but it is not the same thing as
+American-minus-European value.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.95\textwidth]{results/02_pilot_stress_maps/figures/pilot_01_base_premium_heatmaps.png}
+\caption{Base continuation-premium heatmaps.}
+\label{fig:premium_heatmaps}
+\end{figure}
+
+Figure~\ref{fig:indicator_maps} shows the exercise/continuation indicator with boundary overlay.
+The map is threshold-based: it visualizes the diagnostic rule \(U-\Phi \le 10^{-6}\), not an exact
+analytical exercise region.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.95\textwidth]{results/02_pilot_stress_maps/figures/pilot_01_base_indicator_boundary_maps.png}
+\caption{Exercise/continuation indicator maps with approximate boundary overlays.}
+\label{fig:indicator_maps}
+\end{figure}
+
+Figure~\ref{fig:value_slices} gives selected value slices. These are easier for a greenhand reader
+to inspect than heatmaps because each curve can be compared with payoff.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.95\textwidth]{results/02_pilot_stress_maps/figures/pilot_01_base_selected_value_slices.png}
+\caption{Selected value slices at \(\tau/T=0.01,0.25,0.50,0.75,1.00\).}
+\label{fig:value_slices}
+\end{figure}
+
+Figure~\ref{fig:boundary_variations} compares boundary curves across one-at-a-time variations.
+This is the most useful pilot figure for seeing how dividend yield, interest rate, and volatility
+move the threshold boundary. It remains a diagnostic boundary curve, not an exact free-boundary
+claim.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.95\textwidth]{results/02_pilot_stress_maps/figures/pilot_01_boundary_variation_comparison.png}
+\caption{Approximate boundary curves across base and one-at-a-time variations.}
+\label{fig:boundary_variations}
+\end{figure}
+
+Figure~\ref{fig:premium_variations} shows mid-time continuation-premium slices across variations.
+It helps connect the boundary curves to the underlying premium quantity.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.95\textwidth]{results/02_pilot_stress_maps/figures/pilot_01_premium_slice_variation_comparison.png}
+\caption{Continuation-premium slices across variations near \(\tau/T=0.5\).}
+\label{fig:premium_variations}
+\end{figure}
+
+Figure~\ref{fig:greek_slices} shows Gamma diagnostics for the two base cases. The plotted Gamma
+curves include caution markers for payoff kinks and extracted boundary context. They should not be
+used as production Greek labels.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.95\textwidth]{results/02_pilot_stress_maps/figures/pilot_01_greek_diagnostic_slices.png}
+\caption{Base Gamma diagnostic slices with kink and boundary cautions.}
+\label{fig:greek_slices}
+\end{figure}
+
+\section{Acceptance Criteria Results}
+
+\begin{longtable}{L{0.42\textwidth} L{0.18\textwidth} L{0.28\textwidth}}
+\toprule
+Criterion & Result & Interpretation \\
+\midrule
+\endhead
+All PSOR steps converge or report non-convergence & PASS & All 11 runs converged. \\
+Obstacle violation near zero & PASS & All runs report maximum obstacle violation \(0\). \\
+LCP diagnostics near tolerance & PASS & Largest equation violation is \(1.93971868349\times10^{-8}\); complementarity remains small. \\
+Boundary status recorded & PASS & Every run records found/not-found counts and boundary status. \\
+Greek masks recorded & PASS & Selected slices and diagnostic summaries include masks and strict metrics. \\
+Full parameter metadata present & PASS & Every output table records case parameters and grid metadata. \\
+No downstream data products created & PASS & Outputs are CSV summaries and figures only. \\
+\bottomrule
+\end{longtable}
+
+\section{Limitations}
+
+\begin{itemize}
+  \item The pilot uses a small one-at-a-time case set. It is not a broad stress-map sweep.
+  \item Boundary extraction uses a fixed \(10^{-6}\) continuation-premium threshold.
+  \item The \(M=N=180\) checks are confirmation checks, not a formal convergence proof.
+  \item Gamma remains fragile near payoff kinks, maturity rows, and boundary bands.
+  \item Figures are pilot diagnostics. They are not production risk surfaces.
+  \item No output should be treated as a training target for a neural surrogate.
+\end{itemize}
+
+\section{What This Pilot Supports}
+
+The pilot supports a narrow claim: the validated baseline solver can generate small,
+metadata-rich diagnostic stress-map figures for representative American put and dividend-paying
+American call cases. It also supports using the same table/manifest structure for a future
+human-reviewed pilot expansion.
+
+\section{What This Pilot Does Not Support}
+
+The pilot does not support large-scale data generation, production Greek reporting, neural
+surrogate training, exact analytical free-boundary claims, or final paper-style claims about broad
+parameter regimes. Those steps require a separate approved plan and further validation.
+
+\section{Recommended Next Step}
+
+The recommended next step is human review of the Pilot 01 report, figures, and manifest. If the
+review accepts the scope and caveats, the next implementation should still be modest: a slightly
+expanded pilot with the same metadata contract, not a broad dataset or neural surrogate stage.
+
+\section{Reproducibility Record}
+
+\begin{longtable}{L{0.32\textwidth} L{0.52\textwidth}}
+\toprule
+Item & Record \\
+\midrule
+\endhead
+Source module & \file{src/american_risk_surfaces/downstream/pilot_stress_maps.py}. \\
+Experiment script & \file{experiments/11_pilot_stress_maps.py}. \\
+Test file & \file{tests/test_pilot_stress_maps.py}. \\
+Report source & \file{reports/04_downstream/pilot_stress_maps_report.tex}. \\
+Report PDF & \file{reports/04_downstream/pilot_stress_maps_report.pdf}. \\
+Output folder & \file{results/02_pilot_stress_maps/}. \\
+Bibliography & \file{reports/03_solver/references.bib}. \\
+\bottomrule
+\end{longtable}
+
+\bibliographystyle{plainnat}
+\bibliography{reports/03_solver/references}
+
+\end{document}
