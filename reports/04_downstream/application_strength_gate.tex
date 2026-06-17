@@ -1,0 +1,277 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{fontspec}
+\IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{\setmainfont{TeX Gyre Termes}}
+\IfFontExistsTF{Menlo}{\setmonofont{Menlo}}{\setmonofont{Latin Modern Mono}}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage[round,authoryear]{natbib}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+\usepackage{microtype}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.65em}
+\setlist[itemize]{leftmargin=1.4em}
+\newcommand{\file}[1]{\path{#1}}
+\newcommand{\code}[1]{\path{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small Application Strength Gate}
+\rhead{\small Dataset Readiness Planning}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\title{\textbf{Application Strength / Dataset Readiness Gate}\\
+\large Decision Report Before Surrogate Dataset Planning}
+\author{Codex-assisted downstream gate report}
+\date{June 17, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This report decides whether the project has enough application-strength evidence to move from
+small stress analytics into surrogate dataset planning. The decision is
+\code{READY_FOR_DATASET_PLANNING_WITH_LIMITATIONS}. This is deliberately not approval for
+dataset construction, neural-surrogate training, machine-learning label export, broad parameter
+sweeps, or production risk claims. The supported next step is a written surrogate dataset design
+plan that preserves solver, boundary, Greek, and diagnostic cautions.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Purpose of the Application-Strength Gate}
+
+The solver-validation ladder ended with Ticket 12's conservative decision
+\code{PASS_SOLVER_VALIDATION_WITH_LIMITATIONS}. Pilot 01 then showed that the validated
+baseline American Crank--Nicolson / projected SOR solver can produce small diagnostic stress-map
+figures with metadata. The quantitative risk-analytics step added numbers for boundary movement,
+continuation premium, Gamma concentration, PSOR effort, runtime, and LCP diagnostics.
+
+This gate answers a narrower downstream question: are the application messages now clear enough
+to justify a surrogate dataset design plan? It does not create a dataset. It does not create
+labels. It does not train a neural surrogate. It is a human-review decision point between
+diagnostic analytics and any later data-generation work.
+
+The methodology is consistent with the project planning documents and the student methodology
+handouts: first validate the classical free-boundary benchmark, then run risk analytics, and
+only later consider supervised surrogate data and models
+\citep{black_scholes_1973,merton_1973,brennan_schwartz_1977,wilmott_howison_dewynne_1995}.
+
+\section{Evidence Reviewed}
+
+The gate uses four evidence layers:
+\begin{itemize}
+  \item Ticket 12 solver-validation synthesis.
+  \item Downstream design gate policy.
+  \item Pilot 01 stress-map diagnostics.
+  \item Quantitative risk-analytics tables and figures.
+\end{itemize}
+
+\begin{longtable}{L{0.26\textwidth} L{0.34\textwidth} L{0.28\textwidth}}
+\toprule
+Evidence source & Main evidence & Gate reading \\
+\midrule
+\endhead
+Ticket 12 synthesis & \code{PASS_SOLVER_VALIDATION_WITH_LIMITATIONS}. & Baseline solver is credible for human-reviewed downstream planning, not automatic data generation. \\
+Downstream design gate & Baseline CN/PSOR selected; Rannacher kept as comparison only. & Future design must not silently switch solvers. \\
+Pilot 01 & 11 pilot runs; all \code{ACCEPTABLE_FOR_PILOT_REVIEW}. & Small stress-map diagnostics are feasible with required metadata. \\
+Quantitative analytics & 31 controlled analytics rows; all \code{ACCEPTABLE_FOR_ANALYTICS_REVIEW}. & Application messages are now quantitative enough for design planning. \\
+Methodology handouts & Risk analytics should precede dataset and surrogate work. & The next permitted step is dataset planning, not construction. \\
+\bottomrule
+\end{longtable}
+
+\section{Supported Application Messages}
+
+The strongest application messages are directional and diagnostic. They are not universal
+theorems over all parameter regimes, but they are coherent with the methodology handouts and the
+project's American-option intuition.
+
+\begin{longtable}{L{0.30\textwidth} L{0.33\textwidth} L{0.25\textwidth}}
+\toprule
+Supported message & Evidence & Interpretation \\
+\midrule
+\endhead
+American put boundary decreases as volatility rises. & At \(\tau/T=1\), boundary moneyness moves \(0.7668 \rightarrow 0.5667 \rightarrow 0.4000\) as \(\sigma=0.20,0.40,0.60\). & Higher volatility increases waiting value for the put in the tested regime. \\
+Dividend-call boundary decreases as dividend yield rises. & At \(\tau/T=1\), boundary moneyness moves \(1.8979 \rightarrow 1.2666 \rightarrow 1.2332 \rightarrow 1.1666\) as \(q=0.03,0.08,0.10,0.14\). & Higher dividend yield makes early exercise more attractive in the tested call regime. \\
+Higher volatility increases numerical effort. & Put mean PSOR iterations rise from \(6.99\) to \(29.42\); call mean iterations rise from \(7.35\) to \(14.92\). & Stress regimes can be more expensive and need iteration metadata. \\
+LCP diagnostics remain small in tested analytics cases. & Max obstacle violation is \(0\); max equation violation is about \(4.89\times10^{-8}\); max complementarity product is about \(4.73\times10^{-10}\). & The diagnostic analytics are internally coherent for human review. \\
+Gamma remains fragile and mask-dependent. & Full-grid max \(|\Gamma|=30\); strict-mask values are lower but still diagnostic. & Greek outputs require masks and should not become production labels yet. \\
+\bottomrule
+\end{longtable}
+
+\section{Cautionary Findings}
+
+The application evidence is strong enough for planning, but not strong enough for data generation.
+The caution is especially important for boundaries and Greeks. The boundary curves are extracted
+from the continuation premium \(U-\Phi\) using a threshold. They are useful diagnostics, not exact
+analytical free-boundary solutions. Gamma is a finite-difference second derivative, so it is
+especially sensitive near payoff kinks, maturity rows, and extracted boundary bands.
+
+\begin{longtable}{L{0.29\textwidth} L{0.38\textwidth} L{0.21\textwidth}}
+\toprule
+Caution & Why it matters & Planning implication \\
+\midrule
+\endhead
+Threshold boundary extraction & Boundary location depends on grid, threshold, interpolation, and time row. & Store threshold and found/not-found metadata. \\
+Gamma fragility & Full-grid Gamma is dominated by kink and maturity behavior. & Use masks; do not export unmasked Gamma labels. \\
+Representative cases only & The analytics use controlled one-at-a-time sweeps, not full regime coverage. & Dataset design must plan held-out regimes carefully. \\
+Local runtime numbers & Runtime seconds are machine-specific. & Use runtime as planning evidence, not production benchmark. \\
+Baseline solver retained & Rannacher remains comparison-only after Ticket 10A. & Label source must record solver variant explicitly. \\
+\bottomrule
+\end{longtable}
+
+\section{Dataset-Readiness Decision}
+
+\begin{center}
+\fbox{\parbox{0.86\textwidth}{
+\centering
+\textbf{Decision:} \code{READY_FOR_DATASET_PLANNING_WITH_LIMITATIONS}\\
+\textbf{Allowed next step:} write a surrogate dataset design plan.\\
+\textbf{Not allowed yet:} generate datasets, labels, neural models, or broad parameter sweeps.
+}}
+\end{center}
+
+\begin{longtable}{L{0.27\textwidth} L{0.53\textwidth}}
+\toprule
+Decision field & Value \\
+\midrule
+\endhead
+Gate decision & \code{READY_FOR_DATASET_PLANNING_WITH_LIMITATIONS}. \\
+Basis & Solver validation passed with limitations; pilot and analytics evidence show clear diagnostic messages. \\
+Allowed next step & Surrogate dataset design plan only. \\
+Main limitation & Application evidence is representative and diagnostic, not broad label readiness. \\
+Blocked until later & Dataset construction, neural training, production Greek labels, broad sweeps, final claims across all regimes. \\
+\bottomrule
+\end{longtable}
+
+\section{Allowed Next Step}
+
+The next step may be a written surrogate dataset design plan. That plan should define the future
+data schema, parameter ranges, metadata requirements, split strategy, diagnostic gates, and human
+review criteria. It should still avoid generating arrays or labels until a separate construction
+gate approves the design.
+
+The plan should explicitly state that all future labels must come from the validated baseline
+CN/PSOR solver unless a later method gate approves an alternative. If any Rannacher-smoothed
+results are included later, they must be separately labelled and must not replace the baseline by
+default \citep{rannacher_1984}.
+
+\section{Blocked Actions}
+
+\begin{longtable}{L{0.34\textwidth} L{0.46\textwidth}}
+\toprule
+Blocked action & Reason \\
+\midrule
+\endhead
+Actual dataset construction & This gate approves planning only; no arrays or training tables should be exported. \\
+Neural surrogate training & The project has not yet approved data schema, label policy, or held-out regime design. \\
+Training-label export & Boundary and Greek quantities remain diagnostic and metadata-dependent. \\
+Production Greek labels & Gamma remains fragile near kink, maturity, and boundary regions. \\
+Broad regime sweeps & Current evidence comes from controlled pilot and analytics sweeps. \\
+Final claims across all regimes & The tested cases are representative, not universal convergence proof. \\
+Exact free-boundary claims & Boundaries are threshold-based diagnostics. \\
+\bottomrule
+\end{longtable}
+
+\section{Preliminary Dataset Design Rules}
+
+The following rules are not a dataset schema yet. They are constraints that the future dataset
+design plan must respect.
+
+\begin{longtable}{L{0.25\textwidth} L{0.33\textwidth} L{0.29\textwidth}}
+\toprule
+Rule area & Required planning rule & Evidence basis \\
+\midrule
+\endhead
+Normalization & Use normalized strike \(K=1\) for the first design. & Pilot 01 and quantitative analytics. \\
+Option families & Include American puts and dividend-paying American calls. & Both families produced coherent application messages. \\
+Parameters & Plan controlled ranges for \(r\), \(q\), \(\sigma\), and \(T\). & Planning report and methodology handouts. \\
+Solver identity & Use baseline CN/PSOR as the default source. & Ticket 12 and Ticket 10A. \\
+Splits & Use regime-level train/test splits, not only random point splits. & Handout warns that surrogate credibility depends on held-out regimes. \\
+Core quantities & Preserve value, payoff, continuation premium, and parameter metadata. & Solver and pilot reports. \\
+Boundary metadata & Preserve threshold, interpolation, and found/not-found status. & Ticket 09 and analytics evidence. \\
+Greek masks & Preserve kink, maturity, boundary, and strict-mask flags. & Ticket 10 and analytics Gamma caution. \\
+Diagnostics & Require PSOR convergence and LCP residuals for every solved regime. & Ticket 08 and quantitative analytics. \\
+\bottomrule
+\end{longtable}
+
+The machine-readable policy companion is:
+\begin{center}
+\file{reports/04_downstream/dataset_readiness_policy.csv}
+\end{center}
+That file is a planning policy table. It is not a dataset.
+
+\section{Human Review Checklist}
+
+\begin{longtable}{L{0.48\textwidth} L{0.33\textwidth}}
+\toprule
+Review question & Required answer before dataset construction \\
+\midrule
+\endhead
+Is baseline CN/PSOR accepted as the initial label source? & Yes, or document a new method gate. \\
+Are future parameter ranges small enough for a first dataset? & Yes, with explicit ranges and rationale. \\
+Are held-out regimes defined before generation? & Yes. \\
+Are boundary thresholds and interpolation rules fixed? & Yes, with metadata fields. \\
+Are Gamma masks specified? & Yes, especially near \(S=K\), maturity, and boundary bands. \\
+Are PSOR and LCP diagnostics required for every generated surface? & Yes. \\
+Are dataset files still blocked until the construction plan is approved? & Yes. \\
+Are neural models still blocked until after dataset review? & Yes. \\
+\bottomrule
+\end{longtable}
+
+\section{Limitations}
+
+\begin{itemize}
+  \item The application analytics are small and controlled; they are not broad stress-regime
+  coverage.
+  \item Boundary curves are useful but threshold-based.
+  \item Gamma remains diagnostic, not production-quality.
+  \item Runtime evidence is local to the current machine and grid size.
+  \item The methodology handouts describe later dataset and surrogate stages, but this gate does
+  not implement those stages.
+  \item The decision allows design planning only; it does not approve generation.
+\end{itemize}
+
+\section{Recommended Next Step}
+
+The recommended next step is a surrogate dataset design plan. That plan should define the future
+schema, parameter ranges, split strategy, output labels, mask fields, diagnostic acceptance
+criteria, and human-review checkpoint. It should also identify optional higher-grid confirmation
+cases before any large generation run.
+
+The project should keep the current gate language visible: the application evidence is strong
+enough to plan the next stage, but not strong enough to construct datasets or train neural
+surrogates yet.
+
+\section{Reproducibility and Source Record}
+
+\begin{longtable}{L{0.34\textwidth} L{0.50\textwidth}}
+\toprule
+Item & Record \\
+\midrule
+\endhead
+Ticket 12 synthesis & \file{reports/03_solver/tickets/ticket_12_solver_validation_synthesis.tex}. \\
+Downstream gate & \file{reports/04_downstream/downstream_design_gate.tex}. \\
+Pilot 01 report & \file{reports/04_downstream/pilot_stress_maps_report.tex}. \\
+Quantitative analytics report & \file{reports/04_downstream/quantitative_risk_analytics_report.tex}. \\
+Pilot tables & \file{results/02_pilot_stress_maps/tables/}. \\
+Analytics tables & \file{results/03_quantitative_risk_analytics/tables/}. \\
+Policy CSV & \file{reports/04_downstream/dataset_readiness_policy.csv}. \\
+Bibliography & \file{reports/03_solver/references.bib}. \\
+\bottomrule
+\end{longtable}
+
+\bibliographystyle{plainnat}
+\bibliography{reports/03_solver/references}
+
+\end{document}
