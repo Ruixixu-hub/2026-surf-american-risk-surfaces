@@ -15,6 +15,7 @@
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{listings}
+\usepackage[round,authoryear]{natbib}
 \usepackage[hidelinks]{hyperref}
 \usepackage{xurl}
 \usepackage{fancyhdr}
@@ -108,10 +109,11 @@ complementarity problem after discretization. The solver validation plan states 
 validation should include obstacle checks, continuation-premium or obstacle-gap sanity checks,
 selected prices, and convergence evidence.
 
-No BibTeX file is created in Ticket 05. The project documents mention classical finite-difference,
-LCP, and PSOR methodology, including Brennan-Schwartz as background, but this ticket does not
-invent external bibliographic details. It uses the internal literature map, formulation note, and
-solver validation plan as the verified source basis.
+This reference integration pass adds verified citations for the external methodology behind the
+internal source basis. American put finite-difference validation is connected to Brennan-Schwartz
+\citep{brennan_schwartz_1977}; the LCP and obstacle language is connected to standard LCP
+methodology \citep{cottle_pang_stone_2009}; and the European comparison benchmark rests on the
+Black-Scholes/Merton framework \citep{black_scholes_1973,merton_1973}.
 
 \section{Why American Put Validation Follows the PSOR/LCP Core}
 
@@ -554,5 +556,8 @@ HOME=/private/tmp FC_CACHEDIR=/private/tmp/fontconfig-cache latexmk -xelatex -in
 
 PDF verification uses \code{pdfinfo} and page rendering with \code{pdftoppm}. Raw Git status is
 intentionally not included in this formal PDF report.
+
+\bibliographystyle{plainnat}
+\bibliography{reports/03_solver/references}
 
 \end{document}

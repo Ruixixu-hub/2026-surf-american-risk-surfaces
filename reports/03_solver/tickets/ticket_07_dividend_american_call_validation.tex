@@ -15,6 +15,7 @@
 \usepackage{listings}
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage[round,authoryear]{natbib}
 \usepackage[hidelinks]{hyperref}
 \usepackage{xurl}
 \usepackage{fancyhdr}
@@ -112,9 +113,10 @@ with PSOR. The solver validation plan then asks for staged validation: first Eur
 then American puts, then no-dividend American calls, then dividend-paying American calls. Ticket
 07 follows that sequence.
 
-No BibTeX file is created for Ticket 07. Classical finite-difference, LCP, and PSOR ideas are
-discussed only as grounded by the project documents. This avoids inventing bibliographic details
-that have not been verified in the repository.
+This reference integration pass adds verified citations for the external theory behind the
+project documents. Dividend-adjusted option pricing follows the Black-Scholes/Merton framework
+\citep{black_scholes_1973,merton_1973}, and the American obstacle/LCP interpretation is connected
+to standard complementarity methodology \citep{cottle_pang_stone_2009}.
 
 \section{Why Dividends Can Make American Call Early Exercise Meaningful}
 
@@ -642,5 +644,8 @@ PYTHONPYCACHEPREFIX=/private/tmp/codex_pycache PYTHONPATH=src MPLCONFIGDIR=/priv
 PYTHONPYCACHEPREFIX=/private/tmp/codex_pycache PYTHONPATH=src MPLCONFIGDIR=/private/tmp/matplotlib-cache FC_CACHEDIR=/private/tmp/fontconfig-cache python3 -m unittest discover -s tests
 PYTHONPYCACHEPREFIX=/private/tmp/codex_pycache PYTHONPATH=src python3 -m compileall -q src tests experiments
 \end{lstlisting}
+
+\bibliographystyle{plainnat}
+\bibliography{reports/03_solver/references}
 
 \end{document}

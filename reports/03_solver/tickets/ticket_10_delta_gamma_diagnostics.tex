@@ -15,6 +15,7 @@
 \usepackage{listings}
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage[round,authoryear]{natbib}
 \usepackage[hidelinks]{hyperref}
 \usepackage{xurl}
 \usepackage{fancyhdr}
@@ -98,9 +99,11 @@ The documented source basis for this ticket is internal:
   \item prior Ticket 04--09 reports, which establish the American solver, diagnostics, and boundary extraction.
 \end{itemize}
 
-No BibTeX file is created for Ticket 10. The report does not invent external bibliography.
-It uses the project documents as the source basis and treats Greek diagnostics as part of the
-larger American-option validation ladder.
+This reference integration pass adds verified citations for the external numerical background.
+Finite-difference option-PDE and Greek diagnostics are connected to computational-finance PDE
+material \citep{wilmott_howison_dewynne_1995}, while the report's caution about nonsmooth payoff
+data and startup behavior is consistent with the Rannacher smoothing background
+\citep{rannacher_1984}.
 
 \section{Delta and Gamma in Plain Language}
 
@@ -423,5 +426,8 @@ The next ticket should not treat these Greeks as final labels yet. A natural nex
 Rannacher smoothing comparison gate, where smoothed and unsmoothed prices, boundaries, Delta, and
 Gamma can be compared explicitly. After that, grid/domain sensitivity and dataset construction
 can be considered with clearer evidence.
+
+\bibliographystyle{plainnat}
+\bibliography{reports/03_solver/references}
 
 \end{document}

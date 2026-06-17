@@ -1,0 +1,34 @@
+report_file,section_or_topic,citation_key,reference_area,citation_added,verification_status,notes
+reports/03_solver/tickets/ticket_01_black_scholes_utilities.tex,European closed-form benchmark,black_scholes_1973,Black-Scholes pricing,yes,verified_crossref,DOI metadata verified
+reports/03_solver/tickets/ticket_01_black_scholes_utilities.tex,European closed-form benchmark,merton_1973,Rational option pricing and dividends,yes,verified_crossref,DOI metadata verified
+reports/03_solver/tickets/ticket_02_grid_operator.tex,Finite-difference option context,brennan_schwartz_1977,American put finite differences,yes,verified_crossref_jstor,Alternate Wiley metadata conflict recorded in backlog
+reports/03_solver/tickets/ticket_02_grid_operator.tex,Black-Scholes and PDE context,black_scholes_1973,Black-Scholes pricing,yes,verified_crossref,DOI metadata verified
+reports/03_solver/tickets/ticket_02_grid_operator.tex,Computational finance PDE context,wilmott_howison_dewynne_1995,Option PDE background,yes,verified_crossref,DOI metadata verified
+reports/03_solver/tickets/ticket_03_european_cn_validation.tex,Crank-Nicolson scheme,crank_nicolson_1947,Time stepping,yes,verified_crossref,DOI metadata verified
+reports/03_solver/tickets/ticket_03_european_cn_validation.tex,European pricing benchmark,black_scholes_1973,Black-Scholes pricing,yes,verified_crossref,DOI metadata verified
+reports/03_solver/tickets/ticket_03_european_cn_validation.tex,Finite-difference PDE context,wilmott_howison_dewynne_1995,Option PDE background,yes,verified_crossref,DOI metadata verified
+reports/03_solver/tickets/ticket_04_psor_lcp_core.tex,American put finite-difference background,brennan_schwartz_1977,American option finite differences,yes,verified_crossref_jstor,Alternate Wiley metadata conflict recorded in backlog
+reports/03_solver/tickets/ticket_04_psor_lcp_core.tex,LCP methodology,cottle_pang_stone_2009,Linear complementarity problem,yes,verified_crossref,SIAM electronic record used
+reports/03_solver/tickets/ticket_05_american_put_validation.tex,American put validation,brennan_schwartz_1977,American put finite differences,yes,verified_crossref_jstor,Advisor may review canonical publisher DOI later
+reports/03_solver/tickets/ticket_05_american_put_validation.tex,LCP obstacle language,cottle_pang_stone_2009,Linear complementarity problem,yes,verified_crossref,SIAM electronic record used
+reports/03_solver/tickets/ticket_06_no_dividend_american_call_validation.tex,No-dividend call control,black_scholes_1973,Black-Scholes pricing,yes,verified_crossref,DOI metadata verified
+reports/03_solver/tickets/ticket_06_no_dividend_american_call_validation.tex,Rational option pricing,merton_1973,Rational option pricing,yes,verified_crossref,DOI metadata verified
+reports/03_solver/tickets/ticket_07_dividend_american_call_validation.tex,Dividend-adjusted option pricing,merton_1973,Rational option pricing,yes,verified_crossref,DOI metadata verified
+reports/03_solver/tickets/ticket_07_dividend_american_call_validation.tex,LCP obstacle language,cottle_pang_stone_2009,Linear complementarity problem,yes,verified_crossref,SIAM electronic record used
+reports/03_solver/tickets/ticket_08_obstacle_complementarity_diagnostics.tex,LCP diagnostics,cottle_pang_stone_2009,Linear complementarity problem,yes,verified_crossref,SIAM electronic record used
+reports/03_solver/tickets/ticket_08_obstacle_complementarity_diagnostics.tex,American finite-difference background,brennan_schwartz_1977,American put finite differences,yes,verified_crossref_jstor,Advisor may review canonical publisher DOI later
+reports/03_solver/tickets/ticket_09_continuation_premium_boundary_extraction.tex,Boundary extraction context,brennan_schwartz_1977,American put finite differences,yes,verified_crossref_jstor,Advisor may review canonical publisher DOI later
+reports/03_solver/tickets/ticket_09_continuation_premium_boundary_extraction.tex,Free-boundary and PDE context,wilmott_howison_dewynne_1995,Option PDE background,yes,verified_crossref,DOI metadata verified
+reports/03_solver/tickets/ticket_10_delta_gamma_diagnostics.tex,Finite-difference Greeks,wilmott_howison_dewynne_1995,Option PDE and Greeks,yes,verified_crossref,DOI metadata verified
+reports/03_solver/tickets/ticket_10_delta_gamma_diagnostics.tex,Nonsmooth payoff caution,rannacher_1984,Irregular initial data damping,yes,verified_crossref,DOI metadata verified
+reports/03_solver/tickets/ticket_10a_rannacher_smoothing_comparison.tex,Rannacher startup damping,rannacher_1984,Irregular initial data damping,yes,verified_crossref,DOI metadata verified
+reports/03_solver/tickets/ticket_10a_rannacher_smoothing_comparison.tex,Crank-Nicolson baseline,crank_nicolson_1947,Time stepping,yes,verified_crossref,DOI metadata verified
+reports/03_solver/tickets/ticket_11_grid_domain_sensitivity.tex,Grid and domain sensitivity,crank_nicolson_1947,Finite-difference time stepping,yes,verified_crossref,DOI metadata verified
+reports/03_solver/tickets/ticket_11_grid_domain_sensitivity.tex,Option PDE finite differences,wilmott_howison_dewynne_1995,Option PDE background,yes,verified_crossref,DOI metadata verified
+reports/03_solver/tickets/ticket_12_solver_validation_synthesis.tex,Validation ladder synthesis,black_scholes_1973,Black-Scholes pricing,yes,verified_crossref,DOI metadata verified
+reports/03_solver/tickets/ticket_12_solver_validation_synthesis.tex,Validation ladder synthesis,cottle_pang_stone_2009,LCP methodology,yes,verified_crossref,SIAM electronic record used
+reports/03_solver/tickets/ticket_12_solver_validation_synthesis.tex,Future scientific machine learning context,raissi_perdikaris_karniadakis_2019,PINNs,yes,verified_crossref,Future-work context only
+reports/03_solver/tickets/ticket_12_solver_validation_synthesis.tex,Future scientific machine learning context,sirignano_spiliopoulos_2018,DGM,yes,verified_crossref,Future-work context only
+reports/03_solver/tickets/ticket_12_solver_validation_synthesis.tex,Future American option deep learning context,becker_cheridito_jentzen_2020,Deep American options,yes,verified_crossref,Future-work context only
+reports/03_solver/reference_backlog.md,Tavella and Randall source,tavella_randall_2000,Finite-difference option pricing,no,unresolved,Book record not verified from Crossref during this pass
+reports/03_solver/reference_backlog.md,Brennan-Schwartz alternate DOI,brennan_schwartz_1977,American put finite differences,no,metadata_conflict,Conflicting Crossref author metadata recorded for advisor review

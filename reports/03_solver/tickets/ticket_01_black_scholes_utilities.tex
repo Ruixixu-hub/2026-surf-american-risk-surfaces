@@ -13,6 +13,7 @@
 \usepackage{enumitem}
 \usepackage{xcolor}
 \usepackage{listings}
+\usepackage[round,authoryear]{natbib}
 \usepackage[hidelinks]{hyperref}
 \usepackage{xurl}
 \usepackage{fancyhdr}
@@ -77,8 +78,8 @@ project starts finite-difference or CN/PSOR work.
 This order matters. Later tickets will build a numerical solver that approximates option values on
 a grid. A numerical solver is useful only if we can compare it against trusted reference values.
 For European options under the Black-Scholes model with continuous dividends, closed-form formulas
-already exist. That makes European calls and puts an ideal benchmark for the future solver's first
-validation step.
+already exist \citep{black_scholes_1973,merton_1973}. That makes European calls and puts an
+ideal benchmark for the future solver's first validation step.
 
 In plain language, Ticket 1 gives the project two kinds of building blocks:
 \begin{itemize}
@@ -532,5 +533,8 @@ At the final check for this LaTeX report task, the Ticket 1 files were still unt
 ?? src/
 ?? tests/
 \end{lstlisting}
+
+\bibliographystyle{plainnat}
+\bibliography{reports/03_solver/references}
 
 \end{document}

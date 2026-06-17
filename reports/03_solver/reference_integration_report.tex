@@ -1,0 +1,194 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{fontspec}
+\IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{\setmainfont{TeX Gyre Termes}}
+\IfFontExistsTF{Menlo}{\setmonofont{Menlo}}{\setmonofont{Latin Modern Mono}}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage[round,authoryear]{natbib}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+\usepackage{fancyhdr}
+\usepackage{microtype}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.65em}
+\setlist[itemize]{leftmargin=1.4em}
+\newcommand{\file}[1]{\path{#1}}
+\newcommand{\code}[1]{\path{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small Reference Integration}
+\rhead{\small Solver Validation Reports}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\title{\textbf{Reference Integration Report}\\
+\large SURF2026 American Option Risk Surfaces}
+\author{Codex-assisted reference pass}
+\date{June 17, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This report documents the reference integration pass for the completed solver-validation study
+reports. The pass creates one shared BibTeX file, adds verified citations to the ticket reports,
+regenerates the report PDFs, and records unresolved source questions in a backlog. It does not
+modify solver code, numerical results, figures, experiments, datasets, stress maps, neural-network
+files, or machine-learning labels.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Purpose of the Pass}
+
+Tickets 01 through 12 intentionally deferred formal bibliography work while the solver-validation
+ladder was still being built. This pass adds academic grounding after the validation evidence is
+complete. Its purpose is narrow:
+\begin{itemize}
+  \item cite verified sources for the main theoretical and methodological claims;
+  \item keep technical results and conclusions unchanged;
+  \item avoid inventing metadata or fake DOI records;
+  \item record unresolved source questions for later human review.
+\end{itemize}
+
+\section{Source Verification Policy}
+
+References were added only when bibliographic metadata could be verified through Crossref/DOI
+records or stable publisher-style metadata. If metadata was incomplete, conflicting, or merely a
+reading lead in the project documents, the item was placed in \file{reference_backlog.md} instead
+of being guessed into the bibliography.
+
+This policy matters because the solver reports are meant to be study documents for beginner
+researchers. A small verified bibliography is more useful than a long bibliography with uncertain
+details.
+
+\section{Shared Bibliography File}
+
+The shared bibliography is:
+\begin{center}
+\file{reports/03_solver/references.bib}
+\end{center}
+
+The ticket reports use \code{natbib} with author-year citations and a shared BibTeX database:
+\begin{verbatim}
+\usepackage[round,authoryear]{natbib}
+\bibliographystyle{plainnat}
+\bibliography{reports/03_solver/references}
+\end{verbatim}
+
+Citation keys use short lowercase identifiers such as \code{black_scholes_1973},
+\code{crank_nicolson_1947}, and \code{cottle_pang_stone_2009}.
+
+\section{References Added}
+
+\begin{longtable}{L{0.23\textwidth} L{0.35\textwidth} L{0.25\textwidth}}
+\toprule
+Citation key & Reference role & Verification note \\
+\midrule
+\endhead
+\code{black_scholes_1973} & European option pricing and Black-Scholes model. & DOI metadata verified. \\
+\code{merton_1973} & Rational option pricing, dividends, and American-call context. & DOI metadata verified. \\
+\code{crank_nicolson_1947} & Crank-Nicolson time stepping. & DOI metadata verified. \\
+\code{brennan_schwartz_1977} & American put finite-difference valuation background. & JSTOR DOI metadata verified; alternate record noted in backlog. \\
+\code{rannacher_1984} & Startup damping for irregular initial data. & DOI metadata verified. \\
+\code{wilmott_howison_dewynne_1995} & Option-PDE, finite-difference, boundary, and Greek background. & DOI metadata verified. \\
+\code{cottle_pang_stone_2009} & Linear complementarity problem methodology. & SIAM electronic record verified. \\
+\code{longstaff_schwartz_2001} & American option simulation as contrast method. & DOI metadata verified. \\
+\code{haugh_kogan_2004} & American option duality bounds as background. & DOI metadata verified. \\
+\code{raissi_perdikaris_karniadakis_2019} & PINN future-work context. & DOI metadata verified. \\
+\code{sirignano_spiliopoulos_2018} & Deep Galerkin Method future-work context. & DOI metadata verified. \\
+\code{becker_cheridito_jentzen_2020} & Deep learning for American-style options. & DOI metadata verified. \\
+\code{gatta_etal_2023} & PINN American option future-work context. & DOI metadata verified. \\
+\code{nwankwo_etal_2024} & Neural free-boundary American option future-work context. & DOI metadata verified. \\
+\bottomrule
+\end{longtable}
+
+\section{Reference-to-Report Mapping}
+
+\begin{longtable}{L{0.18\textwidth} L{0.29\textwidth} L{0.41\textwidth}}
+\toprule
+Report & Main citation topics & Representative keys \\
+\midrule
+\endhead
+Ticket 01 & Black-Scholes and Merton closed-form pricing. & \code{black_scholes_1973}, \code{merton_1973}. \\
+Ticket 02 & Black-Scholes operator and finite-difference setup. & \code{black_scholes_1973}, \code{brennan_schwartz_1977}, \code{wilmott_howison_dewynne_1995}. \\
+Ticket 03 & European CN validation. & \code{crank_nicolson_1947}, \code{black_scholes_1973}. \\
+Ticket 04 & American obstacle, LCP, PSOR core. & \code{brennan_schwartz_1977}, \code{cottle_pang_stone_2009}. \\
+Ticket 05 & American put validation. & \code{brennan_schwartz_1977}, \code{cottle_pang_stone_2009}. \\
+Ticket 06 & No-dividend American call control. & \code{black_scholes_1973}, \code{merton_1973}. \\
+Ticket 07 & Dividend-paying American call behavior. & \code{black_scholes_1973}, \code{merton_1973}, \code{cottle_pang_stone_2009}. \\
+Ticket 08 & Obstacle and complementarity diagnostics. & \code{cottle_pang_stone_2009}. \\
+Ticket 09 & Continuation premium and boundary extraction. & \code{brennan_schwartz_1977}, \code{wilmott_howison_dewynne_1995}. \\
+Ticket 10 & Delta/Gamma diagnostics. & \code{wilmott_howison_dewynne_1995}, \code{rannacher_1984}. \\
+Ticket 10A & Rannacher comparison gate. & \code{crank_nicolson_1947}, \code{rannacher_1984}. \\
+Ticket 11 & Grid and domain sensitivity. & \code{crank_nicolson_1947}, \code{wilmott_howison_dewynne_1995}. \\
+Ticket 12 & Solver-validation synthesis and future-work context. & Classical solver, LCP, Rannacher, and selected scientific-ML references. \\
+\bottomrule
+\end{longtable}
+
+\section{Unresolved Backlog Summary}
+
+The backlog file is:
+\begin{center}
+\file{reports/03_solver/reference_backlog.md}
+\end{center}
+
+The main unresolved items are:
+\begin{itemize}
+  \item Brennan-Schwartz has a verified JSTOR DOI record and a conflicting Wiley metadata record;
+        the JSTOR record was used and the conflict was recorded.
+  \item Tavella and Randall was considered but not added because the Crossref search surfaced a
+        review rather than a verified book record.
+  \item Some future-work neural and process-informed sources from the literature map remain reading
+        leads rather than necessary citations for the solver-validation reports.
+  \item Advisor review may request denser citation coverage in a future paper-style literature
+        review.
+\end{itemize}
+
+\section{Compilation Status}
+
+The updated ticket reports and this integration report are intended to compile with
+\code{latexmk -xelatex -bibtex}. The implementation pass checks for unresolved citation warnings,
+confirms that each regenerated PDF exists, and uses PDF text extraction to confirm that reference
+sections appear in the compiled reports.
+
+\begin{longtable}{L{0.45\textwidth} L{0.18\textwidth} L{0.25\textwidth}}
+\toprule
+Report group & Expected status & Check \\
+\midrule
+\endhead
+Ticket 01 through Ticket 12 PDFs & Compiled & XeLaTeX/BibTeX via \code{latexmk}. \\
+Reference integration report PDF & Compiled & XeLaTeX/BibTeX via \code{latexmk}. \\
+Citation resolution & No unresolved citations & Log search after compilation. \\
+Bibliography visibility & Present & PDF text extraction and spot checks. \\
+\bottomrule
+\end{longtable}
+
+\section{Limitations}
+
+This pass is not a final paper literature review. It adds the minimum verified references needed
+to ground the solver-validation reports. It does not decide the final paper's citation style, does
+not expand every theoretical aside into a literature survey, and does not convert diagnostic
+boundary or Greek outputs into production claims.
+
+\section{Recommended Next Step}
+
+The recommended next step is human review: confirm that the citation placement is sufficient for
+the course or supervisor's expectations, resolve the backlog items that matter for the final
+paper, and only then decide whether to begin downstream stress-map, dataset, or surrogate-model
+work.
+
+\nocite{*}
+\bibliographystyle{plainnat}
+\bibliography{reports/03_solver/references}
+
+\end{document}

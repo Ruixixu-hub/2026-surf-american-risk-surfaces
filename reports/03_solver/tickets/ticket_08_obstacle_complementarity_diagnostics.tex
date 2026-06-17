@@ -15,6 +15,7 @@
 \usepackage{listings}
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage[round,authoryear]{natbib}
 \usepackage[hidelinks]{hyperref}
 \usepackage{xurl}
 \usepackage{fancyhdr}
@@ -107,8 +108,11 @@ validation plan explicitly calls for obstacle violation and complementarity resi
 The implementation ticket file says the diagnostics must keep boundary nodes separate from
 interior LCP residuals and must not hide maximum residuals behind averages.
 
-No BibTeX file is created for Ticket 08. The report uses the internal project documents as the
-verified source basis and avoids inventing external bibliographic details.
+This reference integration pass adds verified citations for the complementarity language used by
+the diagnostics. The American option discretization is interpreted through LCP methodology
+\citep{cottle_pang_stone_2009} and the earlier finite-difference American option background
+\citep{brennan_schwartz_1977}; the internal project documents remain the implementation source
+basis.
 
 \section{Obstacle, Equation Gap, and Complementarity in Plain Language}
 
@@ -487,5 +491,8 @@ PYTHONPYCACHEPREFIX=/private/tmp/codex_pycache PYTHONPATH=src MPLCONFIGDIR=/priv
 PYTHONPYCACHEPREFIX=/private/tmp/codex_pycache PYTHONPATH=src MPLCONFIGDIR=/private/tmp/matplotlib-cache FC_CACHEDIR=/private/tmp/fontconfig-cache python3 -m unittest discover -s tests
 PYTHONPYCACHEPREFIX=/private/tmp/codex_pycache PYTHONPATH=src python3 -m compileall -q src tests experiments
 \end{lstlisting}
+
+\bibliographystyle{plainnat}
+\bibliography{reports/03_solver/references}
 
 \end{document}

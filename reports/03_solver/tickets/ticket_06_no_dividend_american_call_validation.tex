@@ -15,6 +15,7 @@
 \usepackage{listings}
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage[round,authoryear]{natbib}
 \usepackage[hidelinks]{hyperref}
 \usepackage{xurl}
 \usepackage{fancyhdr}
@@ -108,9 +109,11 @@ The formulation note states that when \(q=0\), a standard American call should m
 European call under the usual Black-Scholes assumptions. The solver validation plan places this
 check after European closed-form validation and before the later dividend-paying call work.
 
-No BibTeX file is created for Ticket 06. The project documents mention classical
-finite-difference, LCP, and PSOR methodology as background, but this report does not invent
-external bibliographic details that are not verified in the project documents.
+This reference integration pass adds verified citations for the no-dividend American call control
+logic. The option-pricing framework follows Black-Scholes and Merton
+\citep{black_scholes_1973,merton_1973}, while the American exercise machinery remains grounded in
+the project's LCP/PSOR validation ladder and standard LCP methodology
+\citep{cottle_pang_stone_2009}.
 
 \section{No-Dividend American Call Theorem in Plain Language}
 
@@ -575,5 +578,8 @@ HOME=/private/tmp FC_CACHEDIR=/private/tmp/fontconfig-cache latexmk -xelatex -in
 
 PDF verification uses \code{pdfinfo} and page rendering with \code{pdftoppm}. Raw Git status is
 intentionally not included in this formal PDF report.
+
+\bibliographystyle{plainnat}
+\bibliography{reports/03_solver/references}
 
 \end{document}

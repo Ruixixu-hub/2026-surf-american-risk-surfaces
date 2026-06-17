@@ -15,6 +15,7 @@
 \usepackage{listings}
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage[round,authoryear]{natbib}
 \usepackage[hidelinks]{hyperref}
 \usepackage{xurl}
 \usepackage{fancyhdr}
@@ -88,8 +89,10 @@ dataset construction, or neural surrogate modelling.
 
 The documented source basis is internal: the planning report, literature map, formulation note,
 solver validation plan, and prior Ticket 01--10A reports. The solver validation plan explicitly
-places grid refinement and domain sensitivity before stress maps and neural work. No BibTeX file
-is created, and no external bibliographic details are invented.
+places grid refinement and domain sensitivity before stress maps and neural work. This reference
+integration pass connects those checks to finite-difference option-PDE background
+\citep{crank_nicolson_1947,wilmott_howison_dewynne_1995} while preserving the ticket's limited
+claim: sensitivity evidence is useful but not a proof of convergence.
 
 \section{Grid Sensitivity in Plain Language}
 
@@ -355,5 +358,8 @@ Figures & Six \path{ticket_11} PNGs under \file{results/01_solver_validation/fig
 Report & This \LaTeX{} source and compiled PDF. \\
 \bottomrule
 \end{longtable}
+
+\bibliographystyle{plainnat}
+\bibliography{reports/03_solver/references}
 
 \end{document}

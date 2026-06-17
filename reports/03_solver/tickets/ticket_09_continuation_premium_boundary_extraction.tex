@@ -15,6 +15,7 @@
 \usepackage{listings}
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage[round,authoryear]{natbib}
 \usepackage[hidelinks]{hyperref}
 \usepackage{xurl}
 \usepackage{fancyhdr}
@@ -102,9 +103,11 @@ The documented source basis for Ticket 09 is internal:
   \item the Ticket 04 through Ticket 08 implementation reports and tests.
 \end{itemize}
 
-No BibTeX file is created for this ticket. The report does not invent external bibliographic
-details. It connects to the project documents' classical finite-difference, LCP, PSOR, and
-free-boundary methodology.
+This reference integration pass adds verified citations for the external methodology behind the
+project documents. The approximate free-boundary and finite-difference context is connected to
+Brennan-Schwartz and computational-finance PDE background
+\citep{brennan_schwartz_1977,wilmott_howison_dewynne_1995}, while complementarity terminology is
+connected to standard LCP methodology \citep{cottle_pang_stone_2009}.
 
 \section{Continuation Premium \(U-\Phi\)}
 
@@ -512,5 +515,8 @@ PYTHONPYCACHEPREFIX=/private/tmp/codex_pycache PYTHONPATH=src MPLCONFIGDIR=/priv
 PYTHONPYCACHEPREFIX=/private/tmp/codex_pycache PYTHONPATH=src MPLCONFIGDIR=/private/tmp/matplotlib-cache FC_CACHEDIR=/private/tmp/fontconfig-cache python3 -m unittest discover -s tests
 PYTHONPYCACHEPREFIX=/private/tmp/codex_pycache PYTHONPATH=src python3 -m compileall -q src tests experiments
 \end{lstlisting}
+
+\bibliographystyle{plainnat}
+\bibliography{reports/03_solver/references}
 
 \end{document}

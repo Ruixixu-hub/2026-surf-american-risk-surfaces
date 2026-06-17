@@ -13,6 +13,7 @@
 \usepackage{enumitem}
 \usepackage{xcolor}
 \usepackage{listings}
+\usepackage[round,authoryear]{natbib}
 \usepackage[hidelinks]{hyperref}
 \usepackage{xurl}
 \usepackage{fancyhdr}
@@ -106,11 +107,12 @@ The source basis for this ticket is internal and project-specific:
 \end{itemize}
 
 The literature map places this work in the classical finite-difference American option
-literature. It mentions Brennan-Schwartz finite-difference valuation as background and emphasizes
-that a trusted classical benchmark must come before neural surrogate modelling. This Ticket 2
-report does not add a standalone bibliography because the available project notes do not provide
-complete bibliographic details for every external source. Instead, it uses the internal literature
-map and formulation note as the documented source basis.
+literature. It mentions Brennan-Schwartz finite-difference valuation as background
+\citep{brennan_schwartz_1977} and emphasizes that a trusted classical benchmark must come before
+neural surrogate modelling. This reference integration pass adds the verified Black-Scholes,
+finite-difference, and computational-finance sources needed for the theory context
+\citep{black_scholes_1973,merton_1973,wilmott_howison_dewynne_1995} while keeping the ticket's
+technical content unchanged.
 
 The formulation note defines the dividend-adjusted Black-Scholes spatial operator:
 \begin{equation}
@@ -488,5 +490,8 @@ HOME=/private/tmp FC_CACHEDIR=/private/tmp/fontconfig-cache latexmk -xelatex -in
 PDF verification used \code{pdfinfo} and rendered page images with \code{pdftoppm}. The PDF is a
 LaTeX-generated formal report on A4 paper with one-inch margins, page numbers, tables, monospace
 commands and paths, and LaTeX math.
+
+\bibliographystyle{plainnat}
+\bibliography{reports/03_solver/references}
 
 \end{document}

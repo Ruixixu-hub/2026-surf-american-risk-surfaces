@@ -10,6 +10,7 @@
 \usepackage{array}
 \usepackage{enumitem}
 \usepackage{fancyhdr}
+\usepackage[round,authoryear]{natbib}
 \usepackage{hyperref}
 \usepackage{url}
 
@@ -38,7 +39,7 @@
 \maketitle
 
 \begin{abstract}
-Ticket 12 synthesizes the solver-validation evidence built across Tickets 01 through 11. It does not add a new pricing method. It audits existing artifacts, summarizes the validation ladder, and makes a conservative review-gate decision for the classical American Crank-Nicolson / projected SOR solver. The decision is \code{PASS_SOLVER_VALIDATION_WITH_LIMITATIONS}. This means the current one-dimensional Black-Scholes American CN/PSOR baseline is credible enough for formal reference integration and human review, while stress maps, datasets, neural surrogate labels, production Greeks, and final bibliography integration remain out of scope.
+Ticket 12 synthesizes the solver-validation evidence built across Tickets 01 through 11. It does not add a new pricing method. It audits existing artifacts, summarizes the validation ladder, and makes a conservative review-gate decision for the classical American Crank-Nicolson / projected SOR solver. The decision is \code{PASS_SOLVER_VALIDATION_WITH_LIMITATIONS}. This means the current one-dimensional Black-Scholes American CN/PSOR baseline is credible enough for formal reference integration and human review, while stress maps, datasets, neural surrogate labels, production Greeks, and downstream risk-surface claims remain out of scope.
 \end{abstract}
 
 \tableofcontents
@@ -93,7 +94,13 @@ This synthesis uses only internal project materials and existing ticket artifact
   \item Ticket 01 through Ticket 11 study reports and result CSVs.
 \end{itemize}
 
-No external bibliography is added here. Formal reference integration is explicitly deferred until after this twelve-report study sequence is complete. That later pass should verify complete bibliographic details and connect the implemented validation ladder to the classical American option, finite-difference, LCP/PSOR, Rannacher smoothing, and scientific machine-learning literature.
+This reference integration pass now adds a shared bibliography for the completed solver-validation
+ladder. The synthesis is connected to classical option-pricing theory
+\citep{black_scholes_1973,merton_1973}, finite-difference and American option numerics
+\citep{crank_nicolson_1947,brennan_schwartz_1977,wilmott_howison_dewynne_1995}, LCP methodology
+\citep{cottle_pang_stone_2009}, Rannacher startup damping \citep{rannacher_1984}, and the
+scientific machine-learning literature that remains future-work context
+\citep{raissi_perdikaris_karniadakis_2019,sirignano_spiliopoulos_2018,becker_cheridito_jentzen_2020}.
 
 \section{Summary of Tickets 01--11}
 
@@ -233,7 +240,7 @@ Decision & \code{PASS_SOLVER_VALIDATION_WITH_LIMITATIONS}. \\
 Evidence status & \code{COMPLETE_WITH_LIMITATIONS}. \\
 Artifact status & \code{ALL_REQUIRED_PRESENT}. \\
 Recommended next stage & Formal reference integration and human review before downstream risk-surface work. \\
-Blocked until later & Stress maps, datasets, neural surrogates, production Greek labels, and final bibliography. \\
+Blocked until later & Stress maps, datasets, neural surrogates, production Greek labels, and production risk reporting. \\
 Main reason & The validation ladder is internally consistent and no Ticket 10A or Ticket 11 evidence contradicts continued baseline use. \\
 \bottomrule
 \end{longtable}
@@ -313,7 +320,7 @@ Threshold-based boundaries & Boundary curves are diagnostics, not exact analytic
 Diagnostic Greeks & Delta and Gamma are finite-difference diagnostics with masks and cautions. \\
 No stress maps & Ticket 12 does not generate regime maps or broad parameter grids. \\
 No datasets or neural labels & Machine-learning label generation remains blocked. \\
-No final reference integration & Bibliographic polishing is deferred to a later pass. \\
+No downstream production claim & Reference integration improves academic grounding but does not make the solver a production risk engine. \\
 \bottomrule
 \end{longtable}
 
@@ -332,7 +339,7 @@ A third lesson is that a conservative gate can still be progress. \code{PASS_SOL
 Next step & Recommendation \\
 \midrule
 \endhead
-Reference integration & Review the 12 ticket reports against verified classical American option, finite-difference, LCP/PSOR, Rannacher, and scientific machine-learning references. \\
+Reference integration & Completed in the follow-up reference integration pass using a shared verified bibliography. \\
 Human review gate & Have the research team inspect the validation evidence and limitations before downstream work. \\
 Broader validation plan & Decide whether additional grids, maturities, volatilities, rates, and dividend yields are needed before stress maps. \\
 Boundary and Greek policy & Keep threshold and mask metadata attached to any future boundary or Greek output. \\
@@ -357,5 +364,8 @@ Full test suite observed before report writing & \texttt{Ran 157 tests in 4.282s
 Report & This \LaTeX{} source and compiled PDF. \\
 \bottomrule
 \end{longtable}
+
+\bibliographystyle{plainnat}
+\bibliography{reports/03_solver/references}
 
 \end{document}

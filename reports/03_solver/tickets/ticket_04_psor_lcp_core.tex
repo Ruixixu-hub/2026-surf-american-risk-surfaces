@@ -13,6 +13,7 @@
 \usepackage{enumitem}
 \usepackage{xcolor}
 \usepackage{listings}
+\usepackage[round,authoryear]{natbib}
 \usepackage[hidelinks]{hyperref}
 \usepackage{xurl}
 \usepackage{fancyhdr}
@@ -97,12 +98,12 @@ The source basis for Ticket 04 is internal and project-specific:
 \end{itemize}
 
 The literature map identifies variational inequalities, linear complementarity problems, and PSOR
-as central concepts in classical finite-difference American option pricing. It mentions
-Brennan-Schwartz finite-difference American put valuation as part of the methodology background,
-but this report does not create a BibTeX file because the project notes do not yet provide a
-complete verified bibliography for all external references. The report therefore cites the
-internal literature map, formulation note, and solver validation plan as the documented source
-basis.
+as central concepts in classical finite-difference American option pricing. This reference pass
+links those claims to verified sources: Brennan-Schwartz finite-difference American put valuation
+\citep{brennan_schwartz_1977}, general LCP methodology \citep{cottle_pang_stone_2009}, and the
+Black-Scholes/Merton option-pricing framework \citep{black_scholes_1973,merton_1973}. The
+internal literature map, formulation note, and solver validation plan remain the implementation
+source basis.
 
 The methodology connection is stronger in Ticket 04 than in Tickets 01 through 03 because PSOR is
 where the American exercise right enters the numerical algorithm. Ticket 01 supplied payoff and
@@ -731,5 +732,8 @@ HOME=/private/tmp FC_CACHEDIR=/private/tmp/fontconfig-cache latexmk -xelatex -in
 
 PDF verification uses \code{pdfinfo} and page rendering with \code{pdftoppm}. Raw Git status is
 intentionally not included in this formal PDF report.
+
+\bibliographystyle{plainnat}
+\bibliography{reports/03_solver/references}
 
 \end{document}

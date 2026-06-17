@@ -15,6 +15,7 @@
 \usepackage{listings}
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage[round,authoryear]{natbib}
 \usepackage[hidelinks]{hyperref}
 \usepackage{xurl}
 \usepackage{fancyhdr}
@@ -100,9 +101,11 @@ The documented source basis for this ticket is internal:
   \item Ticket 09 and Ticket 10 provide boundary and Greek diagnostic tools used by this comparison.
 \end{itemize}
 
-No BibTeX file is created. The report does not invent external bibliographic details. It uses
-the project documents as the source basis and treats Rannacher smoothing as a numerical
-time-stepping device, not an economic model change.
+This reference integration pass adds verified citations for the numerical ideas behind the
+comparison. Crank-Nicolson time stepping is connected to the original method
+\citep{crank_nicolson_1947}, and the startup damping idea is connected to Rannacher's treatment of
+irregular initial data \citep{rannacher_1984}. The project documents remain the source basis for
+the American-option implementation choices.
 
 \section{Rannacher Smoothing in Plain Language}
 
@@ -472,5 +475,8 @@ Figure outputs & Six files under \file{results/01_solver_validation/figures/} wi
 Report outputs & This \LaTeX{} source and compiled PDF under \file{reports/03_solver/tickets/}. \\
 \bottomrule
 \end{longtable}
+
+\bibliographystyle{plainnat}
+\bibliography{reports/03_solver/references}
 
 \end{document}

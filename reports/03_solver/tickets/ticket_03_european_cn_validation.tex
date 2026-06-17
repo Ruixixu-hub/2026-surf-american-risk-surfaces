@@ -13,6 +13,7 @@
 \usepackage{enumitem}
 \usepackage{xcolor}
 \usepackage{listings}
+\usepackage[round,authoryear]{natbib}
 \usepackage[hidelinks]{hyperref}
 \usepackage{xurl}
 \usepackage{fancyhdr}
@@ -110,9 +111,10 @@ The source basis for this ticket is internal and project-specific:
 The literature map motivates a classical finite-difference benchmark before neural surrogate
 modelling. The formulation note defines the dividend-adjusted Black-Scholes operator. The solver
 validation plan identifies European closed-form comparison as the first numerical validation case.
-Ticket 03 follows that plan without adding a separate external bibliography. External finite-
-difference and Crank-Nicolson work is relevant background, but this ticket does not invent
-bibliographic details that are not already verified in the project documents.
+This reference pass connects that implementation to the original Crank-Nicolson time-stepping
+method \citep{crank_nicolson_1947}, the Black-Scholes/Merton option-pricing framework
+\citep{black_scholes_1973,merton_1973}, and standard finite-difference option-pricing background
+\citep{wilmott_howison_dewynne_1995}.
 
 The continuous Black-Scholes spatial operator is
 \begin{equation}
@@ -462,5 +464,8 @@ HOME=/private/tmp FC_CACHEDIR=/private/tmp/fontconfig-cache latexmk -xelatex -in
 
 PDF verification uses \code{pdfinfo} and page rendering with \code{pdftoppm}. Raw Git status is
 intentionally not included in this formal PDF report.
+
+\bibliographystyle{plainnat}
+\bibliography{reports/03_solver/references}
 
 \end{document}
