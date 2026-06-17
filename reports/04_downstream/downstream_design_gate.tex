@@ -1,0 +1,310 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{fontspec}
+\IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{\setmainfont{TeX Gyre Termes}}
+\IfFontExistsTF{Menlo}{\setmonofont{Menlo}}{\setmonofont{Latin Modern Mono}}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage[round,authoryear]{natbib}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+\usepackage{fancyhdr}
+\usepackage{microtype}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.65em}
+\setlist[itemize]{leftmargin=1.4em}
+\newcommand{\file}[1]{\path{#1}}
+\newcommand{\code}[1]{\path{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small Downstream Design Gate}
+\rhead{\small Solver Validation to Pilot Design}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\title{\textbf{Downstream Design Gate: Human Review Before Pilot Stress Maps}\\
+\large SURF2026 American Option Risk Surfaces}
+\author{Codex-assisted design gate report}
+\date{June 17, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This report translates the completed solver-validation ladder into a practical downstream
+design policy. Ticket 12 concluded \code{PASS_SOLVER_VALIDATION_WITH_LIMITATIONS}; the reference
+integration pass added a shared bibliography. The next step is not large-scale stress maps,
+datasets, or neural-surrogate labels. The next step is a small human-reviewed pilot that uses the
+validated baseline American Crank-Nicolson / projected SOR solver, attaches diagnostic metadata
+to every output, and keeps boundary and Greek caveats visible.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Purpose of the Downstream Design Gate}
+
+The project has moved through a validation ladder: Black-Scholes utilities, finite-difference
+operators, European Crank-Nicolson validation, American CN/PSOR obstacle enforcement, American put
+and call validation, complementarity diagnostics, threshold-based boundary extraction,
+Delta/Gamma diagnostics, Rannacher comparison, and grid/domain sensitivity. That ladder is
+grounded in the classical Black-Scholes and American-option finite-difference setting
+\citep{black_scholes_1973,merton_1973,brennan_schwartz_1977,wilmott_howison_dewynne_1995}.
+
+This gate answers a different question: how should the validated classical solver be used next?
+It is a design report, not a new solver ticket. It does not generate stress maps, datasets,
+neural-network files, or machine-learning labels.
+
+\section{Current Validation Status}
+
+Ticket 12 made the conservative gate decision
+\[
+\boxed{\text{\code{PASS_SOLVER_VALIDATION_WITH_LIMITATIONS}}}.
+\]
+This means the solver is credible enough for human-reviewed pilot design, but not enough for
+automatic large-scale data generation. The reference integration pass then added verified
+citations and a shared bibliography, but it did not change the numerical evidence.
+
+\begin{longtable}{L{0.31\textwidth} L{0.31\textwidth} L{0.28\textwidth}}
+\toprule
+Evidence area & Current status & Downstream implication \\
+\midrule
+\endhead
+European pricing & CN matches closed-form prices in the target region. & Price calculations have a trusted benchmark path. \\
+American obstacle & Tested American put and dividend-call cases respect \(U \ge \Phi\). & Pilot plots must continue to report obstacle violation. \\
+LCP diagnostics & Equation and complementarity residuals remain near tolerance. & Every pilot run needs LCP diagnostics. \\
+Boundary extraction & Available from continuation premium \(U-\Phi\). & Boundary curves are allowed only as threshold-based diagnostics. \\
+Greeks & Delta/Gamma diagnostics exist with masks. & Greeks may be plotted, but not used as labels. \\
+Grid/domain sensitivity & Baseline is usable with cautions. & Pilot defaults are allowed, with selected higher-grid checks. \\
+\bottomrule
+\end{longtable}
+
+\section{Solver Choice}
+
+The default downstream solver is the baseline American CN/PSOR solver created in Ticket 04. The
+Rannacher-smoothed variant from Ticket 10A remains a comparison tool only. This decision follows
+Ticket 10A's gate conclusion, \code{KEEP_BASELINE_FOR_NOW}: prices and boundaries stayed close,
+but strict-mask Gamma did not improve enough to justify replacing the validated baseline. The
+project should not silently change the numerical method just because a smoothed variant exists.
+
+\begin{longtable}{L{0.25\textwidth} L{0.26\textwidth} L{0.38\textwidth}}
+\toprule
+Item & Decision & Reason \\
+\midrule
+\endhead
+Default solver & Baseline American CN/PSOR. & It is the solver validated across Tickets 04 through 12. \\
+Rannacher solver & Optional comparison only. & Ticket 10A did not justify adoption as the default. \\
+Smoothing policy & Never hidden. & Any smoothed run must be labeled and compared. \\
+Diagnostics & Required. & PSOR, obstacle, LCP, boundary, and Greek metadata protect interpretation. \\
+\bottomrule
+\end{longtable}
+
+\section{Grid and Domain Recommendation}
+
+For the first pilot, use normalized strike \(K=1\), \(S_{\max}=4K\), and \(M=N=120\). This is the
+practical default because the validation ladder repeatedly used it, and Ticket 11 showed stable
+LCP diagnostics and acceptable representative behavior at this size. It is not a production
+setting.
+
+Before scaling beyond the small pilot, rerun selected pilot cases at \(M=N=180\), still with
+\(S_{\max}=4K\), as a higher-accuracy check. Interpret the main region \(S/K \in [0.4,1.8]\), but
+keep the full computational domain for boundary conditions and diagnostics.
+
+\begin{longtable}{L{0.26\textwidth} L{0.25\textwidth} L{0.38\textwidth}}
+\toprule
+Setting & Recommendation & Interpretation \\
+\midrule
+\endhead
+\(K\) & \(1\). & Keep normalized strike for pilot readability. \\
+\(S_{\max}\) & \(4K\). & Practical default from validation; larger domains remain checks. \\
+\(M=N\) & \(120\). & Pilot default balancing runtime and stability. \\
+Higher-grid check & \(M=N=180\). & Confirmation check before scaling, not a proof. \\
+Reported region & \(S/K \in [0.4,1.8]\). & Primary interpretation region from validation plan. \\
+\bottomrule
+\end{longtable}
+
+\section{Allowed Outputs}
+
+The following outputs may be produced in the future pilot if each output carries full parameter
+metadata and diagnostics. ``Allowed'' does not mean production-ready; it means acceptable for a
+small research pilot after human review.
+
+\begin{longtable}{L{0.24\textwidth} L{0.35\textwidth} L{0.29\textwidth}}
+\toprule
+Output & Allowed use & Required metadata \\
+\midrule
+\endhead
+Option value / price & Main pilot price surface and selected slices. & Parameters, grid, convergence status. \\
+Payoff \(\Phi\) & Benchmark and obstacle reference. & Option type and strike. \\
+Continuation premium \(U-\Phi\) & Premium surface and boundary input. & Threshold and option-type logic. \\
+Exercise/continuation indicator & Approximate visual region map. & Premium threshold and no-boundary reason where relevant. \\
+Approximate boundary curve & Diagnostic overlay. & Threshold, interpolation rule, and found/not-found status. \\
+PSOR metadata & Required run quality evidence. & Iteration counts, final update, convergence flag. \\
+LCP diagnostics & Required structural evidence. & Obstacle, equation, and complementarity diagnostics. \\
+\bottomrule
+\end{longtable}
+
+\section{Cautioned Outputs}
+
+Boundary and Greek outputs are useful, but easy to overclaim. The free boundary is extracted from
+the continuation premium \(U-\Phi\), so it depends on the grid, threshold, and interpolation rule.
+That is appropriate for diagnostics, not exact analytical claims.
+
+Delta and Gamma are finite-difference diagnostics. Delta is usually easier to interpret than
+Gamma. Gamma is especially fragile because it is a second derivative and reacts strongly near
+payoff kinks, maturity rows, and extracted boundary bands. Rannacher smoothing is a comparison
+tool for this issue, not the default method \citep{rannacher_1984}.
+
+\begin{longtable}{L{0.26\textwidth} L{0.32\textwidth} L{0.31\textwidth}}
+\toprule
+Output & Caution & Required reporting rule \\
+\midrule
+\endhead
+Boundary curve & Threshold-based, not exact. & Report threshold, interpolation, and found status. \\
+Exercise indicator & Derived from premium threshold. & Do not describe as exact exercise truth. \\
+Delta & Diagnostic first derivative. & Report endpoint and mask treatment. \\
+Gamma & Fragile second derivative. & Report full-grid and strict-mask values separately. \\
+Greek surfaces & Not labels. & Include kink, maturity, and boundary masks. \\
+\bottomrule
+\end{longtable}
+
+\section{Blocked Outputs}
+
+The following outputs remain blocked by this design gate. They require successful pilot review
+and a separate approved implementation plan.
+
+\begin{longtable}{L{0.31\textwidth} L{0.54\textwidth}}
+\toprule
+Blocked item & Reason \\
+\midrule
+\endhead
+Large training datasets & The project has not yet completed pilot stress-map validation. \\
+Neural surrogate labels & Boundary and Greek outputs remain diagnostic, not label-ready. \\
+Production Greek labels & Gamma remains grid-, kink-, maturity-, and boundary-sensitive. \\
+Broad parameter sweeps & One-at-a-time pilot checks must come first. \\
+Production risk reporting & The solver is validated with limitations, not certified for production use. \\
+Final paper-style claims beyond evidence & Current evidence does not prove full convergence or exact boundaries. \\
+\bottomrule
+\end{longtable}
+
+\section{Pilot Stress-Map Proposal}
+
+The future pilot should be small enough that a human reviewer can inspect every table and plot.
+It should not be a dataset-generation job. Use one American put case and one dividend-paying
+American call case, both with normalized strike \(K=1\).
+
+\begin{longtable}{L{0.28\textwidth} L{0.26\textwidth} L{0.35\textwidth}}
+\toprule
+Case & Base parameters & One-at-a-time variations \\
+\midrule
+\endhead
+American put & \(T=1\), \(r=0.05\), \(q=0.02\), \(\sigma=0.20\), \(S_{\max}=4\), \(M=N=120\). & \(\sigma=0.40\), \(r=0.03\), \(q=0.00\). \\
+Dividend-paying American call & \(T=1\), \(r=0.05\), \(q=0.08\), \(\sigma=0.20\), \(S_{\max}=4\), \(M=N=120\). & \(\sigma=0.40\), \(r=0.03\), \(q=0.03\), \(q=0.10\). \\
+\bottomrule
+\end{longtable}
+
+The reported map region should use \(S/K \in [0.4,1.8]\). Time-to-maturity should use
+\(\tau/T \in [0,1]\), with highlighted slices near \(0.01\), \(0.25\), \(0.50\), \(0.75\), and
+\(1.00\). The solver may compute the full domain, but the report should distinguish full-domain
+computation from the main interpretation region.
+
+The first plots in the later pilot should be:
+\begin{itemize}
+  \item option value surface or heatmap;
+  \item continuation-premium \(U-\Phi\) surface or heatmap;
+  \item exercise/continuation indicator map;
+  \item boundary curve overlay on time-to-maturity;
+  \item masked Delta/Gamma diagnostic slices only if mask metadata is included.
+\end{itemize}
+
+\section{Acceptance Criteria Before Scaling}
+
+The pilot should not scale to broader parameter grids until all of the following checks are met.
+
+\begin{longtable}{L{0.34\textwidth} L{0.48\textwidth}}
+\toprule
+Criterion & Required evidence \\
+\midrule
+\endhead
+Solver convergence & All PSOR steps converge, or non-convergence is explicitly reviewed. \\
+Obstacle condition & Maximum obstacle violation remains near zero. \\
+LCP diagnostics & Equation violation and complementarity product remain near diagnostic tolerance. \\
+Boundary metadata & Every boundary row records found/not-found status and reason. \\
+Greek masks & Any Greek plot includes kink, maturity, boundary, and strict-mask metadata. \\
+Parameter metadata & Every output records option type, \(K,T,r,q,\sigma,S_{\max},M,N\). \\
+Higher-grid check & Selected cases rerun at \(M=N=180\) before interpretation is broadened. \\
+Human interpretation & Figures are accompanied by caveats and no label-ready claims. \\
+\bottomrule
+\end{longtable}
+
+\section{Human Review Checklist}
+
+Before any future implementation of pilot stress maps, the team or supervisor should answer yes
+to the following checklist.
+
+\begin{longtable}{L{0.60\textwidth} L{0.24\textwidth}}
+\toprule
+Review question & Required answer \\
+\midrule
+\endhead
+Is the baseline CN/PSOR solver accepted as the default? & Yes. \\
+Is Rannacher limited to named comparison runs? & Yes. \\
+Are \(K=1\), \(S_{\max}=4K\), \(M=N=120\), and \(M=N=180\) checks accepted? & Yes. \\
+Are the put and dividend-call pilot parameter ranges reasonable? & Yes. \\
+Are boundary caveats clear enough for readers? & Yes. \\
+Are Gamma caveats and masks required before plotting Greeks? & Yes. \\
+Are datasets, neural labels, and broad sweeps still blocked? & Yes. \\
+Are references and source basis sufficient for a pilot report? & Yes. \\
+\bottomrule
+\end{longtable}
+
+\section{Risks and Limitations}
+
+\begin{longtable}{L{0.30\textwidth} L{0.56\textwidth}}
+\toprule
+Risk & Mitigation \\
+\midrule
+\endhead
+Pilot default mistaken for production setting & State that \(M=N=120\) is only the first pilot grid. \\
+Boundary overclaim & Always report threshold and metadata; avoid exact free-boundary language. \\
+Gamma overclaim & Use masks and treat Gamma as diagnostic, not label-ready. \\
+Parameter sweep creep & Use one-at-a-time variations before any grid of regimes. \\
+Dataset creep & Keep CSV/plot outputs as pilot evidence, not training labels. \\
+Hidden solver change & Keep baseline default and label any Rannacher comparison explicitly. \\
+\bottomrule
+\end{longtable}
+
+\section{Recommended Next Step}
+
+The recommended next step is human review of this gate report. If the review accepts the solver,
+grid defaults, output policy, pilot cases, and blockers, then a later ticket may implement the
+small pilot stress-map experiment. That later ticket should still be narrow: no large datasets,
+no neural labels, and no production risk claims.
+
+\section{Reproducibility Record}
+
+\begin{longtable}{L{0.34\textwidth} L{0.50\textwidth}}
+\toprule
+Item & Record \\
+\midrule
+\endhead
+Report source & \file{reports/04_downstream/downstream_design_gate.tex}. \\
+Compiled report & \file{reports/04_downstream/downstream_design_gate.pdf}. \\
+Policy table & \file{reports/04_downstream/downstream_design_policy.csv}. \\
+Bibliography & \file{reports/03_solver/references.bib}. \\
+No code changes & This gate creates report and policy files only. \\
+\bottomrule
+\end{longtable}
+
+\bibliographystyle{plainnat}
+\bibliography{reports/03_solver/references}
+
+\end{document}
