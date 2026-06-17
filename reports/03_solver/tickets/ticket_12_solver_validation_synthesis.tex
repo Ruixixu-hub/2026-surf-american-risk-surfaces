@@ -1,0 +1,361 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{fontspec}
+\IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{\setmainfont{TeX Gyre Termes}}
+\IfFontExistsTF{Menlo}{\setmonofont{Menlo}}{\setmonofont{Latin Modern Mono}}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{url}
+
+\hypersetup{colorlinks=false,pdfborder={0 0 0}}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.65em}
+\setlist[itemize]{leftmargin=1.4em}
+
+\newcommand{\file}[1]{\path{#1}}
+\newcommand{\code}[1]{\path{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small Ticket 12 Study Report}
+\rhead{\small Solver Validation Synthesis}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\title{\textbf{Ticket 12 Study Report: Solver Validation Synthesis / Review Gate}\\
+\large SURF2026 American Option Risk Surfaces}
+\author{Codex-assisted implementation report}
+\date{June 16, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Ticket 12 synthesizes the solver-validation evidence built across Tickets 01 through 11. It does not add a new pricing method. It audits existing artifacts, summarizes the validation ladder, and makes a conservative review-gate decision for the classical American Crank-Nicolson / projected SOR solver. The decision is \code{PASS_SOLVER_VALIDATION_WITH_LIMITATIONS}. This means the current one-dimensional Black-Scholes American CN/PSOR baseline is credible enough for formal reference integration and human review, while stress maps, datasets, neural surrogate labels, production Greeks, and final bibliography integration remain out of scope.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Role of Ticket 12 in the Whole Project}
+
+The project is building toward American option risk surfaces: prices, early-exercise boundaries, Delta, Gamma, and later stress or surrogate-model studies. The planning report and solver validation plan both make one point repeatedly: downstream work should wait until the classical solver has been checked carefully. If the solver is wrong, then any later stress map or machine-learning model can only learn unreliable labels.
+
+Ticket 12 is the review gate after the first solver-validation ladder. It asks:
+
+\begin{quote}
+Is the classical American CN/PSOR solver validated enough for the next research stage, and what limitations must be kept?
+\end{quote}
+
+The answer in this report is yes, but with important limits. The current evidence supports moving to reference integration and human review. It does not support jumping straight to large-scale stress maps, dataset construction, neural-network labels, or production risk reporting.
+
+\section{Validation Ladder Overview}
+
+The validation ladder was intentionally incremental. Early tickets checked analytic utilities and finite-difference building blocks. Middle tickets validated European and American option behavior. Later tickets added diagnostics, boundary extraction, Greeks, Rannacher comparison, and grid/domain sensitivity.
+
+\begin{longtable}{L{0.10\textwidth} L{0.22\textwidth} L{0.25\textwidth} L{0.18\textwidth} L{0.17\textwidth}}
+\toprule
+Ticket & Purpose & Main evidence & Status & Main limitation \\
+\midrule
+\endhead
+01 & Payoffs and European Black-Scholes utilities & Payoff, parity, scalar/vector, \(T=0\), and \(\sigma=0\) tests. & PASS & Analytic utilities only. \\
+02 & Uniform grids and Black-Scholes operator & Grid endpoints, operator coefficients, boundary helpers, manufactured-function checks. & PASS & Uniform central-difference setup only. \\
+03 & European CN validation & Closed-form comparison: max target-region error \(2.68274272102\times10^{-4}\). & PASS & No American obstacle. \\
+04 & PSOR/LCP core & Projected SOR core, obstacle smoke tests, convergence metadata. & PASS with limits & Not a full validation study. \\
+05 & American put validation & Obstacle violation \(0\), positive American-over-European value, PSOR convergence. & PASS & Representative case only. \\
+06 & No-dividend American call theorem & Fine-grid American-European max error \(1.23566318468\times10^{-4}\). & PASS & Approximate finite-difference equality. \\
+07 & Dividend-paying American call & Positive American-minus-European value; fine-grid max \(0.0894222439428\). & PASS & Parameter-specific dividend-call evidence. \\
+08 & LCP diagnostics & Max equation violation \(2.14416621448\times10^{-9}\), complementarity product \(6.6483476629\times10^{-11}\). & PASS & Diagnostic tolerances, not proof. \\
+09 & Boundary extraction & Put and dividend-call boundaries found at 120 positive-\(\tau\) rows; no-dividend call control found no boundary. & PASS with limits & Threshold-based boundaries. \\
+10 & Delta/Gamma diagnostics & Full-grid max \(|\Gamma|=30\), strict-mask max \(|\Gamma|=3.18001886582\). & PASS with cautions & Greeks are diagnostic only. \\
+10A & Rannacher comparison gate & Gate recommendation \code{KEEP_BASELINE_FOR_NOW}; max price difference \(1.72323866424\times10^{-6}\). & PASS with limits & Rannacher not adopted as default. \\
+11 & Grid/domain sensitivity & Grid selected-price diff \(0.0111111111111\); domain selected-price diff \(0\); LCP diagnostics stable. & PASS with cautions & Three grid levels are not a convergence proof. \\
+\bottomrule
+\end{longtable}
+
+\section{Methodology and Source Basis}
+
+This synthesis uses only internal project materials and existing ticket artifacts:
+
+\begin{itemize}
+  \item \file{reports/00_planning/planning_report.md};
+  \item \file{reports/01_literature/literature_map.md};
+  \item \file{reports/02_math/formulation_note.md};
+  \item \file{reports/03_solver/solver_validation_plan.md};
+  \item \file{reports/03_solver/solver_implementation_tickets.md};
+  \item Ticket 01 through Ticket 11 study reports and result CSVs.
+\end{itemize}
+
+No external bibliography is added here. Formal reference integration is explicitly deferred until after this twelve-report study sequence is complete. That later pass should verify complete bibliographic details and connect the implemented validation ladder to the classical American option, finite-difference, LCP/PSOR, Rannacher smoothing, and scientific machine-learning literature.
+
+\section{Summary of Tickets 01--11}
+
+Tickets 01 and 02 established the small trusted components: payoff functions, European closed-form prices, grids, spatial operators, and boundary helpers. Ticket 03 then checked the European finite-difference time-stepping path before any American exercise logic was added.
+
+Ticket 04 introduced the American obstacle and PSOR/LCP core. Tickets 05, 06, and 07 checked the three finance behaviors needed for a first American solver: American put exercise value, no-dividend American call equality with the European call, and positive-dividend American call early-exercise value evidence.
+
+Tickets 08 and 09 moved from price checks into structure checks: obstacle/equation/complementarity diagnostics and threshold-based continuation-premium boundary extraction. Ticket 10 added finite-difference Delta and Gamma diagnostics, carefully warning that Gamma is fragile near kinks, maturity, and boundary bands. Ticket 10A compared a named Rannacher-smoothed variant and kept the baseline because smoothing did not improve the headline strict-mask Gamma metrics enough to justify changing the validated default. Ticket 11 checked grid and domain sensitivity for prices, boundaries, LCP diagnostics, and Greek diagnostics.
+
+\section{Acceptance Criteria Review}
+
+\begin{longtable}{L{0.25\textwidth} L{0.28\textwidth} L{0.18\textwidth} L{0.21\textwidth}}
+\toprule
+Criterion & Evidence source & Result & Interpretation \\
+\midrule
+\endhead
+Analytic payoff and European utilities are trusted. & Tickets 01 tests and report. & PASS & Later validation can use these utilities as references. \\
+Grid/operator construction is explicit and tested. & Ticket 02 tests and report. & PASS & Interior indexing and boundary helpers are documented. \\
+European CN matches closed-form prices. & Ticket 03 CSV. & PASS & Target-region errors are small for the representative case. \\
+American obstacle is enforced. & Tickets 05, 07, 08, 11 CSVs. & PASS & Max obstacle violation is \(0\) in representative American cases. \\
+No-dividend call does not invent early exercise value. & Ticket 06 CSV and Ticket 09 control. & PASS & American-European error remains finite-difference small; no boundary is forced. \\
+Dividend-paying call can show early-exercise value. & Ticket 07 CSV. & PASS & Positive American-minus-European value appears for \(q=0.08\). \\
+Complementarity diagnostics are near solver tolerance. & Ticket 08 and 11 CSVs. & PASS & LCP residuals are small in representative cases. \\
+Boundary extraction is available with metadata. & Ticket 09 CSV. & PASS with limits & Boundary curves are threshold-based, not exact analytical boundaries. \\
+Greeks are diagnosed cautiously. & Ticket 10 and 11 CSVs. & PASS with cautions & Gamma is informative but not production-ready. \\
+Rannacher is considered without changing default solver. & Ticket 10A CSV. & PASS & Baseline remains default for now. \\
+Grid/domain sensitivity does not contradict baseline use. & Ticket 11 CSVs. & PASS with cautions & Evidence is preliminary, not a formal convergence proof. \\
+\bottomrule
+\end{longtable}
+
+\section{Evidence Summary}
+
+The Ticket 12 script generated \file{ticket_12_solver_validation_evidence_summary.csv} with 29 evidence rows. The following table condenses the key metrics.
+
+\begin{longtable}{L{0.16\textwidth} L{0.30\textwidth} L{0.20\textwidth} L{0.24\textwidth}}
+\toprule
+Area & Key metric & Value & Caution \\
+\midrule
+\endhead
+European CN & Max target-region absolute error & \(2.68274272102\times10^{-4}\) & No American obstacle yet. \\
+European CN & Max target-region RMSE & \(1.15854293529\times10^{-4}\) & Representative parameters. \\
+American put & Max obstacle violation & \(0\) & Not an external reference-price benchmark. \\
+American put & Max American-European put value & \(0.0487705754993\) & Case-specific early-exercise value. \\
+No-dividend call & Fine-grid max American-European error & \(1.23566318468\times10^{-4}\) & Approximate equality, not exact arithmetic equality. \\
+Dividend call & Fine-grid max American-European value & \(0.0894222439428\) & Positive-dividend case only. \\
+LCP diagnostics & Max equation violation & \(2.14416621448\times10^{-9}\) & Diagnostic threshold, not proof. \\
+LCP diagnostics & Max complementarity product & \(6.6483476629\times10^{-11}\) & Representative cases. \\
+Boundary extraction & Put and dividend-call found rows & \(120\), \(120\) & Threshold-based extraction. \\
+No-boundary control & No-dividend call control & \code{NO_BOUNDARY_FOUND} & Confirms extractor does not force a boundary. \\
+Greeks & Full-grid max \(|\Gamma|\) & \(30\) & Kink/boundary/maturity sensitive. \\
+Greeks & Strict-mask max \(|\Gamma|\) & \(3.18001886582\) & Diagnostic only. \\
+Rannacher gate & Recommendation & \code{KEEP_BASELINE_FOR_NOW} & Rannacher remains comparison tool. \\
+Grid sensitivity & Max selected price diff vs reference & \(0.0111111111111\) & Nearest-node and three-grid limitation. \\
+Domain sensitivity & Max selected price diff vs reference & \(0\) & Comparable \(\Delta S\) design only. \\
+\bottomrule
+\end{longtable}
+
+\section{Price Validation Evidence}
+
+The price evidence has three layers. First, Ticket 01 validates the closed-form European utilities and payoff functions. Second, Ticket 03 validates European CN against the closed-form formulas before adding American projection. Third, Tickets 05 through 07 validate American put, no-dividend call, and dividend-paying call behavior.
+
+For beginner readers, this order matters. If European CN had failed, debugging PSOR would be premature. If the no-dividend American call had produced large artificial early-exercise value, the obstacle machinery would be suspicious. Instead, the evidence is internally consistent: the European solver is close to closed form, the American put shows early-exercise value, the no-dividend call remains close to European value, and the dividend-paying call shows positive American-over-European value.
+
+\section{American Obstacle and LCP Evidence}
+
+The American option value must satisfy \(U \geq \Phi\), where \(\Phi\) is the payoff. Ticket 04 implemented projection through PSOR, and Tickets 05, 07, 08, and 11 checked that projection behavior.
+
+The strongest structural evidence comes from the LCP diagnostics. For the representative American put and dividend-paying call, the maximum obstacle violation is \(0\). The maximum equation violation reported by Ticket 08 is approximately \(2.14\times10^{-9}\), and the maximum complementarity product is approximately \(6.65\times10^{-11}\). These are near solver tolerance and support the claim that the implemented CN/PSOR core respects the discrete obstacle problem in the tested cases.
+
+This is not a mathematical convergence proof. It is implementation evidence: the computed grids satisfy the intended discrete conditions closely for the validation ladder cases.
+
+\section{Boundary Extraction Evidence}
+
+Ticket 09 is the first ticket where boundary extraction is allowed. It uses the continuation premium
+\[
+P_{\mathrm{cont}}(S,\tau) = U(S,\tau)-\Phi(S)
+\]
+and extracts threshold-based approximate boundaries. The American put and dividend-paying American call each produce 120 found positive-\(\tau\) boundary rows in the representative \(M=N=120\) cases. The no-dividend call control produces \code{NO_BOUNDARY_FOUND}, which is important because a boundary extractor that always finds something would be dangerous.
+
+The supported claim is modest: boundary extraction is useful as a diagnostic and research object. The unsupported claim would be exact analytical free-boundary accuracy. Threshold choice, grid spacing, interpolation, and near-maturity behavior remain limitations.
+
+\section{Greek Diagnostic Evidence}
+
+Ticket 10 computes finite-difference Delta and Gamma. Delta and Gamma are useful because risk surfaces will eventually need them, but they are also fragile. Gamma is a second derivative, so it amplifies payoff kinks, free-boundary transitions, and grid noise.
+
+The Ticket 10 summary reports full-grid max \(|\Gamma|=30\) for the representative put and dividend call. After excluding maturity rows, boundary-near nodes, kink-near nodes, and endpoints, the strict-mask max \(|\Gamma|\) is much smaller, with maximum reported value \(3.18001886582\) in the Ticket 12 evidence table. Ticket 11 shows that Gamma remains grid-sensitive: finer grids expose sharper curvature.
+
+Therefore, Greeks are validated as diagnostics, not as production-quality labels. They should not yet be exported as machine-learning targets.
+
+\section{Rannacher Smoothing Gate Evidence}
+
+Ticket 10A tested a named Rannacher-smoothed variant with two backward-Euler half-substeps over the first ordinary CN time interval. It did not silently replace the Ticket 04 baseline solver.
+
+The comparison found very small baseline-vs-Rannacher price differences, with maximum absolute difference \(1.72323866424\times10^{-6}\). Boundary shifts were small in the Ticket 10A report, but strict-mask Gamma did not improve enough to justify adoption. The gate recommendation was \code{KEEP_BASELINE_FOR_NOW}.
+
+Ticket 12 respects that decision. The solver-validation synthesis uses the Ticket 04 baseline as the main validated solver.
+
+\section{Grid and Domain Sensitivity Evidence}
+
+Ticket 11 checks whether the representative results remain stable when grid resolution and domain cutoff change. Grid sensitivity used \(S_{\max}=4\) and \(M=N=80,120,180\). Domain sensitivity used \(S_{\max}=4,5,6\) with \(M=120,150,180\), keeping \(\Delta S\) comparable and \(N=120\).
+
+The selected-price differences versus the finest grid are small but not zero. The maximum selected price difference in grid sensitivity is \(0.0111111111111\). Domain sensitivity is flatter in the selected target region under comparable \(\Delta S\), with maximum selected price difference \(0\). Boundary shifts exist under grid refinement, and Gamma remains grid-sensitive, so the evidence should be read as a preliminary sensitivity gate rather than a formal convergence proof.
+
+\section{Artifact Audit Summary}
+
+The Ticket 12 audit checked 113 expected artifacts and found 0 missing. It did not create replacement evidence for absent files.
+
+\begin{longtable}{L{0.28\textwidth} L{0.20\textwidth} L{0.20\textwidth} L{0.22\textwidth}}
+\toprule
+Artifact group & Checked & Missing & Interpretation \\
+\midrule
+\endhead
+Project documents & 5 & 0 & Source-basis documents are present. \\
+Ticket reports & 24 & 0 & Ticket 01 through 11 \LaTeX{} and PDF reports are present. \\
+Source files & 10 & 0 & Solver and diagnostic source modules through Ticket 11 are present. \\
+Tests & 12 & 0 & Test files through Ticket 11 are present. \\
+Experiments & 9 & 0 & Validation/audit scripts through Ticket 11 are present. \\
+Result tables & 24 & 0 & Prior CSV result artifacts are present. \\
+Figures & 29 & 0 & Prior diagnostic figures are present. \\
+Total & 113 & 0 & \code{ALL_REQUIRED_PRESENT}. \\
+\bottomrule
+\end{longtable}
+
+\section{Gate Decision}
+
+The Ticket 12 gate decision is:
+\[
+\boxed{\text{\code{PASS\_SOLVER\_VALIDATION\_WITH\_LIMITATIONS}}}
+\]
+
+\begin{longtable}{L{0.28\textwidth} L{0.62\textwidth}}
+\toprule
+Item & Decision record \\
+\midrule
+\endhead
+Decision & \code{PASS_SOLVER_VALIDATION_WITH_LIMITATIONS}. \\
+Evidence status & \code{COMPLETE_WITH_LIMITATIONS}. \\
+Artifact status & \code{ALL_REQUIRED_PRESENT}. \\
+Recommended next stage & Formal reference integration and human review before downstream risk-surface work. \\
+Blocked until later & Stress maps, datasets, neural surrogates, production Greek labels, and final bibliography. \\
+Main reason & The validation ladder is internally consistent and no Ticket 10A or Ticket 11 evidence contradicts continued baseline use. \\
+\bottomrule
+\end{longtable}
+
+This is intentionally not the stronger decision that would send the project directly into the next research stage. The project can move to reference integration and human review, but the phrase ``with limitations'' should remain visible because later research stages depend on preserving those cautions.
+
+\section{Claims Supported by Current Evidence}
+
+\begin{longtable}{L{0.38\textwidth} L{0.52\textwidth}}
+\toprule
+Supported claim & Evidence basis \\
+\midrule
+\endhead
+European CN mode matches closed-form prices to finite-difference accuracy in the tested target region. & Ticket 03 closed-form error CSV. \\
+The American CN/PSOR solver respects the payoff obstacle in tested representative cases. & Tickets 05, 07, 08, and 11 obstacle diagnostics. \\
+The no-dividend American call behavior is consistent with the theorem that early exercise is not optimal. & Ticket 06 American-European comparison and Ticket 09 no-boundary control. \\
+The dividend-paying American call case can show positive American-over-European value. & Ticket 07 positive-dividend validation. \\
+The LCP/complementarity residuals are small in representative cases. & Ticket 08 diagnostics and Ticket 11 diagnostic sensitivity. \\
+Continuation-premium boundary extraction works as a threshold-based diagnostic. & Ticket 09 boundary extraction and Ticket 11 boundary sensitivity. \\
+Finite-difference Greeks can be computed and diagnosed with masks. & Ticket 10 Greek diagnostics and Ticket 11 Gamma sensitivity. \\
+The baseline solver remains the default after the Rannacher comparison gate. & Ticket 10A recommendation \code{KEEP_BASELINE_FOR_NOW}. \\
+\bottomrule
+\end{longtable}
+
+\section{Claims Not Yet Supported}
+
+\begin{longtable}{L{0.38\textwidth} L{0.52\textwidth}}
+\toprule
+Unsupported or premature claim & Why it is not yet supported \\
+\midrule
+\endhead
+The solver has a full convergence proof across all parameters. & Ticket 11 uses three grid levels and selected domain cases only. \\
+Extracted boundaries are exact analytical free boundaries. & Ticket 09 extraction is threshold-based and grid-dependent. \\
+Delta and Gamma are production-quality risk measures. & Ticket 10 reports Gamma fragility near kinks, maturity, and boundary bands. \\
+Rannacher smoothing should replace the baseline solver. & Ticket 10A explicitly keeps the baseline for now. \\
+Stress maps are ready. & Stress maps require broader parameter validation and human review. \\
+Dataset labels are reliable enough for neural training. & Greek and boundary labels remain diagnostic and need reference integration. \\
+The final literature review is complete. & Formal reference integration is deferred. \\
+\bottomrule
+\end{longtable}
+
+\section{Implementation Pitfalls and Debugging Notes}
+
+Actual implementation notes for Ticket 12:
+
+\begin{longtable}{L{0.24\textwidth} L{0.27\textwidth} L{0.24\textwidth} L{0.17\textwidth}}
+\toprule
+Iteration & Symptom & Fix & Lesson \\
+\midrule
+\endhead
+Initial red run & The focused Ticket 12 tests failed because \file{experiments/10_solver_validation_synthesis.py} did not exist. & Implemented the synthesis/audit script. & A red run should fail for the intended missing capability. \\
+Audit label check & Simple report enumeration would have mislabeled Ticket 11 after Ticket 10A. & Derived ticket labels from artifact filenames. & Special ticket numbers such as 10A need explicit handling. \\
+\bottomrule
+\end{longtable}
+
+Likely synthesis pitfalls for future work:
+
+\begin{itemize}
+  \item overclaiming solver reliability from representative cases;
+  \item treating threshold-based boundaries as exact free boundaries;
+  \item treating finite-difference Greeks as production risk labels;
+  \item treating sensitivity outputs as datasets;
+  \item ignoring missing artifacts;
+  \item confusing a validation gate with completion of the whole project.
+\end{itemize}
+
+\section{Limitations}
+
+\begin{longtable}{L{0.30\textwidth} L{0.60\textwidth}}
+\toprule
+Limitation & Meaning \\
+\midrule
+\endhead
+Representative cases & The ladder focuses on normalized \(K=1\) cases and selected put/call regimes. \\
+No formal convergence proof & Grid/domain sensitivity is preliminary and empirical. \\
+Threshold-based boundaries & Boundary curves are diagnostics, not exact analytical objects. \\
+Diagnostic Greeks & Delta and Gamma are finite-difference diagnostics with masks and cautions. \\
+No stress maps & Ticket 12 does not generate regime maps or broad parameter grids. \\
+No datasets or neural labels & Machine-learning label generation remains blocked. \\
+No final reference integration & Bibliographic polishing is deferred to a later pass. \\
+\bottomrule
+\end{longtable}
+
+\section{Lessons Learned / Study Notes}
+
+For greenhand researchers, the main lesson is that solver validation is a ladder, not one big test. A low price error is not enough by itself. American option solvers also need obstacle checks, complementarity checks, financial theorem checks, boundary diagnostics, Greek cautions, and sensitivity checks.
+
+A second lesson is that every diagnostic has a scope. Boundary extraction from \(U-\Phi\) is useful, but threshold-based. Gamma is useful, but fragile. Rannacher smoothing is useful to compare, but should not be adopted just because it sounds more advanced. Grid sensitivity is useful, but three grid levels are not a proof.
+
+A third lesson is that a conservative gate can still be progress. \code{PASS_SOLVER_VALIDATION_WITH_LIMITATIONS} is meaningful because it tells the project what can be trusted, what must remain cautious, and what work must not start yet.
+
+\section{Recommended Next Steps}
+
+\begin{longtable}{L{0.28\textwidth} L{0.62\textwidth}}
+\toprule
+Next step & Recommendation \\
+\midrule
+\endhead
+Reference integration & Review the 12 ticket reports against verified classical American option, finite-difference, LCP/PSOR, Rannacher, and scientific machine-learning references. \\
+Human review gate & Have the research team inspect the validation evidence and limitations before downstream work. \\
+Broader validation plan & Decide whether additional grids, maturities, volatilities, rates, and dividend yields are needed before stress maps. \\
+Boundary and Greek policy & Keep threshold and mask metadata attached to any future boundary or Greek output. \\
+Downstream work & Do not create stress maps, datasets, neural labels, or surrogate models until the review gate accepts the limitations. \\
+\bottomrule
+\end{longtable}
+
+\section{Reproducibility Record}
+
+\begin{longtable}{L{0.22\textwidth} L{0.68\textwidth}}
+\toprule
+Item & Record \\
+\midrule
+\endhead
+Audit script & \file{experiments/10_solver_validation_synthesis.py}. \\
+Tests & \file{tests/test_solver_validation_synthesis.py}. \\
+Evidence CSV & \file{results/01_solver_validation/tables/ticket_12_solver_validation_evidence_summary.csv}. \\
+Gate CSV & \file{results/01_solver_validation/tables/ticket_12_validation_gate_decision.csv}. \\
+Artifact audit CSV & \file{results/01_solver_validation/tables/ticket_12_artifact_audit.csv}. \\
+Focused Ticket 12 tests & \texttt{Ran 9 tests in 0.030s OK}. \\
+Full test suite observed before report writing & \texttt{Ran 157 tests in 4.282s OK}. \\
+Report & This \LaTeX{} source and compiled PDF. \\
+\bottomrule
+\end{longtable}
+
+\end{document}

@@ -1,0 +1,30 @@
+ticket,validation_area,source_artifact,key_metric,metric_value,status,limitation
+Ticket 01,Black-Scholes utilities,reports/03_solver/tickets/ticket_01_black_scholes_utilities.tex,"payoff, parity, scalar/vector, T=0, sigma=0 tests",implemented and tested,PASS,Analytic utilities only; no finite-difference solver validation.
+Ticket 02,Grid and operator setup,reports/03_solver/tickets/ticket_02_grid_operator.tex,uniform grid/operator/boundary helper tests,implemented and tested,PASS,Central-difference uniform-grid setup only.
+Ticket 04,PSOR/LCP core,reports/03_solver/tickets/ticket_04_psor_lcp_core.tex,projected SOR obstacle core tests,implemented and smoke-tested,PASS_WITH_LIMITATIONS,Core smoke tests are not full American validation.
+Ticket 03,European CN validation,results/01_solver_validation/tables/ticket_03_european_cn_validation.csv,max target-region absolute error,0.000268274272102,PASS,European validation only; no American obstacle.
+Ticket 03,European CN validation,results/01_solver_validation/tables/ticket_03_european_cn_validation.csv,max target-region RMSE,0.000115854293529,PASS,"Representative case, not broad parameter sweep."
+Ticket 05,American put validation,results/01_solver_validation/tables/ticket_05_american_put_validation.csv,max obstacle violation,0,PASS,Representative medium/fine case only.
+Ticket 05,American put validation,results/01_solver_validation/tables/ticket_05_american_put_validation.csv,max American minus European put,0.0487705754993,PASS,Not an external benchmark price.
+Ticket 05,American put validation,results/01_solver_validation/tables/ticket_05_american_put_validation.csv,all PSOR steps converged,True,PASS,Convergence checked for selected cases.
+Ticket 06,No-dividend American call theorem,results/01_solver_validation/tables/ticket_06_no_dividend_american_call_validation.csv,fine-grid max American-European error,0.000123566318468,PASS,"Approximate finite-difference equality, not exact identity."
+Ticket 06,No-dividend American call theorem,results/01_solver_validation/tables/ticket_06_no_dividend_american_call_validation.csv,max obstacle violation,0,PASS,Only q=0 control case.
+Ticket 07,Dividend-paying American call,results/01_solver_validation/tables/ticket_07_dividend_american_call_validation.csv,fine-grid max American minus European call,0.0894222439428,PASS,Positive value evidence is parameter-specific.
+Ticket 07,Dividend-paying American call,results/01_solver_validation/tables/ticket_07_dividend_american_call_validation.csv,positive American-minus-European node count,64,PASS,Does not extract an exercise boundary by itself.
+Ticket 08,LCP diagnostics,results/01_solver_validation/tables/ticket_08_lcp_diagnostics_summary.csv,max obstacle violation,0,PASS,Interior-node diagnostics only.
+Ticket 08,LCP diagnostics,results/01_solver_validation/tables/ticket_08_lcp_diagnostics_summary.csv,max equation violation,2.14416621448e-09,PASS,"Tolerance diagnostic, not proof."
+Ticket 08,LCP diagnostics,results/01_solver_validation/tables/ticket_08_lcp_diagnostics_summary.csv,max complementarity product,6.6483476629e-11,PASS,Representative cases only.
+Ticket 09,Boundary extraction,results/01_solver_validation/tables/ticket_09_boundary_extraction_summary.csv,American put found boundary count,120,PASS_WITH_LIMITATIONS,Threshold-based approximate boundary.
+Ticket 09,Boundary extraction,results/01_solver_validation/tables/ticket_09_boundary_extraction_summary.csv,dividend call found boundary count,120,PASS_WITH_LIMITATIONS,Threshold-based approximate boundary.
+Ticket 09,Boundary extraction,results/01_solver_validation/tables/ticket_09_boundary_extraction_summary.csv,no-dividend call control status,NO_BOUNDARY_FOUND,PASS,Control prevents forced boundary extraction.
+Ticket 10,Greek diagnostics,results/01_solver_validation/tables/ticket_10_greek_diagnostics_summary.csv,max full-grid absolute Gamma,30,PASS_WITH_CAUTIONS,Gamma is diagnostic and fragile near kinks/boundaries.
+Ticket 10,Greek diagnostics,results/01_solver_validation/tables/ticket_10_greek_diagnostics_summary.csv,max strict-mask absolute Gamma,3.18001886582,PASS_WITH_CAUTIONS,Strict mask is not a production risk label.
+Ticket 10,Greek diagnostics,results/01_solver_validation/tables/ticket_10_greek_diagnostics_summary.csv,strict negative Gamma count,0,PASS_WITH_CAUTIONS,Finite-difference Greeks require caution.
+Ticket 10A,Rannacher comparison gate,results/01_solver_validation/tables/ticket_10a_rannacher_comparison_summary.csv,gate recommendation,KEEP_BASELINE_FOR_NOW,PASS_WITH_LIMITATIONS,Baseline retained for now.
+Ticket 10A,Rannacher comparison gate,results/01_solver_validation/tables/ticket_10a_rannacher_comparison_summary.csv,max baseline-vs-Rannacher price difference,1.72323866424e-06,PASS,Smoothing comparison only.
+Ticket 11,Grid sensitivity,results/01_solver_validation/tables/ticket_11_grid_sensitivity_summary.csv,max selected price difference vs reference,0.0111111111111,PASS_WITH_CAUTIONS,Three grid levels are not a convergence proof.
+Ticket 11,Grid sensitivity,results/01_solver_validation/tables/ticket_11_grid_sensitivity_summary.csv,max selected boundary shift vs reference,0.0255973757862,PASS_WITH_CAUTIONS,Boundary extraction is threshold-based.
+Ticket 11,Domain sensitivity,results/01_solver_validation/tables/ticket_11_domain_sensitivity_summary.csv,max selected price difference vs domain reference,0,PASS,"Comparable dS design, representative domains only."
+Ticket 11,Domain sensitivity,results/01_solver_validation/tables/ticket_11_domain_sensitivity_summary.csv,max boundary shift vs domain reference,0,PASS_WITH_CAUTIONS,Selected tau comparisons only.
+Ticket 11,Diagnostic sensitivity,results/01_solver_validation/tables/ticket_11_diagnostic_sensitivity.csv,max LCP equation violation,3.58450064075e-09,PASS,Diagnostic tolerance evidence only.
+Ticket 11,Diagnostic sensitivity,results/01_solver_validation/tables/ticket_11_diagnostic_sensitivity.csv,max strict Gamma,4.39201886969,PASS_WITH_CAUTIONS,"Greeks remain diagnostic, not labels."
