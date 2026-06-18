@@ -1,0 +1,9 @@
+dry_run_id,regime_id,split,split_reason,stress_holdout_flag,total_sample_rows,accepted_sample_rows,acceptance_status,downstream_use_status
+dry_01,put_T100_s020_r005_q003,train,Default construction-planning training regime.,no,5203,5203,accepted,v0_dry_run_only
+dry_02,put_T100_s060_r005_q003,train,Default construction-planning training regime.,no,5203,5203,accepted,v0_dry_run_only
+dry_03,put_T100_s020_r001_q003,train,Default construction-planning training regime.,no,5203,5203,accepted,v0_dry_run_only
+dry_04,put_T200_s040_r010_q010,test,Long-maturity high-rate mid-volatility regime assigned to test after stress precedence.,no,5203,5203,accepted,v0_dry_run_only
+dry_05,call_T100_s020_r005_q006,train,Default construction-planning training regime.,no,5203,5203,accepted,v0_dry_run_only
+dry_06,call_T100_s020_r005_q010,train,Default construction-planning training regime.,no,5203,5203,accepted,v0_dry_run_only
+dry_07,call_T100_s060_r005_q006,train,Default construction-planning training regime.,no,5203,5203,accepted,v0_dry_run_only
+dry_08,call_T100_s020_r005_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,no,5203,5203,accepted,v0_dry_run_only

@@ -1,0 +1,34 @@
+schema_group,field_name,field_order,definition,dtype,role,downstream_use_status
+feature,log_moneyness,0,log(S/K),float64,model_input,v0_dry_run_only
+feature,tau_fraction,1,tau/T,float64,model_input,v0_dry_run_only
+feature,r,2,risk-free rate,float64,model_input,v0_dry_run_only
+feature,q,3,continuous dividend yield,float64,model_input,v0_dry_run_only
+feature,sigma,4,volatility,float64,model_input,v0_dry_run_only
+feature,T,5,maturity in years,float64,model_input,v0_dry_run_only
+feature,is_call,6,1 for call and 0 for put,float64,model_input,v0_dry_run_only
+label,value_over_K,0,American value divided by K,float64,dry_run_label_or_diagnostic,v0_dry_run_only
+label,payoff_over_K,1,payoff divided by K,float64,dry_run_label_or_diagnostic,v0_dry_run_only
+label,premium_over_K,2,continuation premium divided by K,float64,dry_run_label_or_diagnostic,v0_dry_run_only
+label,exercise_indicator,3,1 when premium is within threshold of zero,float64,dry_run_label_or_diagnostic,v0_dry_run_only
+label,boundary_spot_over_K,4,threshold boundary spot divided by K,float64,dry_run_label_or_diagnostic,v0_dry_run_only
+label,delta,5,finite-difference Delta,float64,dry_run_label_or_diagnostic,v0_dry_run_only
+label,scaled_gamma,6,K times finite-difference Gamma,float64,dry_run_label_or_diagnostic,v0_dry_run_only
+mask,payoff_kink_near,0,node is near S=K,bool,mask_metadata,v0_dry_run_only
+mask,boundary_near,1,node is near extracted boundary,bool,mask_metadata,v0_dry_run_only
+mask,maturity_row,2,tau equals zero row,bool,mask_metadata,v0_dry_run_only
+mask,strict_interior,3,"finite Greek node away from kink, boundary, and maturity",bool,mask_metadata,v0_dry_run_only
+mask,gamma_allowed_mask,4,strict finite-Gamma node,bool,mask_metadata,v0_dry_run_only
+mask,delta_allowed_mask,5,strict finite-Delta node,bool,mask_metadata,v0_dry_run_only
+mask,exercise_region,6,premium-threshold exercise-like node,bool,mask_metadata,v0_dry_run_only
+mask,continuation_region,7,premium-threshold continuation-like node,bool,mask_metadata,v0_dry_run_only
+audit_numeric,S_over_K,0,numeric audit metadata,float64,audit_metadata,v0_dry_run_only
+audit_numeric,tau,1,numeric audit metadata,float64,audit_metadata,v0_dry_run_only
+audit_numeric,S,2,numeric audit metadata,float64,audit_metadata,v0_dry_run_only
+audit_numeric,K,3,numeric audit metadata,float64,audit_metadata,v0_dry_run_only
+audit_numeric,Smax,4,numeric audit metadata,float64,audit_metadata,v0_dry_run_only
+audit_numeric,M,5,numeric audit metadata,float64,audit_metadata,v0_dry_run_only
+audit_numeric,N,6,numeric audit metadata,float64,audit_metadata,v0_dry_run_only
+audit_numeric,dS,7,numeric audit metadata,float64,audit_metadata,v0_dry_run_only
+audit_numeric,dtau,8,numeric audit metadata,float64,audit_metadata,v0_dry_run_only
+audit_numeric,regime_index,9,numeric audit metadata,float64,audit_metadata,v0_dry_run_only
+audit_numeric,split_index,10,numeric audit metadata,float64,audit_metadata,v0_dry_run_only

@@ -1,0 +1,236 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{fontspec}
+\IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{\setmainfont{TeX Gyre Termes}}
+\IfFontExistsTF{Menlo}{\setmonofont{Menlo}}{\setmonofont{Latin Modern Mono}}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage[round,authoryear]{natbib}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+\usepackage{microtype}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.65em}
+\setlist[itemize]{leftmargin=1.4em}
+\newcommand{\file}[1]{\path{#1}}
+\newcommand{\code}[1]{\path{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small v0 Dry-Run Dataset}
+\rhead{\small Dry-Run Review}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\title{\textbf{v0 Dry-Run Dataset Report}\\
+\large Eight-Regime Surrogate Dataset Generation Test}
+\author{Codex-assisted surrogate data review}
+\date{June 18, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This report reviews the v0 dry-run dataset generation test for the American option risk-surface
+project. The dry run generated a small eight-regime package using the validated baseline
+American Crank--Nicolson / projected SOR solver. It produced one compressed \code{.npz} file,
+audit manifests, diagnostics, and optional review figures. It did not generate the full
+288-regime dataset, train a surrogate model, create \code{.pt} files, or approve production
+Greek labels. The dry-run review decision is
+\code{READY_FOR_V1_SMALL_GRID_PLANNING}.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Purpose of v0 Dry Run}
+
+The v0 dry run is the first controlled execution after the surrogate dataset construction plan.
+Its purpose is to test the proposed pipeline on eight regimes before any larger generation step.
+The dry run checks whether solver outputs, continuation premium, boundary metadata, Greek masks,
+LCP diagnostics, split metadata, and file manifests can be assembled into one auditable package.
+
+This is a dry-run generation test only. It is not the final dataset, not a neural-surrogate
+training stage, and not approval for broad production-scale sweeps.
+
+\section{Roadmap and Construction-Plan Link}
+
+The compressed roadmap places this work in Stage 1: v0 dry-run dataset plus dry-run review. The
+preceding dataset construction plan named the full 288-regime grid, split policy, failure rules,
+and eight-regime dry-run subset. This report records the outcome of executing that subset.
+
+The solver source remains the validated classical benchmark:
+\begin{center}
+\code{solver_name = american_crank_nicolson_psor_price}\\
+\code{solver_variant = baseline_cn_psor}
+\end{center}
+The numerical method and American-option setting follow the project validation ladder and the
+classical option-pricing references already integrated into the solver reports
+\citep{black_scholes_1973,merton_1973,brennan_schwartz_1977,wilmott_howison_dewynne_1995}.
+
+\section{Exact Eight Regimes}
+
+{\scriptsize
+\setlength{\tabcolsep}{1.5pt}
+\begin{longtable}{L{0.07\textwidth} L{0.41\textwidth} L{0.06\textwidth} L{0.05\textwidth} L{0.06\textwidth} L{0.05\textwidth} L{0.05\textwidth} L{0.06\textwidth}}
+\toprule
+Dry ID & Regime ID & Type & \(T\) & \(\sigma\) & \(r\) & \(q\) & Split \\
+\midrule
+\endhead
+\code{dry_01} & \code{put_T100_s020_r005_q003} & put & 1.0 & 0.20 & 0.05 & 0.03 & train \\
+\code{dry_02} & \code{put_T100_s060_r005_q003} & put & 1.0 & 0.60 & 0.05 & 0.03 & train \\
+\code{dry_03} & \code{put_T100_s020_r001_q003} & put & 1.0 & 0.20 & 0.01 & 0.03 & train \\
+\code{dry_04} & \code{put_T200_s040_r010_q010} & put & 2.0 & 0.40 & 0.10 & 0.10 & test \\
+\code{dry_05} & \code{call_T100_s020_r005_q006} & call & 1.0 & 0.20 & 0.05 & 0.06 & train \\
+\code{dry_06} & \code{call_T100_s020_r005_q010} & call & 1.0 & 0.20 & 0.05 & 0.10 & train \\
+\code{dry_07} & \code{call_T100_s060_r005_q006} & call & 1.0 & 0.60 & 0.05 & 0.06 & train \\
+\code{dry_08} & \code{call_T100_s020_r005_q000} & call & 1.0 & 0.20 & 0.05 & 0.00 & test \\
+\bottomrule
+\end{longtable}
+}
+
+All regimes used \(K=1\), \(S_{\max}=4\), and \(M=N=120\). The no-dividend call row is a
+control regime, not dividend-call early-exercise evidence.
+
+\section{Feature, Label, and Mask Schema}
+
+The stored feature matrix uses:
+\[
+x=\left(\log(S/K),\ \tau/T,\ r,\ q,\ \sigma,\ T,\ \mathrm{is\_call}\right).
+\]
+The package stores reliable price-style labels and diagnostic labels separately:
+\begin{itemize}
+  \item core dry-run labels: \code{value_over_K}, \code{payoff_over_K}, and \code{premium_over_K};
+  \item diagnostic labels: \code{exercise_indicator} and \code{boundary_spot_over_K};
+  \item cautioned Greek diagnostics: \code{delta} and \code{scaled_gamma}.
+\end{itemize}
+
+Masks are included for payoff-kink-near, boundary-near, maturity-row, strict-interior,
+Gamma-allowed, Delta-allowed, exercise-region, and continuation-region nodes. These masks are
+mandatory metadata. They are especially important because Gamma remains fragile near kinks,
+maturity rows, and extracted boundary bands.
+
+\section{Diagnostics and Acceptance Checks}
+
+A regime is accepted into the dry-run arrays only when PSOR converges, obstacle violation is at
+most \(10^{-8}\), equation violation is at most \(10^{-6}\), complementarity product is at most
+\(10^{-6}\), and required metadata and masks are present. Failed regimes would remain visible in
+the CSV manifests with \code{review_required}; they would not be silently included as accepted
+label rows.
+
+\begin{longtable}{L{0.36\textwidth} L{0.22\textwidth} L{0.30\textwidth}}
+\toprule
+Metric & Dry-run result & Interpretation \\
+\midrule
+\endhead
+Regimes solved & 8 & Exactly the approved dry-run subset. \\
+Accepted regimes & 8 & All regimes passed the dry-run acceptance checks. \\
+Accepted sampled rows & 41,624 & 5,203 rows per accepted regime. \\
+Train rows & 31,218 & Six train regimes. \\
+Test rows & 10,406 & Two test/control regimes. \\
+Maximum obstacle violation & \(0.0\) & Payoff obstacle respected in accepted regimes. \\
+Maximum equation violation & \(4.90\times 10^{-8}\) & Below the \(10^{-6}\) diagnostic threshold. \\
+Maximum complementarity product & \(5.34\times 10^{-10}\) & Below the \(10^{-6}\) diagnostic threshold. \\
+Maximum PSOR iterations & 41 & Highest effort occurs in a high-volatility put regime. \\
+Total solver runtime & about 0.82 seconds & Small dry run is computationally manageable. \\
+\bottomrule
+\end{longtable}
+
+\section{Output Files and Manifests}
+
+\begin{longtable}{L{0.38\textwidth} L{0.14\textwidth} L{0.34\textwidth}}
+\toprule
+Output & Type & Purpose \\
+\midrule
+\endhead
+\file{results/04_surrogate_dataset/v0_dry_run/dataset_v0_dry_run.npz} & \code{.npz} & Accepted-row dry-run arrays only. \\
+\file{results/04_surrogate_dataset/v0_dry_run/regime_manifest.csv} & CSV & Regime parameters, convergence, and acceptance status. \\
+\file{results/04_surrogate_dataset/v0_dry_run/diagnostic_summary.csv} & CSV & PSOR, LCP, boundary, Greek, and runtime diagnostics. \\
+\file{results/04_surrogate_dataset/v0_dry_run/split_assignment.csv} & CSV & Regime-level split assignment and row counts. \\
+\file{results/04_surrogate_dataset/v0_dry_run/schema_snapshot.csv} & CSV & Feature, label, mask, and audit-field schema. \\
+\file{results/04_surrogate_dataset/v0_dry_run/output_manifest.csv} & CSV & Output audit manifest for all dry-run artifacts. \\
+\bottomrule
+\end{longtable}
+
+The compressed package contains the keys \code{X}, \code{y_value}, \code{y_payoff},
+\code{y_premium}, \code{y_exercise_indicator}, \code{y_boundary}, \code{y_delta},
+\code{y_scaled_gamma}, \code{masks}, \code{regime_index}, \code{feature_names},
+\code{label_names}, \code{mask_names}, \code{audit_numeric}, \code{audit_numeric_names},
+\code{regime_ids}, \code{dry_run_ids}, and \code{split_names}.
+
+\section{Figure Interpretation}
+
+Three optional figures were created for human review. They are diagnostic figures only, not
+stress-map datasets.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\textwidth]{results/04_surrogate_dataset/v0_dry_run/figures/v0_dry_run_row_counts.png}
+\caption{Accepted sampled rows by dry-run regime. Each accepted regime contributes 5,203 sampled rows in the reporting region.}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\textwidth]{results/04_surrogate_dataset/v0_dry_run/figures/v0_dry_run_diagnostics.png}
+\caption{Obstacle, equation, and complementarity diagnostics by regime. The equation residuals remain below the dry-run threshold.}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.78\textwidth]{results/04_surrogate_dataset/v0_dry_run/figures/v0_dry_run_premium_distribution.png}
+\caption{Distribution of continuation premium over accepted rows. This checks the dry-run label pipeline without creating broad surfaces.}
+\end{figure}
+
+\section{Dry-Run Review Decision}
+
+The dry-run review decision is:
+\begin{center}
+\fbox{\code{READY_FOR_V1_SMALL_GRID_PLANNING}}
+\end{center}
+
+This means the eight-regime pipeline is ready for a v1 small-grid planning step. It does not mean
+the full dataset is approved for generation, and it does not approve surrogate training.
+
+\section{Limitations}
+
+\begin{itemize}
+  \item The package covers eight regimes only, not the planned 288-regime grid.
+  \item Boundary labels remain threshold-based diagnostics, not exact analytical free boundaries.
+  \item Delta and scaled Gamma are diagnostic fields. Gamma remains high caution and should be
+  used only with masks.
+  \item Runtime observations from eight regimes do not prove large-scale generation cost.
+  \item The no-dividend call control has no boundary found, which is expected control behavior
+  rather than a failed dividend-call boundary.
+\end{itemize}
+
+\section{What This Dry Run Supports}
+
+The dry run supports the claim that the approved eight-regime generation pipeline can assemble
+features, reliable price and premium labels, diagnostic labels, masks, solver diagnostics, split
+metadata, and manifests into one auditable package. It also supports moving to a v1 small-grid
+planning discussion.
+
+\section{What This Dry Run Does Not Support}
+
+The dry run does not support final dataset claims, neural surrogate training, production Greek
+labels, broad parameter-sweep conclusions, or final paper claims about all regimes. It is a
+pipeline test and review gate.
+
+\section{Recommended Next Step}
+
+The recommended next step is a v1 small-grid planning gate. That gate should decide whether to
+generate all 288 planned regimes, whether any additional higher-grid confirmation is required,
+and whether Delta or Gamma should remain metadata-only in the first generated version.
+
+\bibliographystyle{plainnat}
+\bibliography{reports/03_solver/references}
+
+\end{document}
