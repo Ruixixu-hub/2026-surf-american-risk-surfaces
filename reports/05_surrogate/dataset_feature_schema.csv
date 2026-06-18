@@ -1,0 +1,18 @@
+feature_name,definition,normalized,required,notes
+log_moneyness,log(S/K),yes,yes,Primary spot feature for learning across normalized strike K=1.
+tau_fraction,tau/T,yes,yes,"Primary time-to-maturity feature on [0,1]."
+r,risk-free interest rate,planned_scaling,yes,Regime feature; scale consistently in future preprocessing.
+q,continuous dividend yield,planned_scaling,yes,Regime feature; retained for puts because the PDE includes q and required for dividend-paying calls.
+sigma,volatility,planned_scaling,yes,Regime feature; stress analytics showed volatility affects boundaries and solver effort.
+T,maturity in years,planned_scaling,yes,Regime feature; first design includes four maturities.
+is_call,1 for call and 0 for put,yes,yes,Primary option-family indicator for model inputs.
+option_type,human-readable option family,metadata,yes,Store as put or call for auditing even if is_call is the numeric feature.
+S_over_K,spot divided by strike,yes,optional,Useful for reports and debugging; redundant with log_moneyness.
+K,strike,constant_metadata,optional,First design fixes K=1 but should still record it for reproducibility.
+Smax,solver upper spot boundary,metadata,yes,Required solver-domain metadata; not a learned market feature.
+M,number of spatial steps,metadata,yes,Required grid metadata for every future solved regime.
+N,number of time steps,metadata,yes,Required grid metadata for every future solved regime.
+dS,spot grid spacing,metadata,yes,Required for grid auditing and finite-difference diagnostics.
+dtau,time grid spacing,metadata,yes,Required for grid auditing and finite-difference diagnostics.
+solver_variant,solver identity string,metadata,yes,Must be baseline_cn_psor unless a later gate approves a separately labelled comparison source.
+downstream_use_status,planned downstream use flag,metadata,yes,Use design_or_label_candidate until construction is approved; never imply production status.

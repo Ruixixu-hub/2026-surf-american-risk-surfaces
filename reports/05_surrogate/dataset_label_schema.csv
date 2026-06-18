@@ -1,0 +1,11 @@
+label_name,definition,reliability_level,required_mask,allowed_use,notes
+value_over_K,U/K,core_reliable,none,primary_future_label,Most reliable numerical label after solver diagnostics pass.
+payoff_over_K,Phi/K,analytic_reliable,none,reference_label,Analytic payoff reference; useful for obstacle checks and reconstruction.
+premium_over_K,(U-Phi)/K,core_reliable_with_caution,none,primary_future_label,Supports positive-premium modelling and payoff reconstruction; do not confuse with American-minus-European value.
+exercise_indicator,1 where continuation premium is within threshold of zero and 0 otherwise,diagnostic_threshold_based,boundary_metadata,diagnostic_metadata_only,Derived from premium threshold; not exact exercise truth.
+boundary_spot_over_K,threshold-extracted boundary spot divided by K,diagnostic_threshold_based,boundary_near,diagnostic_metadata_only,Store threshold interpolation found/not-found status and no-boundary reason.
+delta,finite-difference Delta,cautioned,delta_allowed_mask,optional_diagnostic_label,Use only with endpoint kink maturity and boundary masks; not production Greek.
+scaled_gamma,K times finite-difference Gamma,high_caution,gamma_allowed_mask,optional_diagnostic_label,Do not use unmasked near payoff kink maturity row or extracted boundary band.
+boundary_found,boundary found flag for a time row,diagnostic_metadata,boundary_metadata,metadata_for_boundary_rows,Records whether a boundary label exists for that row.
+no_boundary_reason,reason boundary was not extracted,diagnostic_metadata,boundary_metadata,metadata_for_boundary_rows,Required when boundary_found is false; avoids silent missing labels.
+sample_weight,planned weighting field for later experiments,deferred_design_field,mask_dependent,not_approved_for_generation,May be useful later for boundary-aware training but must be specified in a construction plan.
