@@ -1,0 +1,9 @@
+future_file,future_file_type,purpose,required,created_now,notes
+american_option_surrogate_v0_dry_run_arrays.npz,compressed_numeric_arrays,"Future dry-run numeric sample arrays for value, payoff, premium, masks, and optional Greeks.",yes_for_generation,no,Mentioned as a future storage target only; this plan does not create it.
+regime_manifest.csv,csv_manifest,"Regime parameters, solver settings, split assignment, and construction status.",yes,no,"Must include solver_name, solver_variant, K, Smax, M, N, dS, and dtau."
+diagnostic_summary.csv,csv_manifest,"PSOR, LCP, boundary, runtime, and mask diagnostics per solved regime.",yes,no,Failed diagnostics block label export until review.
+split_assignment.csv,csv_manifest,"Regime-level train, validation, test, and stress-holdout assignments.",yes,no,Must be copied from approved assignment plan before row generation.
+label_schema_copy.csv,csv_schema_copy,Frozen copy of approved label schema used during generation.,yes,no,Prevents silent schema drift.
+mask_policy.json,json_manifest,"Exact mask thresholds and widths for kink, maturity, boundary, strict interior, Delta, and Gamma.",yes_if_greeks_or_boundary_used,no,May be CSV instead if reviewed before construction.
+generation_log.txt,text_log,"Human-readable command, environment, and failure log for future generation.",yes,no,No log is created by this planning step.
+dataset_validation_report.pdf,pdf_report,Future post-generation review report before surrogate training.,yes,no,Should summarize diagnostics and blocked regimes.

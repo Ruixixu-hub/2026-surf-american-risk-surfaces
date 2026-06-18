@@ -1,0 +1,9 @@
+failure_type,detection_rule,default_action,human_review_required,notes
+psor_non_convergence,all_psor_steps_converged is false,exclude_from_label_export_and_mark_review_required,yes,May keep metadata for debugging but not as accepted labels.
+obstacle_violation_too_large,max_obstacle_violation > 1e-8,exclude_from_label_export_and_mark_review_required,yes,Protects American payoff obstacle.
+equation_violation_too_large,max_equation_violation > 1e-6,exclude_from_label_export_and_mark_review_required,yes,Uses Ticket 08 LCP diagnostic convention.
+complementarity_product_too_large,max_abs_complementarity_product > 1e-6,exclude_from_label_export_and_mark_review_required,yes,Prevents accepting inconsistent obstacle/equation states.
+boundary_not_found,boundary_found false or found count unexpectedly low,accept_price_and_premium_if_other_diagnostics_pass_but_mark_boundary_label_missing,yes_for_boundary_use,Record no-boundary reason; do not fabricate boundary labels.
+greek_masks_missing_or_too_narrow,required Greek masks absent or mask width not approved,block_delta_gamma_labels_until_mask_policy_is_fixed,yes,Price and premium labels may remain eligible if diagnostics pass.
+unexpected_runtime_high,runtime exceeds approved budget or PSOR iterations are unusually high,mark_expensive_and_review_before_scaling,yes,Do not discard automatically if diagnostics pass; record cost signal.
+missing_metadata,"required solver, grid, split, diagnostic, or mask metadata missing",block_export_until_metadata_is_reconstructed_or_regime_is_dropped,yes,No row should become a label without provenance.

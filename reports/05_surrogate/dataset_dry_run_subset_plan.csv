@@ -1,0 +1,9 @@
+dry_run_id,regime_id,reason_selected,expected_check,required_manual_review
+dry_01,put_T100_s020_r005_q003,Base-like American put aligned with prior validation and analytics.,"Check solver convergence, price/premium labels, boundary metadata, and masks.",yes
+dry_02,put_T100_s060_r005_q003,High-volatility put stress case.,"Check put boundary movement, Gamma masks, runtime, and PSOR effort.",yes
+dry_03,put_T100_s020_r001_q003,Low-rate put case.,Check low-rate exercise behavior and diagnostics.,yes
+dry_04,put_T200_s040_r010_q010,"Longer, higher-rate stress put case.",Check maturity/rate interaction and stress-holdout policy behavior.,yes
+dry_05,call_T100_s020_r005_q006,Base-like dividend-paying American call.,Check positive-dividend call boundary and premium diagnostics.,yes
+dry_06,call_T100_s020_r005_q010,High-dividend call case.,Check lower call boundary direction and boundary metadata.,yes
+dry_07,call_T100_s060_r005_q006,High-volatility dividend call case.,"Check Gamma masks, runtime, and call boundary stability.",yes
+dry_08,call_T100_s020_r005_q000,No-dividend call control.,Check no-dividend control behavior and prevent forced dividend-call interpretation.,yes

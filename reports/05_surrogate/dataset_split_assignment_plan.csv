@@ -1,0 +1,289 @@
+regime_id,split,split_reason,option_family_balance,stress_holdout_flag,notes
+put_T025_s020_r001_q000,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T025_s020_r001_q003,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T025_s020_r001_q006,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T025_s020_r001_q010,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T025_s020_r005_q000,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T025_s020_r005_q003,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T025_s020_r005_q006,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T025_s020_r005_q010,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T025_s020_r010_q000,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T025_s020_r010_q003,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T025_s020_r010_q006,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T025_s020_r010_q010,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T025_s040_r001_q000,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T025_s040_r001_q003,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T025_s040_r001_q006,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T025_s040_r001_q010,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T025_s040_r005_q000,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T025_s040_r005_q003,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T025_s040_r005_q006,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T025_s040_r005_q010,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T025_s040_r010_q000,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T025_s040_r010_q003,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T025_s040_r010_q006,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T025_s040_r010_q010,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T025_s060_r001_q000,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T025_s060_r001_q003,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T025_s060_r001_q006,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T025_s060_r001_q010,stress_holdout,High-volatility and high-dividend stress combination held out before any row-level split.,put_family,yes,Regime-level assignment only; no generated samples exist yet.
+put_T025_s060_r005_q000,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T025_s060_r005_q003,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T025_s060_r005_q006,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T025_s060_r005_q010,stress_holdout,High-volatility and high-dividend stress combination held out before any row-level split.,put_family,yes,Regime-level assignment only; no generated samples exist yet.
+put_T025_s060_r010_q000,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T025_s060_r010_q003,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T025_s060_r010_q006,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T025_s060_r010_q010,stress_holdout,High-volatility and high-dividend stress combination held out before any row-level split.,put_family,yes,Regime-level assignment only; no generated samples exist yet.
+put_T050_s020_r001_q000,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T050_s020_r001_q003,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T050_s020_r001_q006,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T050_s020_r001_q010,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T050_s020_r005_q000,validation,Mid-maturity baseline-rate slice reserved for validation after stress/test precedence.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T050_s020_r005_q003,validation,Mid-maturity baseline-rate slice reserved for validation after stress/test precedence.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T050_s020_r005_q006,validation,Mid-maturity baseline-rate slice reserved for validation after stress/test precedence.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T050_s020_r005_q010,validation,Mid-maturity baseline-rate slice reserved for validation after stress/test precedence.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T050_s020_r010_q000,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T050_s020_r010_q003,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T050_s020_r010_q006,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T050_s020_r010_q010,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T050_s040_r001_q000,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T050_s040_r001_q003,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T050_s040_r001_q006,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T050_s040_r001_q010,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T050_s040_r005_q000,validation,Mid-maturity baseline-rate slice reserved for validation after stress/test precedence.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T050_s040_r005_q003,validation,Mid-maturity baseline-rate slice reserved for validation after stress/test precedence.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T050_s040_r005_q006,validation,Mid-maturity baseline-rate slice reserved for validation after stress/test precedence.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T050_s040_r005_q010,validation,Mid-maturity baseline-rate slice reserved for validation after stress/test precedence.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T050_s040_r010_q000,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T050_s040_r010_q003,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T050_s040_r010_q006,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T050_s040_r010_q010,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T050_s060_r001_q000,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T050_s060_r001_q003,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T050_s060_r001_q006,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T050_s060_r001_q010,stress_holdout,High-volatility and high-dividend stress combination held out before any row-level split.,put_family,yes,Regime-level assignment only; no generated samples exist yet.
+put_T050_s060_r005_q000,validation,Mid-maturity baseline-rate slice reserved for validation after stress/test precedence.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T050_s060_r005_q003,validation,Mid-maturity baseline-rate slice reserved for validation after stress/test precedence.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T050_s060_r005_q006,validation,Mid-maturity baseline-rate slice reserved for validation after stress/test precedence.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T050_s060_r005_q010,stress_holdout,High-volatility and high-dividend stress combination held out before any row-level split.,put_family,yes,Regime-level assignment only; no generated samples exist yet.
+put_T050_s060_r010_q000,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T050_s060_r010_q003,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T050_s060_r010_q006,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T050_s060_r010_q010,stress_holdout,High-volatility and high-dividend stress combination held out before any row-level split.,put_family,yes,Regime-level assignment only; no generated samples exist yet.
+put_T100_s020_r001_q000,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T100_s020_r001_q003,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T100_s020_r001_q006,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T100_s020_r001_q010,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T100_s020_r005_q000,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T100_s020_r005_q003,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T100_s020_r005_q006,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T100_s020_r005_q010,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T100_s020_r010_q000,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T100_s020_r010_q003,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T100_s020_r010_q006,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T100_s020_r010_q010,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T100_s040_r001_q000,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T100_s040_r001_q003,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T100_s040_r001_q006,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T100_s040_r001_q010,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T100_s040_r005_q000,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T100_s040_r005_q003,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T100_s040_r005_q006,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T100_s040_r005_q010,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T100_s040_r010_q000,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T100_s040_r010_q003,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T100_s040_r010_q006,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T100_s040_r010_q010,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T100_s060_r001_q000,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T100_s060_r001_q003,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T100_s060_r001_q006,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T100_s060_r001_q010,stress_holdout,High-volatility and high-dividend stress combination held out before any row-level split.,put_family,yes,Regime-level assignment only; no generated samples exist yet.
+put_T100_s060_r005_q000,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T100_s060_r005_q003,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T100_s060_r005_q006,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T100_s060_r005_q010,stress_holdout,High-volatility and high-dividend stress combination held out before any row-level split.,put_family,yes,Regime-level assignment only; no generated samples exist yet.
+put_T100_s060_r010_q000,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T100_s060_r010_q003,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T100_s060_r010_q006,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T100_s060_r010_q010,stress_holdout,High-volatility and high-dividend stress combination held out before any row-level split.,put_family,yes,Regime-level assignment only; no generated samples exist yet.
+put_T200_s020_r001_q000,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T200_s020_r001_q003,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T200_s020_r001_q006,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T200_s020_r001_q010,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T200_s020_r005_q000,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T200_s020_r005_q003,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T200_s020_r005_q006,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T200_s020_r005_q010,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T200_s020_r010_q000,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T200_s020_r010_q003,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T200_s020_r010_q006,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T200_s020_r010_q010,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T200_s040_r001_q000,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T200_s040_r001_q003,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T200_s040_r001_q006,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T200_s040_r001_q010,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T200_s040_r005_q000,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T200_s040_r005_q003,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T200_s040_r005_q006,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T200_s040_r005_q010,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T200_s040_r010_q000,test,Long-maturity high-rate mid-volatility regime assigned to test after stress precedence.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T200_s040_r010_q003,test,Long-maturity high-rate mid-volatility regime assigned to test after stress precedence.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T200_s040_r010_q006,test,Long-maturity high-rate mid-volatility regime assigned to test after stress precedence.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T200_s040_r010_q010,test,Long-maturity high-rate mid-volatility regime assigned to test after stress precedence.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T200_s060_r001_q000,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T200_s060_r001_q003,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T200_s060_r001_q006,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T200_s060_r001_q010,stress_holdout,High-volatility and high-dividend stress combination held out before any row-level split.,put_family,yes,Regime-level assignment only; no generated samples exist yet.
+put_T200_s060_r005_q000,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T200_s060_r005_q003,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T200_s060_r005_q006,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T200_s060_r005_q010,stress_holdout,High-volatility and high-dividend stress combination held out before any row-level split.,put_family,yes,Regime-level assignment only; no generated samples exist yet.
+put_T200_s060_r010_q000,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T200_s060_r010_q003,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T200_s060_r010_q006,train,Default construction-planning training regime.,put_family,no,Regime-level assignment only; no generated samples exist yet.
+put_T200_s060_r010_q010,stress_holdout,High-volatility and high-dividend stress combination held out before any row-level split.,put_family,yes,Regime-level assignment only; no generated samples exist yet.
+call_T025_s020_r001_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T025_s020_r001_q003,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T025_s020_r001_q006,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T025_s020_r001_q010,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T025_s020_r005_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T025_s020_r005_q003,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T025_s020_r005_q006,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T025_s020_r005_q010,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T025_s020_r010_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T025_s020_r010_q003,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T025_s020_r010_q006,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T025_s020_r010_q010,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T025_s040_r001_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T025_s040_r001_q003,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T025_s040_r001_q006,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T025_s040_r001_q010,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T025_s040_r005_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T025_s040_r005_q003,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T025_s040_r005_q006,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T025_s040_r005_q010,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T025_s040_r010_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T025_s040_r010_q003,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T025_s040_r010_q006,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T025_s040_r010_q010,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T025_s060_r001_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T025_s060_r001_q003,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T025_s060_r001_q006,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T025_s060_r001_q010,stress_holdout,High-volatility and high-dividend stress combination held out before any row-level split.,dividend_call_family,yes,Regime-level assignment only; no generated samples exist yet.
+call_T025_s060_r005_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T025_s060_r005_q003,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T025_s060_r005_q006,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T025_s060_r005_q010,stress_holdout,High-volatility and high-dividend stress combination held out before any row-level split.,dividend_call_family,yes,Regime-level assignment only; no generated samples exist yet.
+call_T025_s060_r010_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T025_s060_r010_q003,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T025_s060_r010_q006,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T025_s060_r010_q010,stress_holdout,High-volatility and high-dividend stress combination held out before any row-level split.,dividend_call_family,yes,Regime-level assignment only; no generated samples exist yet.
+call_T050_s020_r001_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T050_s020_r001_q003,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T050_s020_r001_q006,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T050_s020_r001_q010,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T050_s020_r005_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T050_s020_r005_q003,validation,Mid-maturity baseline-rate slice reserved for validation after stress/test precedence.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T050_s020_r005_q006,validation,Mid-maturity baseline-rate slice reserved for validation after stress/test precedence.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T050_s020_r005_q010,validation,Mid-maturity baseline-rate slice reserved for validation after stress/test precedence.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T050_s020_r010_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T050_s020_r010_q003,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T050_s020_r010_q006,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T050_s020_r010_q010,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T050_s040_r001_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T050_s040_r001_q003,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T050_s040_r001_q006,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T050_s040_r001_q010,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T050_s040_r005_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T050_s040_r005_q003,validation,Mid-maturity baseline-rate slice reserved for validation after stress/test precedence.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T050_s040_r005_q006,validation,Mid-maturity baseline-rate slice reserved for validation after stress/test precedence.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T050_s040_r005_q010,validation,Mid-maturity baseline-rate slice reserved for validation after stress/test precedence.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T050_s040_r010_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T050_s040_r010_q003,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T050_s040_r010_q006,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T050_s040_r010_q010,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T050_s060_r001_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T050_s060_r001_q003,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T050_s060_r001_q006,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T050_s060_r001_q010,stress_holdout,High-volatility and high-dividend stress combination held out before any row-level split.,dividend_call_family,yes,Regime-level assignment only; no generated samples exist yet.
+call_T050_s060_r005_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T050_s060_r005_q003,validation,Mid-maturity baseline-rate slice reserved for validation after stress/test precedence.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T050_s060_r005_q006,validation,Mid-maturity baseline-rate slice reserved for validation after stress/test precedence.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T050_s060_r005_q010,stress_holdout,High-volatility and high-dividend stress combination held out before any row-level split.,dividend_call_family,yes,Regime-level assignment only; no generated samples exist yet.
+call_T050_s060_r010_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T050_s060_r010_q003,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T050_s060_r010_q006,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T050_s060_r010_q010,stress_holdout,High-volatility and high-dividend stress combination held out before any row-level split.,dividend_call_family,yes,Regime-level assignment only; no generated samples exist yet.
+call_T100_s020_r001_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T100_s020_r001_q003,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T100_s020_r001_q006,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T100_s020_r001_q010,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T100_s020_r005_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T100_s020_r005_q003,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T100_s020_r005_q006,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T100_s020_r005_q010,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T100_s020_r010_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T100_s020_r010_q003,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T100_s020_r010_q006,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T100_s020_r010_q010,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T100_s040_r001_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T100_s040_r001_q003,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T100_s040_r001_q006,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T100_s040_r001_q010,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T100_s040_r005_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T100_s040_r005_q003,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T100_s040_r005_q006,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T100_s040_r005_q010,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T100_s040_r010_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T100_s040_r010_q003,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T100_s040_r010_q006,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T100_s040_r010_q010,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T100_s060_r001_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T100_s060_r001_q003,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T100_s060_r001_q006,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T100_s060_r001_q010,stress_holdout,High-volatility and high-dividend stress combination held out before any row-level split.,dividend_call_family,yes,Regime-level assignment only; no generated samples exist yet.
+call_T100_s060_r005_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T100_s060_r005_q003,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T100_s060_r005_q006,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T100_s060_r005_q010,stress_holdout,High-volatility and high-dividend stress combination held out before any row-level split.,dividend_call_family,yes,Regime-level assignment only; no generated samples exist yet.
+call_T100_s060_r010_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T100_s060_r010_q003,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T100_s060_r010_q006,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T100_s060_r010_q010,stress_holdout,High-volatility and high-dividend stress combination held out before any row-level split.,dividend_call_family,yes,Regime-level assignment only; no generated samples exist yet.
+call_T200_s020_r001_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T200_s020_r001_q003,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T200_s020_r001_q006,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T200_s020_r001_q010,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T200_s020_r005_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T200_s020_r005_q003,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T200_s020_r005_q006,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T200_s020_r005_q010,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T200_s020_r010_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T200_s020_r010_q003,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T200_s020_r010_q006,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T200_s020_r010_q010,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T200_s040_r001_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T200_s040_r001_q003,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T200_s040_r001_q006,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T200_s040_r001_q010,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T200_s040_r005_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T200_s040_r005_q003,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T200_s040_r005_q006,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T200_s040_r005_q010,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T200_s040_r010_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T200_s040_r010_q003,test,Long-maturity high-rate mid-volatility regime assigned to test after stress precedence.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T200_s040_r010_q006,test,Long-maturity high-rate mid-volatility regime assigned to test after stress precedence.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T200_s040_r010_q010,test,Long-maturity high-rate mid-volatility regime assigned to test after stress precedence.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T200_s060_r001_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T200_s060_r001_q003,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T200_s060_r001_q006,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T200_s060_r001_q010,stress_holdout,High-volatility and high-dividend stress combination held out before any row-level split.,dividend_call_family,yes,Regime-level assignment only; no generated samples exist yet.
+call_T200_s060_r005_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T200_s060_r005_q003,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T200_s060_r005_q006,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T200_s060_r005_q010,stress_holdout,High-volatility and high-dividend stress combination held out before any row-level split.,dividend_call_family,yes,Regime-level assignment only; no generated samples exist yet.
+call_T200_s060_r010_q000,test,No-dividend call validation/control regime assigned to test after stress precedence.,call_control_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T200_s060_r010_q003,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T200_s060_r010_q006,train,Default construction-planning training regime.,dividend_call_family,no,Regime-level assignment only; no generated samples exist yet.
+call_T200_s060_r010_q010,stress_holdout,High-volatility and high-dividend stress combination held out before any row-level split.,dividend_call_family,yes,Regime-level assignment only; no generated samples exist yet.

@@ -1,0 +1,289 @@
+regime_id,option_type,T,sigma,r,q,K,Smax,M,N,solver_variant,planned_use,notes
+put_T025_s020_r001_q000,put,0.25,0.20,0.01,0.00,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T025_s020_r001_q003,put,0.25,0.20,0.01,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T025_s020_r001_q006,put,0.25,0.20,0.01,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T025_s020_r001_q010,put,0.25,0.20,0.01,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T025_s020_r005_q000,put,0.25,0.20,0.05,0.00,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T025_s020_r005_q003,put,0.25,0.20,0.05,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T025_s020_r005_q006,put,0.25,0.20,0.05,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T025_s020_r005_q010,put,0.25,0.20,0.05,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T025_s020_r010_q000,put,0.25,0.20,0.10,0.00,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T025_s020_r010_q003,put,0.25,0.20,0.10,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T025_s020_r010_q006,put,0.25,0.20,0.10,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T025_s020_r010_q010,put,0.25,0.20,0.10,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T025_s040_r001_q000,put,0.25,0.40,0.01,0.00,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T025_s040_r001_q003,put,0.25,0.40,0.01,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T025_s040_r001_q006,put,0.25,0.40,0.01,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T025_s040_r001_q010,put,0.25,0.40,0.01,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T025_s040_r005_q000,put,0.25,0.40,0.05,0.00,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T025_s040_r005_q003,put,0.25,0.40,0.05,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T025_s040_r005_q006,put,0.25,0.40,0.05,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T025_s040_r005_q010,put,0.25,0.40,0.05,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T025_s040_r010_q000,put,0.25,0.40,0.10,0.00,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T025_s040_r010_q003,put,0.25,0.40,0.10,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T025_s040_r010_q006,put,0.25,0.40,0.10,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T025_s040_r010_q010,put,0.25,0.40,0.10,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T025_s060_r001_q000,put,0.25,0.60,0.01,0.00,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T025_s060_r001_q003,put,0.25,0.60,0.01,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T025_s060_r001_q006,put,0.25,0.60,0.01,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T025_s060_r001_q010,put,0.25,0.60,0.01,0.10,1.0,4.0,120,120,baseline_cn_psor,stress_holdout,Stress holdout by split precedence.
+put_T025_s060_r005_q000,put,0.25,0.60,0.05,0.00,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T025_s060_r005_q003,put,0.25,0.60,0.05,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T025_s060_r005_q006,put,0.25,0.60,0.05,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T025_s060_r005_q010,put,0.25,0.60,0.05,0.10,1.0,4.0,120,120,baseline_cn_psor,stress_holdout,Stress holdout by split precedence.
+put_T025_s060_r010_q000,put,0.25,0.60,0.10,0.00,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T025_s060_r010_q003,put,0.25,0.60,0.10,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T025_s060_r010_q006,put,0.25,0.60,0.10,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T025_s060_r010_q010,put,0.25,0.60,0.10,0.10,1.0,4.0,120,120,baseline_cn_psor,stress_holdout,Stress holdout by split precedence.
+put_T050_s020_r001_q000,put,0.50,0.20,0.01,0.00,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T050_s020_r001_q003,put,0.50,0.20,0.01,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T050_s020_r001_q006,put,0.50,0.20,0.01,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T050_s020_r001_q010,put,0.50,0.20,0.01,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T050_s020_r005_q000,put,0.50,0.20,0.05,0.00,1.0,4.0,120,120,baseline_cn_psor,validation,Planned regime only; not solved in this construction plan.
+put_T050_s020_r005_q003,put,0.50,0.20,0.05,0.03,1.0,4.0,120,120,baseline_cn_psor,validation,Planned regime only; not solved in this construction plan.
+put_T050_s020_r005_q006,put,0.50,0.20,0.05,0.06,1.0,4.0,120,120,baseline_cn_psor,validation,Planned regime only; not solved in this construction plan.
+put_T050_s020_r005_q010,put,0.50,0.20,0.05,0.10,1.0,4.0,120,120,baseline_cn_psor,validation,Planned regime only; not solved in this construction plan.
+put_T050_s020_r010_q000,put,0.50,0.20,0.10,0.00,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T050_s020_r010_q003,put,0.50,0.20,0.10,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T050_s020_r010_q006,put,0.50,0.20,0.10,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T050_s020_r010_q010,put,0.50,0.20,0.10,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T050_s040_r001_q000,put,0.50,0.40,0.01,0.00,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T050_s040_r001_q003,put,0.50,0.40,0.01,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T050_s040_r001_q006,put,0.50,0.40,0.01,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T050_s040_r001_q010,put,0.50,0.40,0.01,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T050_s040_r005_q000,put,0.50,0.40,0.05,0.00,1.0,4.0,120,120,baseline_cn_psor,validation,Planned regime only; not solved in this construction plan.
+put_T050_s040_r005_q003,put,0.50,0.40,0.05,0.03,1.0,4.0,120,120,baseline_cn_psor,validation,Planned regime only; not solved in this construction plan.
+put_T050_s040_r005_q006,put,0.50,0.40,0.05,0.06,1.0,4.0,120,120,baseline_cn_psor,validation,Planned regime only; not solved in this construction plan.
+put_T050_s040_r005_q010,put,0.50,0.40,0.05,0.10,1.0,4.0,120,120,baseline_cn_psor,validation,Planned regime only; not solved in this construction plan.
+put_T050_s040_r010_q000,put,0.50,0.40,0.10,0.00,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T050_s040_r010_q003,put,0.50,0.40,0.10,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T050_s040_r010_q006,put,0.50,0.40,0.10,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T050_s040_r010_q010,put,0.50,0.40,0.10,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T050_s060_r001_q000,put,0.50,0.60,0.01,0.00,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T050_s060_r001_q003,put,0.50,0.60,0.01,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T050_s060_r001_q006,put,0.50,0.60,0.01,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T050_s060_r001_q010,put,0.50,0.60,0.01,0.10,1.0,4.0,120,120,baseline_cn_psor,stress_holdout,Stress holdout by split precedence.
+put_T050_s060_r005_q000,put,0.50,0.60,0.05,0.00,1.0,4.0,120,120,baseline_cn_psor,validation,Planned regime only; not solved in this construction plan.
+put_T050_s060_r005_q003,put,0.50,0.60,0.05,0.03,1.0,4.0,120,120,baseline_cn_psor,validation,Planned regime only; not solved in this construction plan.
+put_T050_s060_r005_q006,put,0.50,0.60,0.05,0.06,1.0,4.0,120,120,baseline_cn_psor,validation,Planned regime only; not solved in this construction plan.
+put_T050_s060_r005_q010,put,0.50,0.60,0.05,0.10,1.0,4.0,120,120,baseline_cn_psor,stress_holdout,Stress holdout by split precedence.
+put_T050_s060_r010_q000,put,0.50,0.60,0.10,0.00,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T050_s060_r010_q003,put,0.50,0.60,0.10,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T050_s060_r010_q006,put,0.50,0.60,0.10,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T050_s060_r010_q010,put,0.50,0.60,0.10,0.10,1.0,4.0,120,120,baseline_cn_psor,stress_holdout,Stress holdout by split precedence.
+put_T100_s020_r001_q000,put,1.00,0.20,0.01,0.00,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T100_s020_r001_q003,put,1.00,0.20,0.01,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T100_s020_r001_q006,put,1.00,0.20,0.01,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T100_s020_r001_q010,put,1.00,0.20,0.01,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T100_s020_r005_q000,put,1.00,0.20,0.05,0.00,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T100_s020_r005_q003,put,1.00,0.20,0.05,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T100_s020_r005_q006,put,1.00,0.20,0.05,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T100_s020_r005_q010,put,1.00,0.20,0.05,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T100_s020_r010_q000,put,1.00,0.20,0.10,0.00,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T100_s020_r010_q003,put,1.00,0.20,0.10,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T100_s020_r010_q006,put,1.00,0.20,0.10,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T100_s020_r010_q010,put,1.00,0.20,0.10,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T100_s040_r001_q000,put,1.00,0.40,0.01,0.00,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T100_s040_r001_q003,put,1.00,0.40,0.01,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T100_s040_r001_q006,put,1.00,0.40,0.01,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T100_s040_r001_q010,put,1.00,0.40,0.01,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T100_s040_r005_q000,put,1.00,0.40,0.05,0.00,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T100_s040_r005_q003,put,1.00,0.40,0.05,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T100_s040_r005_q006,put,1.00,0.40,0.05,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T100_s040_r005_q010,put,1.00,0.40,0.05,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T100_s040_r010_q000,put,1.00,0.40,0.10,0.00,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T100_s040_r010_q003,put,1.00,0.40,0.10,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T100_s040_r010_q006,put,1.00,0.40,0.10,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T100_s040_r010_q010,put,1.00,0.40,0.10,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T100_s060_r001_q000,put,1.00,0.60,0.01,0.00,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T100_s060_r001_q003,put,1.00,0.60,0.01,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T100_s060_r001_q006,put,1.00,0.60,0.01,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T100_s060_r001_q010,put,1.00,0.60,0.01,0.10,1.0,4.0,120,120,baseline_cn_psor,stress_holdout,Stress holdout by split precedence.
+put_T100_s060_r005_q000,put,1.00,0.60,0.05,0.00,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T100_s060_r005_q003,put,1.00,0.60,0.05,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T100_s060_r005_q006,put,1.00,0.60,0.05,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T100_s060_r005_q010,put,1.00,0.60,0.05,0.10,1.0,4.0,120,120,baseline_cn_psor,stress_holdout,Stress holdout by split precedence.
+put_T100_s060_r010_q000,put,1.00,0.60,0.10,0.00,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T100_s060_r010_q003,put,1.00,0.60,0.10,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T100_s060_r010_q006,put,1.00,0.60,0.10,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T100_s060_r010_q010,put,1.00,0.60,0.10,0.10,1.0,4.0,120,120,baseline_cn_psor,stress_holdout,Stress holdout by split precedence.
+put_T200_s020_r001_q000,put,2.00,0.20,0.01,0.00,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T200_s020_r001_q003,put,2.00,0.20,0.01,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T200_s020_r001_q006,put,2.00,0.20,0.01,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T200_s020_r001_q010,put,2.00,0.20,0.01,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T200_s020_r005_q000,put,2.00,0.20,0.05,0.00,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T200_s020_r005_q003,put,2.00,0.20,0.05,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T200_s020_r005_q006,put,2.00,0.20,0.05,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T200_s020_r005_q010,put,2.00,0.20,0.05,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T200_s020_r010_q000,put,2.00,0.20,0.10,0.00,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T200_s020_r010_q003,put,2.00,0.20,0.10,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T200_s020_r010_q006,put,2.00,0.20,0.10,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T200_s020_r010_q010,put,2.00,0.20,0.10,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T200_s040_r001_q000,put,2.00,0.40,0.01,0.00,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T200_s040_r001_q003,put,2.00,0.40,0.01,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T200_s040_r001_q006,put,2.00,0.40,0.01,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T200_s040_r001_q010,put,2.00,0.40,0.01,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T200_s040_r005_q000,put,2.00,0.40,0.05,0.00,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T200_s040_r005_q003,put,2.00,0.40,0.05,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T200_s040_r005_q006,put,2.00,0.40,0.05,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T200_s040_r005_q010,put,2.00,0.40,0.05,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T200_s040_r010_q000,put,2.00,0.40,0.10,0.00,1.0,4.0,120,120,baseline_cn_psor,test,Planned regime only; not solved in this construction plan.
+put_T200_s040_r010_q003,put,2.00,0.40,0.10,0.03,1.0,4.0,120,120,baseline_cn_psor,test,Planned regime only; not solved in this construction plan.
+put_T200_s040_r010_q006,put,2.00,0.40,0.10,0.06,1.0,4.0,120,120,baseline_cn_psor,test,Planned regime only; not solved in this construction plan.
+put_T200_s040_r010_q010,put,2.00,0.40,0.10,0.10,1.0,4.0,120,120,baseline_cn_psor,test,Planned regime only; not solved in this construction plan.
+put_T200_s060_r001_q000,put,2.00,0.60,0.01,0.00,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T200_s060_r001_q003,put,2.00,0.60,0.01,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T200_s060_r001_q006,put,2.00,0.60,0.01,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T200_s060_r001_q010,put,2.00,0.60,0.01,0.10,1.0,4.0,120,120,baseline_cn_psor,stress_holdout,Stress holdout by split precedence.
+put_T200_s060_r005_q000,put,2.00,0.60,0.05,0.00,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T200_s060_r005_q003,put,2.00,0.60,0.05,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T200_s060_r005_q006,put,2.00,0.60,0.05,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T200_s060_r005_q010,put,2.00,0.60,0.05,0.10,1.0,4.0,120,120,baseline_cn_psor,stress_holdout,Stress holdout by split precedence.
+put_T200_s060_r010_q000,put,2.00,0.60,0.10,0.00,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T200_s060_r010_q003,put,2.00,0.60,0.10,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T200_s060_r010_q006,put,2.00,0.60,0.10,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+put_T200_s060_r010_q010,put,2.00,0.60,0.10,0.10,1.0,4.0,120,120,baseline_cn_psor,stress_holdout,Stress holdout by split precedence.
+call_T025_s020_r001_q000,call,0.25,0.20,0.01,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T025_s020_r001_q003,call,0.25,0.20,0.01,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T025_s020_r001_q006,call,0.25,0.20,0.01,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T025_s020_r001_q010,call,0.25,0.20,0.01,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T025_s020_r005_q000,call,0.25,0.20,0.05,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T025_s020_r005_q003,call,0.25,0.20,0.05,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T025_s020_r005_q006,call,0.25,0.20,0.05,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T025_s020_r005_q010,call,0.25,0.20,0.05,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T025_s020_r010_q000,call,0.25,0.20,0.10,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T025_s020_r010_q003,call,0.25,0.20,0.10,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T025_s020_r010_q006,call,0.25,0.20,0.10,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T025_s020_r010_q010,call,0.25,0.20,0.10,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T025_s040_r001_q000,call,0.25,0.40,0.01,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T025_s040_r001_q003,call,0.25,0.40,0.01,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T025_s040_r001_q006,call,0.25,0.40,0.01,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T025_s040_r001_q010,call,0.25,0.40,0.01,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T025_s040_r005_q000,call,0.25,0.40,0.05,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T025_s040_r005_q003,call,0.25,0.40,0.05,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T025_s040_r005_q006,call,0.25,0.40,0.05,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T025_s040_r005_q010,call,0.25,0.40,0.05,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T025_s040_r010_q000,call,0.25,0.40,0.10,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T025_s040_r010_q003,call,0.25,0.40,0.10,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T025_s040_r010_q006,call,0.25,0.40,0.10,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T025_s040_r010_q010,call,0.25,0.40,0.10,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T025_s060_r001_q000,call,0.25,0.60,0.01,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T025_s060_r001_q003,call,0.25,0.60,0.01,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T025_s060_r001_q006,call,0.25,0.60,0.01,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T025_s060_r001_q010,call,0.25,0.60,0.01,0.10,1.0,4.0,120,120,baseline_cn_psor,stress_holdout,Stress holdout by split precedence.
+call_T025_s060_r005_q000,call,0.25,0.60,0.05,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T025_s060_r005_q003,call,0.25,0.60,0.05,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T025_s060_r005_q006,call,0.25,0.60,0.05,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T025_s060_r005_q010,call,0.25,0.60,0.05,0.10,1.0,4.0,120,120,baseline_cn_psor,stress_holdout,Stress holdout by split precedence.
+call_T025_s060_r010_q000,call,0.25,0.60,0.10,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T025_s060_r010_q003,call,0.25,0.60,0.10,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T025_s060_r010_q006,call,0.25,0.60,0.10,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T025_s060_r010_q010,call,0.25,0.60,0.10,0.10,1.0,4.0,120,120,baseline_cn_psor,stress_holdout,Stress holdout by split precedence.
+call_T050_s020_r001_q000,call,0.50,0.20,0.01,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T050_s020_r001_q003,call,0.50,0.20,0.01,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T050_s020_r001_q006,call,0.50,0.20,0.01,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T050_s020_r001_q010,call,0.50,0.20,0.01,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T050_s020_r005_q000,call,0.50,0.20,0.05,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T050_s020_r005_q003,call,0.50,0.20,0.05,0.03,1.0,4.0,120,120,baseline_cn_psor,validation,Planned regime only; not solved in this construction plan.
+call_T050_s020_r005_q006,call,0.50,0.20,0.05,0.06,1.0,4.0,120,120,baseline_cn_psor,validation,Planned regime only; not solved in this construction plan.
+call_T050_s020_r005_q010,call,0.50,0.20,0.05,0.10,1.0,4.0,120,120,baseline_cn_psor,validation,Planned regime only; not solved in this construction plan.
+call_T050_s020_r010_q000,call,0.50,0.20,0.10,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T050_s020_r010_q003,call,0.50,0.20,0.10,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T050_s020_r010_q006,call,0.50,0.20,0.10,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T050_s020_r010_q010,call,0.50,0.20,0.10,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T050_s040_r001_q000,call,0.50,0.40,0.01,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T050_s040_r001_q003,call,0.50,0.40,0.01,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T050_s040_r001_q006,call,0.50,0.40,0.01,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T050_s040_r001_q010,call,0.50,0.40,0.01,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T050_s040_r005_q000,call,0.50,0.40,0.05,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T050_s040_r005_q003,call,0.50,0.40,0.05,0.03,1.0,4.0,120,120,baseline_cn_psor,validation,Planned regime only; not solved in this construction plan.
+call_T050_s040_r005_q006,call,0.50,0.40,0.05,0.06,1.0,4.0,120,120,baseline_cn_psor,validation,Planned regime only; not solved in this construction plan.
+call_T050_s040_r005_q010,call,0.50,0.40,0.05,0.10,1.0,4.0,120,120,baseline_cn_psor,validation,Planned regime only; not solved in this construction plan.
+call_T050_s040_r010_q000,call,0.50,0.40,0.10,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T050_s040_r010_q003,call,0.50,0.40,0.10,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T050_s040_r010_q006,call,0.50,0.40,0.10,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T050_s040_r010_q010,call,0.50,0.40,0.10,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T050_s060_r001_q000,call,0.50,0.60,0.01,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T050_s060_r001_q003,call,0.50,0.60,0.01,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T050_s060_r001_q006,call,0.50,0.60,0.01,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T050_s060_r001_q010,call,0.50,0.60,0.01,0.10,1.0,4.0,120,120,baseline_cn_psor,stress_holdout,Stress holdout by split precedence.
+call_T050_s060_r005_q000,call,0.50,0.60,0.05,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T050_s060_r005_q003,call,0.50,0.60,0.05,0.03,1.0,4.0,120,120,baseline_cn_psor,validation,Planned regime only; not solved in this construction plan.
+call_T050_s060_r005_q006,call,0.50,0.60,0.05,0.06,1.0,4.0,120,120,baseline_cn_psor,validation,Planned regime only; not solved in this construction plan.
+call_T050_s060_r005_q010,call,0.50,0.60,0.05,0.10,1.0,4.0,120,120,baseline_cn_psor,stress_holdout,Stress holdout by split precedence.
+call_T050_s060_r010_q000,call,0.50,0.60,0.10,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T050_s060_r010_q003,call,0.50,0.60,0.10,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T050_s060_r010_q006,call,0.50,0.60,0.10,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T050_s060_r010_q010,call,0.50,0.60,0.10,0.10,1.0,4.0,120,120,baseline_cn_psor,stress_holdout,Stress holdout by split precedence.
+call_T100_s020_r001_q000,call,1.00,0.20,0.01,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T100_s020_r001_q003,call,1.00,0.20,0.01,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T100_s020_r001_q006,call,1.00,0.20,0.01,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T100_s020_r001_q010,call,1.00,0.20,0.01,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T100_s020_r005_q000,call,1.00,0.20,0.05,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T100_s020_r005_q003,call,1.00,0.20,0.05,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T100_s020_r005_q006,call,1.00,0.20,0.05,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T100_s020_r005_q010,call,1.00,0.20,0.05,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T100_s020_r010_q000,call,1.00,0.20,0.10,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T100_s020_r010_q003,call,1.00,0.20,0.10,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T100_s020_r010_q006,call,1.00,0.20,0.10,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T100_s020_r010_q010,call,1.00,0.20,0.10,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T100_s040_r001_q000,call,1.00,0.40,0.01,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T100_s040_r001_q003,call,1.00,0.40,0.01,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T100_s040_r001_q006,call,1.00,0.40,0.01,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T100_s040_r001_q010,call,1.00,0.40,0.01,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T100_s040_r005_q000,call,1.00,0.40,0.05,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T100_s040_r005_q003,call,1.00,0.40,0.05,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T100_s040_r005_q006,call,1.00,0.40,0.05,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T100_s040_r005_q010,call,1.00,0.40,0.05,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T100_s040_r010_q000,call,1.00,0.40,0.10,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T100_s040_r010_q003,call,1.00,0.40,0.10,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T100_s040_r010_q006,call,1.00,0.40,0.10,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T100_s040_r010_q010,call,1.00,0.40,0.10,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T100_s060_r001_q000,call,1.00,0.60,0.01,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T100_s060_r001_q003,call,1.00,0.60,0.01,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T100_s060_r001_q006,call,1.00,0.60,0.01,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T100_s060_r001_q010,call,1.00,0.60,0.01,0.10,1.0,4.0,120,120,baseline_cn_psor,stress_holdout,Stress holdout by split precedence.
+call_T100_s060_r005_q000,call,1.00,0.60,0.05,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T100_s060_r005_q003,call,1.00,0.60,0.05,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T100_s060_r005_q006,call,1.00,0.60,0.05,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T100_s060_r005_q010,call,1.00,0.60,0.05,0.10,1.0,4.0,120,120,baseline_cn_psor,stress_holdout,Stress holdout by split precedence.
+call_T100_s060_r010_q000,call,1.00,0.60,0.10,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T100_s060_r010_q003,call,1.00,0.60,0.10,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T100_s060_r010_q006,call,1.00,0.60,0.10,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T100_s060_r010_q010,call,1.00,0.60,0.10,0.10,1.0,4.0,120,120,baseline_cn_psor,stress_holdout,Stress holdout by split precedence.
+call_T200_s020_r001_q000,call,2.00,0.20,0.01,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T200_s020_r001_q003,call,2.00,0.20,0.01,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T200_s020_r001_q006,call,2.00,0.20,0.01,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T200_s020_r001_q010,call,2.00,0.20,0.01,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T200_s020_r005_q000,call,2.00,0.20,0.05,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T200_s020_r005_q003,call,2.00,0.20,0.05,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T200_s020_r005_q006,call,2.00,0.20,0.05,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T200_s020_r005_q010,call,2.00,0.20,0.05,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T200_s020_r010_q000,call,2.00,0.20,0.10,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T200_s020_r010_q003,call,2.00,0.20,0.10,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T200_s020_r010_q006,call,2.00,0.20,0.10,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T200_s020_r010_q010,call,2.00,0.20,0.10,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T200_s040_r001_q000,call,2.00,0.40,0.01,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T200_s040_r001_q003,call,2.00,0.40,0.01,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T200_s040_r001_q006,call,2.00,0.40,0.01,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T200_s040_r001_q010,call,2.00,0.40,0.01,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T200_s040_r005_q000,call,2.00,0.40,0.05,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T200_s040_r005_q003,call,2.00,0.40,0.05,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T200_s040_r005_q006,call,2.00,0.40,0.05,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T200_s040_r005_q010,call,2.00,0.40,0.05,0.10,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T200_s040_r010_q000,call,2.00,0.40,0.10,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T200_s040_r010_q003,call,2.00,0.40,0.10,0.03,1.0,4.0,120,120,baseline_cn_psor,test,Planned regime only; not solved in this construction plan.
+call_T200_s040_r010_q006,call,2.00,0.40,0.10,0.06,1.0,4.0,120,120,baseline_cn_psor,test,Planned regime only; not solved in this construction plan.
+call_T200_s040_r010_q010,call,2.00,0.40,0.10,0.10,1.0,4.0,120,120,baseline_cn_psor,test,Planned regime only; not solved in this construction plan.
+call_T200_s060_r001_q000,call,2.00,0.60,0.01,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T200_s060_r001_q003,call,2.00,0.60,0.01,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T200_s060_r001_q006,call,2.00,0.60,0.01,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T200_s060_r001_q010,call,2.00,0.60,0.01,0.10,1.0,4.0,120,120,baseline_cn_psor,stress_holdout,Stress holdout by split precedence.
+call_T200_s060_r005_q000,call,2.00,0.60,0.05,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T200_s060_r005_q003,call,2.00,0.60,0.05,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T200_s060_r005_q006,call,2.00,0.60,0.05,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T200_s060_r005_q010,call,2.00,0.60,0.05,0.10,1.0,4.0,120,120,baseline_cn_psor,stress_holdout,Stress holdout by split precedence.
+call_T200_s060_r010_q000,call,2.00,0.60,0.10,0.00,1.0,4.0,120,120,baseline_cn_psor,test,No-dividend American call control; not core dividend-call evidence.
+call_T200_s060_r010_q003,call,2.00,0.60,0.10,0.03,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T200_s060_r010_q006,call,2.00,0.60,0.10,0.06,1.0,4.0,120,120,baseline_cn_psor,train,Planned regime only; not solved in this construction plan.
+call_T200_s060_r010_q010,call,2.00,0.60,0.10,0.10,1.0,4.0,120,120,baseline_cn_psor,stress_holdout,Stress holdout by split precedence.

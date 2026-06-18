@@ -1,0 +1,334 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{fontspec}
+\IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{\setmainfont{TeX Gyre Termes}}
+\IfFontExistsTF{Menlo}{\setmonofont{Menlo}}{\setmonofont{Latin Modern Mono}}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage[round,authoryear]{natbib}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+\usepackage{microtype}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.65em}
+\setlist[itemize]{leftmargin=1.4em}
+\newcommand{\file}[1]{\path{#1}}
+\newcommand{\code}[1]{\path{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small Dataset Construction Plan}
+\rhead{\small Planning Only}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\title{\textbf{Dataset Construction Plan}\\
+\large Final Planning Gate Before Any Dataset Generation}
+\author{Codex-assisted surrogate planning report}
+\date{June 18, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This report converts the approved surrogate dataset design into exact future construction
+instructions. It approves construction planning only. It does not generate a dataset, solve the
+planned regimes, create \code{.npz}, \code{.npy}, or \code{.pt} files, export labels, create
+training tables, create model files, train neural networks, or run broad production-scale sweeps.
+The future label source remains the validated baseline American Crank--Nicolson / projected SOR
+solver.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Purpose of Dataset Construction Plan}
+
+The surrogate dataset design plan approved only a schema and policy. This construction plan is
+the next gate: it names the planned regimes, dry-run subset, split assignment, future storage
+manifest, failure handling policy, and approval checklist. It is still a planning document. No
+regime is solved here and no label array is produced.
+
+The construction objective is a future dataset for constrained surrogate experiments on American
+option value and continuation premium, with boundary and Greek diagnostics preserved as metadata
+or masked labels. The project remains grounded in the validated finite-difference American option
+benchmark and free-boundary setting
+\citep{black_scholes_1973,merton_1973,brennan_schwartz_1977,wilmott_howison_dewynne_1995}.
+
+\section{Design Plan Versus Construction Plan}
+
+\begin{longtable}{L{0.28\textwidth} L{0.32\textwidth} L{0.28\textwidth}}
+\toprule
+Artifact & What it decides & What it does not do \\
+\midrule
+\endhead
+Dataset design plan & Feature schema, label schema, parameter grid, masks, diagnostics, and split policy. & It does not name every regime or authorize generation. \\
+Construction plan & Exact regime list, dry-run subset, split assignment, future storage manifest, and failure rules. & It does not run the solver or create dataset files. \\
+Future dry run & A small future execution over eight regimes after approval. & It is not performed in this report. \\
+Future small dataset & A later \code{v1_small_grid} generation if dry-run review passes. & It remains blocked until human review. \\
+\bottomrule
+\end{longtable}
+
+\section{Source Evidence and Previous Gates}
+
+The construction plan inherits constraints from the solver-validation synthesis, application
+strength gate, downstream planning, Pilot 01, quantitative risk analytics, and the surrogate
+dataset design plan. The methodology handouts warn that neural surrogates should be trained only
+after the classical benchmark and application diagnostics are credible. They also warn against
+random-only splits and unmasked Gamma labels near payoff kinks and free-boundary regions.
+
+\begin{longtable}{L{0.30\textwidth} L{0.50\textwidth}}
+\toprule
+Prior source & Construction constraint \\
+\midrule
+\endhead
+Ticket 12 synthesis & Solver validation passed with limitations, not production certification. \\
+Application-strength gate & Dataset planning is allowed; dataset construction remains blocked. \\
+Dataset design plan & Use normalized \(K=1\), baseline CN/PSOR, planned feature and label schemas, masks, diagnostics, and regime-level splits. \\
+Methodology handouts & Use validated PSOR labels, stress regimes, held-out regimes, and boundary/Gamma caution. \\
+\bottomrule
+\end{longtable}
+
+\section{Planned Full Regime Grid and Count}
+
+The future full small-grid dataset is planned as the Cartesian product:
+\[
+\text{option\_type}\in\{\text{put},\text{call}\},\quad
+T\in\{0.25,0.5,1.0,2.0\},\quad
+\sigma\in\{0.20,0.40,0.60\},
+\]
+\[
+r\in\{0.01,0.05,0.10\},\qquad
+q\in\{0.00,0.03,0.06,0.10\}.
+\]
+
+This gives:
+\[
+2 \times 4 \times 3 \times 3 \times 4 = 288
+\]
+planned regimes: 144 American puts and 144 American calls. The 36 no-dividend call regimes are
+included as validation/control regimes. They are not core dividend-call early-exercise evidence.
+
+Every planned regime uses:
+\begin{center}
+\(K=1,\quad S_{\max}=4K,\quad M=N=120\),\\
+\code{solver_variant = baseline_cn_psor}.
+\end{center}
+
+\begin{longtable}{L{0.27\textwidth} L{0.53\textwidth}}
+\toprule
+Regime-plan rule & Exact policy \\
+\midrule
+\endhead
+Regime ID format & \code{\{option\}_T\{025|050|100|200\}_s\{020|040|060\}_r\{001|005|010\}_q\{000|003|006|010\}}. \\
+Machine-readable plan & \file{reports/05_surrogate/dataset_regime_plan.csv}. \\
+Generated now & No. The CSV is a plan, not solved data. \\
+Control rows & Call rows with \(q=0\) are marked as no-dividend call controls. \\
+\bottomrule
+\end{longtable}
+
+\section{Dry-Run Subset Plan}
+
+Before any 288-regime generation, the future implementation must run a small manual-review dry
+run. The dry run is planned as eight regimes:
+
+\begin{longtable}{L{0.23\textwidth} L{0.31\textwidth} L{0.30\textwidth}}
+\toprule
+Dry-run ID & Regime ID & Purpose \\
+\midrule
+\endhead
+\code{dry_01} & \code{put_T100_s020_r005_q003} & Base-like American put. \\
+\code{dry_02} & \code{put_T100_s060_r005_q003} & High-volatility put. \\
+\code{dry_03} & \code{put_T100_s020_r001_q003} & Low-rate put. \\
+\code{dry_04} & \code{put_T200_s040_r010_q010} & Longer, higher-rate stress put. \\
+\code{dry_05} & \code{call_T100_s020_r005_q006} & Base-like dividend-paying call. \\
+\code{dry_06} & \code{call_T100_s020_r005_q010} & High-dividend call. \\
+\code{dry_07} & \code{call_T100_s060_r005_q006} & High-volatility dividend call. \\
+\code{dry_08} & \code{call_T100_s020_r005_q000} & No-dividend call control. \\
+\bottomrule
+\end{longtable}
+
+The machine-readable dry-run plan is listed in the reproducibility and source record. It is not a
+dry-run result table.
+
+\section{Feature and Label Schema Summary}
+
+The future feature vector remains:
+\[
+x=\left(\log(S/K),\ \tau/T,\ r,\ q,\ \sigma,\ T,\ \text{is\_call}\right),
+\]
+with solver and grid metadata retained separately. The main learning and reporting region remains:
+\[
+S/K\in[0.4,1.8],\qquad \tau/T\in[0,1].
+\]
+
+The most reliable future labels are \code{value_over_K} with formula \(U/K\),
+\code{payoff_over_K} with formula \(\Phi/K\), and \code{premium_over_K} with formula
+\((U-\Phi)/K\). Exercise indicators and boundary locations are threshold-based diagnostics.
+Delta is cautioned. Scaled Gamma is high caution and must never be used unmasked near payoff
+kinks, maturity rows, or extracted boundary bands.
+
+\section{Mask and Diagnostic Policy Summary}
+
+Future generated surfaces must preserve masks for payoff-kink-near, boundary-near, maturity-row,
+strict-interior, Gamma-allowed, Delta-allowed, exercise-region, and continuation-region nodes.
+Masks are mandatory metadata, not decoration.
+
+Every future solved regime must record:
+\begin{itemize}
+  \item solver convergence flag;
+  \item maximum and mean PSOR iterations;
+  \item maximum final PSOR update;
+  \item maximum obstacle violation;
+  \item maximum equation violation;
+  \item maximum absolute complementarity product;
+  \item boundary found count and boundary threshold;
+  \item grid metadata \(M,N,S_{\max},\Delta S,\Delta\tau\);
+  \item solver name and solver variant;
+  \item downstream use status.
+\end{itemize}
+
+\section{Split Assignment Plan}
+
+The split is regime-level, not row-level and not random point only. The deterministic precedence is:
+\begin{enumerate}
+  \item \code{stress_holdout}: \(\sigma=0.60\) and \(q=0.10\);
+  \item \code{test}: all call regimes with \(q=0.00\), plus \(T=2.0\), \(r=0.10\), \(\sigma=0.40\), after stress precedence;
+  \item \code{validation}: \(T=0.5\) and \(r=0.05\), after stress/test precedence;
+  \item \code{train}: all remaining regimes.
+\end{enumerate}
+
+\begin{longtable}{L{0.24\textwidth} L{0.20\textwidth} L{0.42\textwidth}}
+\toprule
+Split & Planned count & Purpose \\
+\midrule
+\endhead
+\code{train} & 202 & Main fitting regimes for future surrogate experiments. \\
+\code{validation} & 19 & Model-selection regimes after stress/test precedence. \\
+\code{test} & 43 & No-dividend call controls and selected long-maturity high-rate regimes. \\
+\code{stress_holdout} & 24 & High-volatility, high-dividend stress regimes. \\
+\bottomrule
+\end{longtable}
+
+The machine-readable assignment is listed in the reproducibility and source record. No generated
+rows exist yet.
+
+\section{Storage and Manifest Plan}
+
+The future storage package may use one compressed \code{.npz} numeric-array file plus CSV or JSON
+manifests. This report does not create that storage. The planned storage manifest has
+\code{created_now=no} for every row.
+
+\begin{longtable}{L{0.28\textwidth} L{0.22\textwidth} L{0.34\textwidth}}
+\toprule
+Future file & Type & Purpose \\
+\midrule
+\endhead
+Future arrays file & compressed arrays & Future numeric samples only after approval; exact \code{.npz} name is in the CSV plan. \\
+Regime manifest & CSV manifest & Regime parameters and solver settings. \\
+Diagnostic summary & CSV manifest & PSOR, LCP, boundary, runtime, and mask diagnostics. \\
+Split assignment & CSV manifest & Approved regime-level split assignment. \\
+Label schema copy & CSV schema copy & Frozen future label schema. \\
+Mask policy & JSON manifest & Exact mask thresholds and widths. \\
+Generation log & text log & Future command, environment, and failure log. \\
+Validation report & PDF report & Future post-generation review report. \\
+\bottomrule
+\end{longtable}
+
+\section{Failure Handling Policy}
+
+The future generation script must reject or quarantine regimes according to the failure policy
+before any label export:
+
+\begin{longtable}{L{0.30\textwidth} L{0.34\textwidth} L{0.22\textwidth}}
+\toprule
+Failure type & Detection rule & Default action \\
+\midrule
+\endhead
+PSOR non-convergence & PSOR convergence flag is false. & Exclude and review. \\
+Obstacle violation & Obstacle violation exceeds \(10^{-8}\). & Exclude and review. \\
+Equation violation & Equation violation exceeds \(10^{-6}\). & Exclude and review. \\
+Complementarity failure & Complementarity product exceeds \(10^{-6}\). & Exclude and review. \\
+Boundary not found & Boundary flag false or count unexpectedly low. & Keep price/premium only if other diagnostics pass; boundary label missing. \\
+Greek masks missing & Required masks absent or unapproved. & Block Delta/Gamma labels. \\
+Unexpected runtime & Runtime exceeds approved budget. & Mark expensive and review. \\
+Missing metadata & Required provenance or diagnostics absent. & Block export until fixed. \\
+\bottomrule
+\end{longtable}
+
+\section{Construction Approval Checklist}
+
+Actual dataset construction may start only after human review approves:
+\begin{itemize}
+  \item exact regimes and 288-regime count;
+  \item dry-run subset;
+  \item split assignment;
+  \item storage format;
+  \item diagnostic thresholds;
+  \item failure handling policy;
+  \item mask widths;
+  \item post-dry-run review process.
+\end{itemize}
+
+The checklist is listed in the reproducibility and source record. It records planning status only.
+
+\section{Blocked Actions}
+
+The following remain blocked by this plan:
+\begin{itemize}
+  \item actual dataset construction;
+  \item CN/PSOR solves over the planned regimes;
+  \item \code{.npz}, \code{.npy}, or \code{.pt} file creation;
+  \item label-array export;
+  \item training-table export;
+  \item model-file creation;
+  \item neural surrogate training;
+  \item broad production-scale sweeps;
+  \item production Greek labels;
+  \item final paper claims across all regimes.
+\end{itemize}
+
+\section{Limitations}
+
+This construction plan is detailed enough to implement a future dry-run generator, but it is not
+evidence that the dataset exists. The split counts are deterministic and auditable, but they have
+not been tested on generated rows. Boundary and Gamma labels remain diagnostic and mask-dependent.
+The planned \(M=N=120\) grid is inherited from pilot defaults and should be confirmed on selected
+\(M=N=180\) cases before broad scaling.
+
+\section{Recommended Next Step}
+
+The recommended next step is human review of this construction plan and its six planning CSVs. If
+accepted, the next technical ticket should implement only the eight-regime \code{v0_dry_run}
+generator, parse the approved planning CSVs, write no full 288-regime dataset, and produce a
+post-dry-run review report before any \code{v1_small_grid} generation.
+
+\section{Reproducibility and Source Record}
+
+\begin{longtable}{L{0.34\textwidth} L{0.48\textwidth}}
+\toprule
+Item & Record \\
+\midrule
+\endhead
+Regime plan & \file{reports/05_surrogate/dataset_regime_plan.csv}. \\
+Dry-run subset & \file{reports/05_surrogate/dataset_dry_run_subset_plan.csv}. \\
+Split assignment & \file{reports/05_surrogate/dataset_split_assignment_plan.csv}. \\
+Storage manifest plan & \file{reports/05_surrogate/dataset_storage_manifest_plan.csv}. \\
+Failure handling policy & \file{reports/05_surrogate/dataset_failure_handling_policy.csv}. \\
+Construction checklist & \file{reports/05_surrogate/dataset_construction_checklist.csv}. \\
+Construction backlog & \file{reports/05_surrogate/dataset_construction_backlog.md}. \\
+Shared bibliography & \file{reports/03_solver/references.bib}. \\
+\bottomrule
+\end{longtable}
+
+\bibliographystyle{plainnat}
+\bibliography{reports/03_solver/references}
+
+\end{document}

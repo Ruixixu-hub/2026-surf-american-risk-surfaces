@@ -1,0 +1,11 @@
+checklist_item,required_before_generation,status_now,notes
+Existing five design CSVs parse with stable columns,yes,complete_for_planning,Verified before creating the construction plan.
+Full 288-regime plan reviewed,yes,planned_not_approved_for_generation,Human review must approve regime count and q=0 call control treatment.
+Eight-regime dry-run subset approved,yes,planned_not_generated,Dry run must happen before any v1_small_grid generation.
+Regime-level split assignment approved,yes,planned_not_generated,No row-level split exists because no rows exist.
+Storage format approved,yes,planned_only,Future .npz and manifests are described but not created.
+Diagnostic thresholds approved,yes,planned_from_prior_tickets,Review tolerances before export.
+Failure handling policy approved,yes,planned_not_exercised,No failed regimes exist because no regimes are solved here.
+"Mask widths approved for boundary, kink, maturity, Delta, and Gamma",yes,review_required,Must be fixed before using Greek labels.
+"No dataset arrays, label exports, or model files created by this plan",yes,complete_for_planning,This construction plan is report-only.
+Post-dry-run review gate scheduled,yes,pending_human_review,Dry-run diagnostics should be compared with Pilot 01 and analytics evidence.
