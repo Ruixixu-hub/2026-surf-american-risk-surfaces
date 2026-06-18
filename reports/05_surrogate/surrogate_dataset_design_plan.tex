@@ -1,0 +1,358 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{fontspec}
+\IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{\setmainfont{TeX Gyre Termes}}
+\IfFontExistsTF{Menlo}{\setmonofont{Menlo}}{\setmonofont{Latin Modern Mono}}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage[round,authoryear]{natbib}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+\usepackage{microtype}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.65em}
+\setlist[itemize]{leftmargin=1.4em}
+\newcommand{\file}[1]{\path{#1}}
+\newcommand{\code}[1]{\path{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small Surrogate Dataset Design}
+\rhead{\small Planning Only}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\title{\textbf{Surrogate Dataset Design Plan}\\
+\large Planning Gate Before Any Dataset Construction}
+\author{Codex-assisted surrogate planning report}
+\date{June 17, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This report defines the planned schema, parameter grid, label policy, mask policy, diagnostics,
+split strategy, and construction gate for a future surrogate dataset. It approves dataset design
+only. It does not generate data, labels, arrays, neural-network files, training tables, broad
+parameter sweeps, or surrogate models. All future labels must come from the validated baseline
+American Crank--Nicolson / projected SOR solver unless a later human-review gate approves a
+separately labelled alternative.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Purpose of the Dataset Design Plan}
+
+The application-strength gate concluded \code{READY_FOR_DATASET_PLANNING_WITH_LIMITATIONS}. The
+next step is therefore a written dataset design plan, not dataset construction. This report
+records the planned future schema and quality policy so that a later construction ticket can be
+reviewed before it creates any arrays or labels.
+
+The plan follows the project's evidence ladder: classical American option validation, pilot
+stress-map diagnostics, quantitative risk analytics, and then dataset planning. This order is
+important because a neural surrogate trained on unreliable numerical labels would only learn
+unreliable structure. The mathematical background remains the Black--Scholes American
+free-boundary and finite-difference setting
+\citep{black_scholes_1973,merton_1973,brennan_schwartz_1977,wilmott_howison_dewynne_1995}.
+
+\section{Link to Solver Validation and Application-Strength Gate}
+
+Ticket 12 passed solver validation with limitations. The downstream design gate approved only a
+small pilot. Pilot 01 and quantitative risk analytics then showed coherent application messages:
+put boundaries moved lower as volatility increased, dividend-call boundaries moved lower as
+dividend yield increased, high volatility increased PSOR effort, and LCP diagnostics remained
+small in the tested regimes.
+
+Those results support dataset planning. They do not support immediate generation, broad sweeps,
+neural training, production Greek labels, or final paper claims.
+
+\begin{longtable}{L{0.30\textwidth} L{0.48\textwidth}}
+\toprule
+Prior gate & Constraint carried into this plan \\
+\midrule
+\endhead
+Ticket 12 synthesis & Solver is validated with limitations, not production certified. \\
+Application-strength gate & Planning is allowed; construction and training remain blocked. \\
+Pilot 01 & Use baseline CN/PSOR, \(K=1\), and full diagnostics. \\
+Quantitative analytics & Preserve boundary, Gamma, PSOR, runtime, and LCP metadata. \\
+Reference integration & Use verified citations and avoid unsupported literature claims. \\
+\bottomrule
+\end{longtable}
+
+\section{Dataset Purpose and Non-Generation Statement}
+
+The future dataset is intended to support constrained surrogate experiments for American option
+price and continuation-premium surfaces, boundary diagnostics, and possibly masked Greek
+diagnostics. It should help answer whether a surrogate can accelerate scenario evaluation while
+respecting the payoff obstacle, continuation premium, and boundary-aware risk structure.
+
+This step does not produce the dataset. The files in \file{reports/05_surrogate/} are planning
+artifacts only. No \code{.npz}, \code{.npy}, \code{.pt}, training table, model file, or generated
+label file is created by this design plan.
+
+\section{Solver Source and Default Numerical Settings}
+
+All future labels must come from the validated baseline solver:
+\begin{center}
+\code{solver_name = american_crank_nicolson_psor_price}\\
+\code{solver_variant = baseline_cn_psor}
+\end{center}
+
+Rannacher-smoothed outputs are not the default. Ticket 10A kept Rannacher as an optional
+comparison tool only \citep{rannacher_1984}. If Rannacher is ever included in a later dataset, it
+must be separately labelled and must not be pooled silently with baseline CN/PSOR labels.
+
+The first construction plan should inherit the downstream defaults unless human review changes
+them: normalized strike \(K=1\), default \(S_{\max}=4K\), default \(M=N=120\), and selected
+higher-grid confirmation at \(M=N=180\) before broad generation.
+
+\section{Option Families}
+
+The planned dataset must include:
+\begin{itemize}
+  \item American puts;
+  \item dividend-paying American calls.
+\end{itemize}
+
+Both families are required because the application analytics produced meaningful but different
+messages for puts and dividend-paying calls. A pooled dataset that hides dividend-call boundary
+weakness would not serve the project. No-dividend American calls remain useful as validation
+controls, but they are not the core first dataset family.
+
+\section{Feature Schema}
+
+The primary learning features are normalized variables:
+\[
+x = \left(\log(S/K),\ \tau/T,\ r,\ q,\ \sigma,\ T,\ \text{is\_call}\right).
+\]
+This matches the methodology handout's normalized feature recommendation while keeping enough
+metadata for solver audit.
+
+\begin{longtable}{L{0.24\textwidth} L{0.33\textwidth} L{0.16\textwidth} L{0.17\textwidth}}
+\toprule
+Feature & Definition & Required & Notes \\
+\midrule
+\endhead
+\code{log_moneyness} & \(\log(S/K)\). & yes & Primary spot feature. \\
+\code{tau_fraction} & \(\tau/T\). & yes & Normalized time-to-maturity. \\
+\code{r} & Risk-free rate. & yes & Scale consistently in preprocessing. \\
+\code{q} & Continuous dividend yield. & yes & Needed for both option families. \\
+\code{sigma} & Volatility. & yes & Stress-sensitive regime feature. \\
+\code{T} & Maturity in years. & yes & Planned grid includes four values. \\
+\code{is_call} & 1 for call, 0 for put. & yes & Numeric option-family indicator. \\
+\code{option_type} & \code{put} or \code{call}. & yes & Human-readable audit field. \\
+\code{S_over_K} & \(S/K\). & optional & Redundant but useful for reporting. \\
+\code{Smax}, \code{M}, \code{N} & Solver domain and grid metadata. & yes & Required for reproducibility. \\
+\bottomrule
+\end{longtable}
+
+The companion CSV version is listed in the reproducibility and source record.
+
+\section{Label Schema}
+
+The first design separates reliable price-style labels from diagnostic labels. This protects the
+project from treating every computed quantity as equally trustworthy.
+
+\begin{longtable}{L{0.30\textwidth} L{0.25\textwidth} L{0.16\textwidth} L{0.19\textwidth}}
+\toprule
+Label & Definition & Reliability & Allowed use \\
+\midrule
+\endhead
+\code{value_over_K} & \(U/K\). & core reliable & Primary future label. \\
+\code{payoff_over_K} & \(\Phi/K\). & analytic reliable & Reference label. \\
+\code{premium_over_K} & \((U-\Phi)/K\). & reliable with caution & Primary future label. \\
+\code{exercise_indicator} & Threshold-derived exercise flag. & diagnostic & Metadata only at first. \\
+\code{boundary_spot_over_K} & Extracted boundary divided by \(K\). & diagnostic & Boundary metadata. \\
+\code{delta} & Finite-difference Delta. & cautioned & Optional diagnostic label. \\
+\code{scaled_gamma} & \(K\Gamma\). & high caution & Masked diagnostic only. \\
+\bottomrule
+\end{longtable}
+
+Price and premium labels are the most reliable first targets. Boundary labels remain
+threshold-based. Gamma labels are fragile near payoff kinks, maturity, and extracted boundaries;
+they must never be used unmasked. The companion CSV version is listed in the reproducibility and
+source record.
+
+\section{Parameter Grid Plan}
+
+The first planned grid is intentionally small:
+\[
+T \in \{0.25,0.5,1.0,2.0\},\quad
+\sigma \in \{0.20,0.40,0.60\},\quad
+r \in \{0.01,0.05,0.10\}.
+\]
+For dividend yield:
+\[
+q \in \{0.00,0.03,0.06,0.10\}.
+\]
+For dividend-paying calls, the first construction plan should ensure positive-dividend regimes
+are included. The \(q=0\) no-dividend call is mainly a validation control and should not dominate
+the dividend-call dataset.
+
+This grid is a plan, not generated data. The companion CSV version is listed in the reproducibility
+and source record.
+
+\section{Spot-Time Sampling Plan}
+
+Future solves should keep the full solver domain for boundary conditions and diagnostics. The
+main learning and reporting region should be:
+\[
+S/K \in [0.4,1.8],\qquad \tau/T \in [0,1].
+\]
+
+The recommended first version is a regular-grid design: retain grid nodes in the target region
+because they are reproducible and easy to audit. Boundary-near, kink-near, and maturity rows
+should be marked by masks rather than oversampled in this design step. Random samples from
+surfaces and boundary-focused oversampling may be considered later, but only after the first
+construction plan fixes masks, splits, and diagnostics.
+
+\section{Mask Policy}
+
+Masks are mandatory metadata. They are not cosmetic fields. They tell future surrogate code and
+human reviewers which labels are safe to use for which purpose.
+
+\begin{longtable}{L{0.31\textwidth} L{0.36\textwidth} L{0.21\textwidth}}
+\toprule
+Mask & Meaning & Required use \\
+\midrule
+\endhead
+\code{payoff_kink_near} & Node is near \(S=K\), where payoff slope changes. & Greek caution. \\
+\code{boundary_near} & Node is near the extracted free-boundary diagnostic. & Greek and boundary caution. \\
+\code{maturity_row} & Node belongs to \(\tau=0\). & Greek caution. \\
+\code{strict_interior} & Node avoids endpoints, kink, maturity, and boundary bands. & Safer Greek summaries. \\
+\code{gamma_allowed_mask} & Node is allowed for Gamma target use. & Required for Gamma. \\
+\code{delta_allowed_mask} & Node is allowed for Delta target use. & Required for Delta. \\
+\code{exercise_region} & Threshold-derived exercise-like region. & Boundary metadata. \\
+\code{continuation_region} & Threshold-derived continuation-like region. & Boundary metadata. \\
+\bottomrule
+\end{longtable}
+
+The mask policy follows the Ticket 09 boundary extraction and Ticket 10 Greek-diagnostic logic.
+It also follows the handout warning not to train heavily on Gamma exactly at payoff kinks or
+extracted boundaries.
+
+\section{Diagnostic Metadata Policy}
+
+Every future solved regime must store diagnostics before any label is accepted:
+\begin{itemize}
+  \item all PSOR steps converged;
+  \item maximum and mean PSOR iterations;
+  \item maximum final PSOR update;
+  \item maximum obstacle violation;
+  \item maximum equation violation;
+  \item maximum absolute complementarity product;
+  \item boundary found count and boundary threshold;
+  \item \(M\), \(N\), \(S_{\max}\), \(\Delta S\), and \(\Delta\tau\);
+  \item solver name and solver variant;
+  \item downstream use status.
+\end{itemize}
+
+If a regime fails convergence or diagnostic checks, it must be excluded from label export until
+human review decides how to handle it. The companion CSV version is listed in the reproducibility
+and source record.
+
+\section{Train/Test Split Policy}
+
+The main split must be regime-level: hold out entire parameter combinations. A random point split
+inside a solved surface is allowed only as a secondary debugging diagnostic. Neighboring grid
+points from the same surface are highly correlated; using them in both train and test can make a
+surrogate look better than it really is.
+
+\begin{longtable}{L{0.26\textwidth} L{0.37\textwidth} L{0.25\textwidth}}
+\toprule
+Split type & Purpose & Priority \\
+\midrule
+\endhead
+Regime holdout & Test generalization to unseen parameter combinations. & primary \\
+Option-family balance & Ensure puts and dividend calls are both represented. & primary \\
+Stress-regime holdout & Test high-volatility, high-dividend, or low-rate regions. & primary \\
+Random point split & Debug interpolation within solved surfaces. & secondary only \\
+Boundary-band holdout & Optional future boundary-specific diagnostic. & review required \\
+\bottomrule
+\end{longtable}
+
+The machine-readable version is \file{reports/05_surrogate/dataset_split_policy.csv}.
+
+\section{Storage Recommendation}
+
+The future construction ticket may use compressed arrays such as \code{.npz} plus CSV or JSON
+manifests. A reasonable future package would include one array file for numeric samples and one
+human-readable manifest for regimes, diagnostics, masks, and split membership.
+
+This report does not create that storage. No array file, model file, training table, or label
+export is produced here.
+
+\section{Dataset Construction Gate}
+
+Dataset construction may start only after human review approves:
+\begin{itemize}
+  \item parameter grid;
+  \item feature schema;
+  \item label schema;
+  \item mask policy;
+  \item diagnostic policy;
+  \item split strategy;
+  \item storage format;
+  \item handling of failed diagnostics.
+\end{itemize}
+
+Approval of this design plan is not approval to train models. A later surrogate plan must review
+model architecture, losses, metrics, held-out regime tests, and PSOR spot-check policy.
+
+\section{Blocked Actions}
+
+The following remain blocked:
+\begin{itemize}
+  \item actual dataset construction;
+  \item \code{.npz}, \code{.npy}, \code{.pt}, or training-table export;
+  \item neural surrogate training;
+  \item broad production-scale sweeps;
+  \item unmasked Gamma labels;
+  \item final paper claims based on a dataset that does not yet exist.
+\end{itemize}
+
+\section{Limitations}
+
+The planned grid is deliberately small. It should be treated as a first design, not a production
+coverage claim. Boundary labels are threshold-based. Gamma labels remain fragile. Runtime and
+PSOR effort may change under larger grids or wider parameter ranges. The plan also does not yet
+specify exact train/test regime IDs; that should be done in the construction plan before any data
+is generated.
+
+\section{Recommended Next Step}
+
+The recommended next step is human review of the five schema and policy CSVs plus this report. If
+accepted, the next technical artifact should be a dataset construction plan that names the exact
+regimes, storage format, diagnostic failure rules, and split assignments. Only after that plan is
+approved should the project generate any dataset files.
+
+\section{Reproducibility and Source Record}
+
+\begin{longtable}{L{0.34\textwidth} L{0.50\textwidth}}
+\toprule
+Item & Record \\
+\midrule
+\endhead
+Feature schema & \file{reports/05_surrogate/dataset_feature_schema.csv}. \\
+Label schema & \file{reports/05_surrogate/dataset_label_schema.csv}. \\
+Parameter grid plan & \file{reports/05_surrogate/dataset_parameter_grid_plan.csv}. \\
+Split policy & \file{reports/05_surrogate/dataset_split_policy.csv}. \\
+Diagnostic policy & \file{reports/05_surrogate/dataset_diagnostic_policy.csv}. \\
+Backlog & \file{reports/05_surrogate/dataset_generation_backlog.md}. \\
+Design report & \file{reports/05_surrogate/surrogate_dataset_design_plan.tex}. \\
+Shared bibliography & \file{reports/03_solver/references.bib}. \\
+\bottomrule
+\end{longtable}
+
+\bibliographystyle{plainnat}
+\bibliography{reports/03_solver/references}
+
+\end{document}

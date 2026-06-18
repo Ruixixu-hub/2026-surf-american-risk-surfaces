@@ -1,0 +1,15 @@
+diagnostic_name,definition,required,acceptance_guidance,notes
+solver_name,Name of pricing solver used,yes,Must equal american_crank_nicolson_psor_price unless a later gate approves otherwise,Required provenance field.
+solver_variant,Named solver variant,yes,Must equal baseline_cn_psor for default labels,Rannacher must be separately labelled if ever used.
+all_psor_steps_converged,Whether every PSOR step converged,yes,False blocks label export until reviewed,Required per solved regime.
+max_psor_iterations,Maximum PSOR iterations over time steps,yes,Record and review unusually high values,Stress analytics showed volatility can increase effort.
+mean_psor_iterations,Mean PSOR iterations over time steps,yes,Record for runtime and difficulty comparisons,Used for workload diagnostics.
+max_final_update,Maximum final PSOR update,yes,Should remain near solver tolerance,Supports convergence audit.
+max_obstacle_violation,"Maximum max(Phi-U,0)",yes,Near zero required before label use,Protects American payoff obstacle.
+max_equation_violation,"Maximum max(b-AU,0) from LCP diagnostics",yes,Must remain near diagnostic tolerance,Checks reconstructed LCP inequality.
+max_abs_complementarity_product,Maximum absolute complementarity product,yes,Must remain near diagnostic tolerance,Checks obstacle/equation complementarity.
+boundary_found_count,Number of positive-tau rows with extracted boundary,yes,Review missing or unexpected counts,Boundary labels require found/not-found metadata.
+boundary_threshold,Continuation-premium threshold used for boundary and indicator,yes,Must be recorded consistently,Default planned threshold is 1e-6 unless a later gate changes it.
+grid_metadata,M N Smax dS dtau,yes,Must be present for every regime,Required to reproduce labels and masks.
+mask_metadata,kink boundary maturity strict Delta/Gamma masks,yes_if_greeks_or_boundary_used,Required before using boundary or Greek labels,Masks are mandatory metadata.
+downstream_use_status,Use-status flag for rows or regimes,yes,Use planned_dataset_design or future_label_candidate until construction is approved,Prevents accidental production wording.

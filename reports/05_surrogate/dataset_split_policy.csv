@@ -1,0 +1,8 @@
+split_type,purpose,allowed,priority,notes
+regime_holdout,Main generalization test using whole held-out parameter combinations,yes,primary,Required before construction; prevents neighboring points from same surface leaking into test.
+option_family_balance,Ensure put and dividend-call regimes both appear in train and evaluation sets,yes,primary,Do not let dividend-call boundary behavior be hidden by pooled put performance.
+stress_regime_holdout,Hold out selected high-volatility high-dividend or low-rate regimes,yes,primary,Needed because analytics showed boundaries and solver effort change under stress.
+random_point_split,Secondary debugging split within solved surfaces,yes_secondary_only,secondary,Can reveal interpolation quality but can overstate performance because grid neighbors are correlated.
+time_slice_holdout,Optional holdout of selected tau fractions for diagnostic interpolation review,review_required,optional,May be useful later but should not replace regime holdout.
+boundary_band_holdout,Optional holdout or weighting of boundary-near nodes,review_required,optional,Requires a precise boundary mask policy before use.
+production_split_claim,Claim that split proves production readiness,no,blocked,No production claim is allowed from the first design plan.

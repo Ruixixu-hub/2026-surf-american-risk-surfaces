@@ -1,0 +1,372 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{fontspec}
+\IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{\setmainfont{TeX Gyre Termes}}
+\IfFontExistsTF{Menlo}{\setmonofont{Menlo}}{\setmonofont{Latin Modern Mono}}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage[round,authoryear]{natbib}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+\usepackage{microtype}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.65em}
+\setlist[itemize]{leftmargin=1.4em}
+\newcommand{\file}[1]{\path{#1}}
+\newcommand{\code}[1]{\path{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small Quantitative Risk Analytics}
+\rhead{\small Controlled Expansion After Pilot 01}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\title{\textbf{Quantitative Risk Analytics Report}\\
+\large Small Controlled Expansion After Pilot 01 Stress Maps}
+\author{Codex-assisted diagnostic analytics report}
+\date{June 17, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This report documents a small quantitative risk-analytics expansion after Pilot 01. The experiment
+uses the validated baseline American Crank--Nicolson / projected SOR solver only. It quantifies
+boundary movement, continuation premium, Gamma concentration, PSOR effort, runtime, and LCP
+diagnostics under selected one-at-a-time stress parameters. The outputs are diagnostic analytics
+only. They are not broad stress-map datasets, training labels, neural-surrogate inputs, or
+production risk surfaces.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Purpose of Quantitative Risk Analytics}
+
+Pilot 01 showed that the validated baseline solver can produce small, metadata-rich diagnostic
+stress-map figures. The present step is narrower than data generation but more quantitative than
+visual inspection. Its purpose is to summarize how key numerical and financial diagnostics move
+when selected stress parameters are changed one at a time.
+
+The experiment follows the downstream design gate and Ticket 12 synthesis decision,
+\code{PASS_SOLVER_VALIDATION_WITH_LIMITATIONS}. It keeps the same classical finite-difference
+American option setting described by the project validation ladder
+\citep{black_scholes_1973,merton_1973,brennan_schwartz_1977,wilmott_howison_dewynne_1995}.
+
+\section{Link to Pilot 01 and Senior Handout Experiment 04}
+
+The senior handout's risk-analytics stage asks for boundary movement, Gamma concentration, PSOR
+iteration effort, runtime, and complementarity diagnostics before dataset construction. This
+report implements that idea at small scale. It deliberately does not export training arrays or
+machine-learning-ready targets.
+
+\begin{longtable}{L{0.30\textwidth} L{0.54\textwidth}}
+\toprule
+Handout theme & This report's controlled implementation \\
+\midrule
+\endhead
+Boundary movement & Selected boundary values and boundary curves across stress sweeps. \\
+Gamma concentration & Full-grid and strict-mask maximum \(|\Gamma|\) summaries. \\
+PSOR effort & Mean and maximum PSOR iterations plus runtime seconds. \\
+Complementarity diagnostics & Obstacle, equation, and complementarity product metrics. \\
+Dataset caution & Outputs are marked \code{analytics\_diagnostic\_only}. \\
+\bottomrule
+\end{longtable}
+
+\section{Solver and Grid Choice}
+
+All runs use the Ticket 04 baseline American CN/PSOR solver:
+\begin{center}
+\code{american\_crank\_nicolson\_psor\_price}
+\end{center}
+Rannacher smoothing is not used. Ticket 10A kept Rannacher as an optional comparison tool only,
+so this analytics step does not silently change the validated solver.
+
+Every run uses normalized strike \(K=1\), \(T=1\), \(S_{\max}=4\), and \(M=N=120\). The main
+interpretation region remains \(S/K \in [0.4,1.8]\), while the solver still computes on the full
+domain.
+
+\section{Stress Parameter Design}
+
+\begin{longtable}{L{0.23\textwidth} L{0.25\textwidth} L{0.37\textwidth}}
+\toprule
+Family & Sweep & Values \\
+\midrule
+\endhead
+American put & Volatility & \(\sigma \in \{0.20,0.40,0.60\}\), with \(r=0.05\), \(q=0.02\). \\
+American put & Dividend yield & \(q \in \{0.00,0.02,0.04\}\), with \(r=0.05\), \(\sigma=0.20\). \\
+American put & Interest rate & \(r \in \{0.03,0.05,0.08\}\), with \(q=0.02\), \(\sigma=0.20\). \\
+Dividend call & Dividend yield & \(q \in \{0.03,0.08,0.10,0.14\}\), with \(r=0.05\), \(\sigma=0.20\). \\
+Dividend call & Volatility & \(\sigma \in \{0.20,0.40,0.60\}\), with \(r=0.05\), \(q=0.08\). \\
+Dividend call & Interest rate & \(r \in \{0.03,0.05,0.08\}\), with \(q=0.08\), \(\sigma=0.20\). \\
+Dividend call & Small \(q\)-\(\sigma\) diagnostic & \(q \in \{0.03,0.08,0.10,0.14\}\) and \(\sigma \in \{0.20,0.40,0.60\}\). \\
+\bottomrule
+\end{longtable}
+
+The experiment writes 31 analytics rows: 19 one-at-a-time sweep rows and 12 small \(q\)-\(\sigma\)
+diagnostic heatmap rows. Duplicate parameter solves are cached internally, but the CSV rows keep
+their sweep membership.
+
+\section{Metric Definitions}
+
+\begin{longtable}{L{0.26\textwidth} L{0.56\textwidth}}
+\toprule
+Metric & Meaning \\
+\midrule
+\endhead
+Boundary moneyness & Threshold-based boundary spot divided by \(K\), extracted from \(U-\Phi\). \\
+Continuation premium & \(U-\Phi\), the value above immediate exercise payoff. \\
+PSOR effort & Maximum and mean projected-SOR iteration counts over time steps. \\
+Runtime seconds & Wall-clock runtime for the baseline solver and attached diagnostics. \\
+Obstacle violation & \(\max(\Phi-U,0)\). \\
+Equation violation & \(\max(b-AU,0)\) from the reconstructed LCP. \\
+Complementarity product & \((U-\Phi)(AU-b)\), summarized by maximum absolute value. \\
+Full max \(|\Gamma|\) & Maximum absolute finite-difference Gamma over finite grid entries. \\
+Strict max \(|\Gamma|\) & Maximum absolute Gamma after excluding boundary-near, payoff-kink, and maturity rows. \\
+\bottomrule
+\end{longtable}
+
+\section{Tables and Interpretation}
+
+\subsection{Boundary Direction Checks}
+
+The main qualitative handout directions are visible in the generated numbers. At \(\tau/T=1\), the
+American put boundary falls as volatility rises:
+\[
+0.7668 \rightarrow 0.5667 \rightarrow 0.4000
+\]
+for \(\sigma=0.20,0.40,0.60\). This matches the expected direction: higher volatility raises the
+value of waiting, so the put exercise boundary moves lower.
+
+For the dividend-paying call, the boundary also falls as dividend yield rises:
+\[
+1.8979 \rightarrow 1.2666 \rightarrow 1.2332 \rightarrow 1.1666
+\]
+for \(q=0.03,0.08,0.10,0.14\). This matches the expected direction that higher dividend yield
+makes early exercise more attractive for calls.
+
+\begin{longtable}{L{0.23\textwidth} L{0.30\textwidth} L{0.31\textwidth}}
+\toprule
+Sweep & Boundary at \(\tau/T=1\) & Interpretation \\
+\midrule
+\endhead
+Put \(\sigma=0.20,0.40,0.60\) & 0.7668, 0.5667, 0.4000. & Decreasing; matches expected volatility direction. \\
+Call \(q=0.03,0.08,0.10,0.14\) & 1.8979, 1.2666, 1.2332, 1.1666. & Decreasing; matches expected dividend-yield direction. \\
+Call \(\sigma=0.20,0.40,0.60\) & 1.2666, 1.7331, 2.3660. & Increasing; higher volatility delays high-spot exercise in this diagnostic. \\
+\bottomrule
+\end{longtable}
+
+\subsection{PSOR, Runtime, and LCP Checks}
+
+All 31 analytics rows converged and were marked acceptable for analytics review. The largest
+equation violation was \(4.8938\times 10^{-8}\), and the largest complementarity product was
+\(4.7325\times 10^{-10}\). These are small diagnostic values, but they are not a mathematical
+proof across all future parameter settings.
+
+Volatility increased PSOR effort and runtime in both families. For the put volatility sweep, mean
+PSOR iterations rose from \(6.99\) to \(29.42\) as \(\sigma\) moved from \(0.20\) to \(0.60\). The
+runtime for the same sweep rose from about \(0.049\) seconds to about \(0.204\) seconds. For the
+call volatility sweep, mean iterations rose from \(7.35\) to \(14.92\).
+
+\begin{longtable}{L{0.28\textwidth} L{0.20\textwidth} L{0.20\textwidth} L{0.20\textwidth}}
+\toprule
+Diagnostic & Minimum / baseline reading & Maximum observed & Comment \\
+\midrule
+\endhead
+Obstacle violation & \(0\) & \(0\) & Payoff obstacle respected in all runs. \\
+Equation violation & Near \(10^{-9}\) for base cases & \(4.8938\times10^{-8}\) & Largest value occurs in high-volatility put run. \\
+Complementarity product & Around \(10^{-11}\) for many runs & \(4.7325\times10^{-10}\) & Still small relative to the diagnostic threshold. \\
+Mean PSOR iterations & Around \(7\) in base cases & \(29.42\) & High volatility increases iteration effort. \\
+Runtime seconds & Around \(0.05\) in base cases & \(0.204\) & Small absolute runtime in this pilot. \\
+\bottomrule
+\end{longtable}
+
+\subsection{Gamma Concentration}
+
+Full-grid maximum \(|\Gamma|\) is \(30\) across the runs because the full metric includes fragile
+regions such as payoff kink and maturity-row effects. The strict-mask maximum is much smaller,
+around \(1.92\) to \(3.29\) in the one-at-a-time sweeps. This difference is exactly why the project
+keeps Gamma diagnostic and masked. The strict-mask Gamma values do not move monotonically in every
+sweep, so the report does not claim a simple universal Gamma direction.
+
+\section{Figures and Interpretation}
+
+Figure~\ref{fig:put_boundary_scalar} shows the scalar put boundary direction check. It is the
+cleanest evidence that the selected put boundary decreases with volatility in this pilot.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.78\textwidth]{results/03_quantitative_risk_analytics/figures/risk_analytics_put_boundary_vs_volatility.png}
+\caption{American put boundary moneyness versus volatility at \(\tau/T=1\).}
+\label{fig:put_boundary_scalar}
+\end{figure}
+
+Figure~\ref{fig:call_boundary_scalar} shows the corresponding dividend-call direction check. The
+boundary decreases as dividend yield rises.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.78\textwidth]{results/03_quantitative_risk_analytics/figures/risk_analytics_call_boundary_vs_dividend_yield.png}
+\caption{Dividend-call boundary moneyness versus dividend yield at \(\tau/T=1\).}
+\label{fig:call_boundary_scalar}
+\end{figure}
+
+Figures~\ref{fig:put_boundary_curves} and~\ref{fig:call_boundary_curves} show the whole
+threshold-extracted boundary curves over time-to-maturity. They are approximate diagnostic curves,
+not exact analytical free-boundary solutions.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.78\textwidth]{results/03_quantitative_risk_analytics/figures/risk_analytics_put_vol_boundary_curves.png}
+\caption{American put boundary curves across the volatility sweep.}
+\label{fig:put_boundary_curves}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.78\textwidth]{results/03_quantitative_risk_analytics/figures/risk_analytics_call_q_boundary_curves.png}
+\caption{Dividend-call boundary curves across the dividend-yield sweep.}
+\label{fig:call_boundary_curves}
+\end{figure}
+
+Figure~\ref{fig:gamma_concentration} separates full-grid Gamma from strict-mask Gamma. The full
+values are dominated by fragile locations; the strict values are the safer summary for human
+review, but still not production Greek labels.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.90\textwidth]{results/03_quantitative_risk_analytics/figures/risk_analytics_gamma_concentration.png}
+\caption{Gamma concentration across key stress sweeps.}
+\label{fig:gamma_concentration}
+\end{figure}
+
+Figure~\ref{fig:psor_runtime} shows numerical workload. The high-volatility cases are visibly
+more expensive in iteration count and runtime, matching the senior handout's warning that stress
+regimes can increase solver effort.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.95\textwidth]{results/03_quantitative_risk_analytics/figures/risk_analytics_psor_runtime_iterations.png}
+\caption{PSOR iteration and runtime diagnostics across analytics cases.}
+\label{fig:psor_runtime}
+\end{figure}
+
+Figure~\ref{fig:lcp_stability} shows LCP diagnostic magnitudes. The values remain small, with the
+largest equation violations appearing in higher-volatility runs.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.95\textwidth]{results/03_quantitative_risk_analytics/figures/risk_analytics_lcp_stability.png}
+\caption{LCP diagnostic stability across analytics cases.}
+\label{fig:lcp_stability}
+\end{figure}
+
+Figure~\ref{fig:call_heatmap} is the optional small dividend-call \(q\)-\(\sigma\) boundary
+heatmap. It is an aggregate diagnostic visualization only. It is not a saved data array and not a
+dataset construction step.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.70\textwidth]{results/03_quantitative_risk_analytics/figures/risk_analytics_call_q_sigma_boundary_heatmap.png}
+\caption{Small aggregate dividend-call boundary moneyness heatmap over \(q\) and \(\sigma\).}
+\label{fig:call_heatmap}
+\end{figure}
+
+\section{Qualitative Comparison with Senior Handout}
+
+\begin{longtable}{L{0.34\textwidth} L{0.18\textwidth} L{0.34\textwidth}}
+\toprule
+Expected direction or caution & Result & Comment \\
+\midrule
+\endhead
+Put boundary should decrease as volatility rises. & Matches. & Boundary at \(\tau/T=1\) falls from \(0.7668\) to \(0.4000\). \\
+Dividend-call boundary should decrease as dividend yield rises. & Matches. & Boundary falls from \(1.8979\) at \(q=0.03\) to \(1.1666\) at \(q=0.14\). \\
+Higher volatility may increase PSOR effort and runtime. & Matches. & Put mean iterations rise to \(29.42\); runtime rises to \(0.204\) seconds. \\
+Gamma concentration should be strongest near kink/boundary regions. & Caution confirmed. & Full max \(|\Gamma|\) is dominated by fragile full-grid locations; strict-mask values are lower. \\
+\bottomrule
+\end{longtable}
+
+\section{Acceptance Checks}
+
+\begin{longtable}{L{0.42\textwidth} L{0.18\textwidth} L{0.28\textwidth}}
+\toprule
+Criterion & Result & Interpretation \\
+\midrule
+\endhead
+Use baseline CN/PSOR solver only & PASS & No Rannacher run is used. \\
+Keep sweeps small and controlled & PASS & 19 one-at-a-time rows plus 12 small heatmap rows. \\
+All PSOR steps converge or are reported & PASS & All rows converged. \\
+Obstacle violation near zero & PASS & Maximum obstacle violation is \(0\). \\
+LCP diagnostics near tolerance & PASS & Diagnostics remain small in all rows. \\
+Boundary metadata present & PASS & Selected-tau boundary rows include found/not-found status. \\
+Greek diagnostics masked and cautious & PASS & Greek table includes strict-mask and caution metrics. \\
+No dataset or neural outputs & PASS & Only CSV summaries, PNG figures, and this report are created. \\
+\bottomrule
+\end{longtable}
+
+\section{Limitations}
+
+\begin{itemize}
+  \item The \(q\)-\(\sigma\) heatmap is a small aggregate diagnostic, not a broad two-dimensional
+  parameter sweep.
+  \item Boundary extraction is threshold-based with threshold \(10^{-6}\).
+  \item The scalar direction checks use the nearest \(\tau/T=1\) row and should not be read as
+  exact comparative statics.
+  \item Gamma remains finite-difference diagnostic output. It is not a production Greek measure.
+  \item Runtime seconds are local-machine observations, useful for this pilot but not a portable
+  performance benchmark.
+  \item The experiment supports human review, not automated downstream generation.
+\end{itemize}
+
+\section{What This Analytics Step Supports}
+
+This step supports the claim that the validated baseline solver can produce small quantitative
+diagnostic analytics aligned with the senior handout's risk-analytics expectations. It also
+supports the specific qualitative observations that the put boundary decreases with volatility,
+the dividend-call boundary decreases with dividend yield, and high volatility increases PSOR
+effort in the tested settings.
+
+\section{What This Analytics Step Does Not Support}
+
+This step does not support broad stress-map generation, exact free-boundary claims, production
+Greek reporting, training-label export, neural-surrogate readiness, or final paper-style claims
+about all parameter regimes. Those remain blocked until a separate human-reviewed plan approves
+the next stage.
+
+\section{Recommended Next Step}
+
+The recommended next step is human review of the analytics tables, figures, and limitations. If
+accepted, the next technical step should be another small approved pilot that either enlarges the
+stress grid modestly or compares selected analytics at a higher grid resolution. It should still
+avoid dataset construction and surrogate-model training.
+
+\section{Reproducibility Record}
+
+\begin{longtable}{L{0.34\textwidth} L{0.50\textwidth}}
+\toprule
+Item & Record \\
+\midrule
+\endhead
+Source module & \file{src/american_risk_surfaces/downstream/risk_analytics.py}. \\
+Experiment script & \file{experiments/12_quantitative_risk_analytics.py}. \\
+Test file & \file{tests/test_quantitative_risk_analytics.py}. \\
+Output folder & \file{results/03_quantitative_risk_analytics/}. \\
+Report source & \file{reports/04_downstream/quantitative_risk_analytics_report.tex}. \\
+Report PDF & \file{reports/04_downstream/quantitative_risk_analytics_report.pdf}. \\
+Bibliography & \file{reports/03_solver/references.bib}. \\
+\bottomrule
+\end{longtable}
+
+\bibliographystyle{plainnat}
+\bibliography{reports/03_solver/references}
+
+\end{document}

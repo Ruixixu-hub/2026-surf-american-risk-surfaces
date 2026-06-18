@@ -1,0 +1,12 @@
+parameter,planned_values,applies_to,reason,status
+K,{1.0},all,Fixes normalized strike for first dataset design and keeps moneyness interpretation stable,planned_not_generated
+T,"{0.25, 0.5, 1.0, 2.0}",all,Covers short medium and longer maturities without becoming a broad production grid,planned_not_generated
+sigma,"{0.20, 0.40, 0.60}",all,Matches pilot analytics volatility levels and captures boundary/Gamma sensitivity,planned_not_generated
+r,"{0.01, 0.05, 0.10}",all,Covers low baseline and higher interest-rate regimes,planned_not_generated
+q,"{0.00, 0.03, 0.06, 0.10}",american_put,Dividend yield remains a PDE parameter for puts and supports consistency across families,planned_not_generated
+q,"{0.03, 0.06, 0.10}",dividend_call,Ensures dividend-paying call regimes; q=0 call control is solver validation context not first dataset focus,planned_not_generated
+option_family,"{american_put, dividend_call}",all,Dataset design must include both families because application analytics covered both,planned_not_generated
+S_over_K_reporting_region,"[0.4, 1.8]",all,Main learning and reporting region from downstream gates,planned_not_generated
+tau_fraction,"[0, 1]",all,Full normalized time-to-maturity interval,planned_not_generated
+Smax,"4K by default; higher-domain checks by review",all,Default from pilot and downstream gate; domain sensitivity remains a review item,planned_not_generated
+M_N,"120 default; 180 confirmation subset before scaling",all,Default from pilot with higher-grid confirmation before construction,planned_not_generated
