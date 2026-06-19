@@ -1,0 +1,269 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{fontspec}
+\IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{\setmainfont{TeX Gyre Termes}}
+\IfFontExistsTF{Menlo}{\setmonofont{Menlo}}{\setmonofont{Latin Modern Mono}}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage[round,authoryear]{natbib}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+\usepackage{microtype}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.65em}
+\setlist[itemize]{leftmargin=1.4em}
+\newcommand{\file}[1]{\path{#1}}
+\newcommand{\code}[1]{\path{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small v1 Small-Grid Dataset}
+\rhead{\small Dataset QA Review}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\title{\textbf{v1 Small-Grid Dataset Report}\\
+\large 288-Regime Surrogate Dataset Generation and QA}
+\author{Codex-assisted surrogate data review}
+\date{June 18, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This report reviews the Stage 2 v1 small-grid dataset generation for the American option
+risk-surface project. The generation used exactly the 288 approved regimes from the construction
+plan, the validated baseline American Crank--Nicolson / projected SOR solver, and the established
+LCP, boundary, and Greek diagnostic layers. It produced one compressed \code{.npz} package,
+human-audit manifests, QA summaries, QA figures, and a higher-grid confirmation table. It did not
+train a neural model, create \code{.pt} files, switch to Rannacher smoothing, or generate regimes
+outside the approved v1 plan. The v1 review decision is
+\code{READY_FOR_PRICE_SURROGATE_PLANNING}.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Purpose of v1 Small-Grid Dataset}
+
+The v1 small-grid dataset is the first approved full small-grid dataset package after the v0
+dry-run generation test. Its purpose is to create a compact, auditable dataset for future
+price-surrogate planning. The dataset stores normalized features, price and continuation-premium
+labels, diagnostic boundary and Greek fields, masks, solver metadata, split assignments, and QA
+manifests.
+
+This is not a production dataset and not a model-training stage. It is a small-grid dataset and
+QA gate that comes before any neural surrogate experiment.
+
+\section{Roadmap Link and v0 Result}
+
+The compressed roadmap places this work in Stage 2: v1 small-grid dataset generation plus dataset
+QA. The preceding v0 dry run accepted all eight dry-run regimes and produced 41,624 accepted
+sampled rows. That result supported moving from pipeline testing to the approved 288-regime
+small-grid generation.
+
+The solver source remains:
+\begin{center}
+\code{solver_name = american_crank_nicolson_psor_price}\\
+\code{solver_variant = baseline_cn_psor}
+\end{center}
+The numerical foundation follows the validated American finite-difference and LCP framework used
+throughout the solver ladder \citep{black_scholes_1973,merton_1973,brennan_schwartz_1977,wilmott_howison_dewynne_1995}.
+
+\section{Regime Count and Split Counts}
+
+The v1 generation used the exact Cartesian product approved in the construction plan:
+\[
+\{\mathrm{put},\mathrm{call}\}\times
+\{0.25,0.5,1.0,2.0\}\times
+\{0.20,0.40,0.60\}\times
+\{0.01,0.05,0.10\}\times
+\{0.00,0.03,0.06,0.10\}.
+\]
+This gives 288 regimes: 144 puts and 144 calls. No-dividend call regimes remain explicit control
+regimes rather than dividend-call early-exercise evidence.
+
+\begin{longtable}{L{0.22\textwidth} L{0.20\textwidth} L{0.20\textwidth} L{0.28\textwidth}}
+\toprule
+Split & Regimes & Accepted rows & Purpose \\
+\midrule
+\endhead
+Train & 202 & 1,051,006 & Main fitting split for future price-surrogate planning. \\
+Validation & 19 & 98,857 & Regime-level validation split. \\
+Test & 43 & 223,729 & Regime-level test and control regimes. \\
+Stress holdout & 24 & 124,872 & Held-out stress combinations. \\
+\midrule
+Total & 288 & 1,498,464 & All accepted v1 sampled rows. \\
+\bottomrule
+\end{longtable}
+
+\section{Solver and Grid Settings}
+
+Every v1 regime used \(K=1\), \(S_{\max}=4\), \(M=N=120\), and the baseline CN/PSOR solver.
+Sampling was restricted to the approved reporting and learning region \(S/K\in[0.4,1.8]\) and
+\(\tau/T\in[0,1]\). The full solver domain was retained internally for boundary conditions and
+diagnostics.
+
+Each accepted regime contributed 5,203 sampled rows: 43 spot nodes by 121 time rows. The
+compressed package size is 50,262,900 bytes.
+
+\section{Feature, Label, and Mask Schema}
+
+The feature matrix uses:
+\[
+x=\left(\log(S/K),\ \tau/T,\ r,\ q,\ \sigma,\ T,\ \mathrm{is\_call}\right).
+\]
+The stored labels are:
+\begin{itemize}
+  \item core labels: \code{value_over_K}, \code{payoff_over_K}, and \code{premium_over_K};
+  \item diagnostic labels: \code{exercise_indicator} and \code{boundary_spot_over_K};
+  \item cautioned Greek diagnostics: \code{delta} and \code{scaled_gamma}.
+\end{itemize}
+
+The mask matrix contains payoff-kink-near, boundary-near, maturity-row, strict-interior,
+Gamma-allowed, Delta-allowed, exercise-region, and continuation-region masks. These masks are
+not optional: they are the main protection against treating boundary and Gamma diagnostics as
+production-quality labels.
+
+\section{Diagnostics and Acceptance Checks}
+
+A regime was accepted only if PSOR converged, obstacle violation was at most \(10^{-8}\), equation
+violation was at most \(10^{-6}\), complementarity product was at most \(10^{-6}\), and required
+metadata and masks were present.
+
+\begin{longtable}{L{0.38\textwidth} L{0.24\textwidth} L{0.28\textwidth}}
+\toprule
+Metric & v1 result & Interpretation \\
+\midrule
+\endhead
+Regimes solved & 288 & Exactly the approved v1 plan. \\
+Accepted regimes & 288 & All regimes passed acceptance checks. \\
+Accepted sampled rows & 1,498,464 & 5,203 rows per accepted regime. \\
+Maximum obstacle violation & \(0.0\) & Payoff obstacle respected in accepted regimes. \\
+Maximum equation violation & \(1.02\times 10^{-7}\) & Below the \(10^{-6}\) threshold. \\
+Maximum complementarity product & \(1.82\times 10^{-8}\) & Below the \(10^{-6}\) threshold. \\
+Boundary-found time rows & 29,795 & Boundary metadata was recorded across regimes. \\
+Strict Greek mask nodes & 3,825,842 & Greek diagnostics remain mask-dependent. \\
+\bottomrule
+\end{longtable}
+
+\section{Output Files and Manifests}
+
+\begin{longtable}{L{0.42\textwidth} L{0.13\textwidth} L{0.33\textwidth}}
+\toprule
+Output & Type & Purpose \\
+\midrule
+\endhead
+\file{results/04_surrogate_dataset/v1_small_grid/dataset_v1_small_grid.npz} & \code{.npz} & Accepted-row v1 arrays only. \\
+\file{results/04_surrogate_dataset/v1_small_grid/regime_manifest.csv} & CSV & Per-regime parameters, diagnostics, and acceptance status. \\
+\file{results/04_surrogate_dataset/v1_small_grid/diagnostic_summary.csv} & CSV & PSOR, LCP, boundary, Greek, and runtime diagnostics. \\
+\file{results/04_surrogate_dataset/v1_small_grid/split_assignment.csv} & CSV & Regime-level split assignment and row counts. \\
+\file{results/04_surrogate_dataset/v1_small_grid/schema_snapshot.csv} & CSV & Feature, label, mask, and audit-field schema. \\
+\file{results/04_surrogate_dataset/v1_small_grid/output_manifest.csv} & CSV & Output audit manifest for v1 artifacts. \\
+\file{results/04_surrogate_dataset/v1_small_grid/generation_log.txt} & TXT & Plain-text generation progress log. \\
+\file{results/04_surrogate_dataset/v1_small_grid/v1_dataset_quality_summary.csv} & CSV & Aggregate QA status and decision metrics. \\
+\file{results/04_surrogate_dataset/v1_small_grid/v1_higher_grid_confirmation.csv} & CSV & QA-only \(M=N=180\) confirmation checks. \\
+\bottomrule
+\end{longtable}
+
+The compressed package contains the keys \code{X}, \code{y_value}, \code{y_payoff},
+\code{y_premium}, \code{y_exercise_indicator}, \code{y_boundary}, \code{y_delta},
+\code{y_scaled_gamma}, \code{masks}, \code{regime_index}, \code{feature_names},
+\code{label_names}, \code{mask_names}, \code{audit_numeric}, \code{audit_numeric_names},
+\code{regime_ids}, and \code{split_names}.
+
+\section{QA Figures}
+
+The QA figures are diagnostic only. They check row balance, diagnostic tolerances, premium
+distribution, boundary metadata availability, and Greek-mask availability.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\textwidth]{results/04_surrogate_dataset/v1_small_grid/figures/v1_split_row_counts.png}
+\caption{Accepted sampled rows by regime-level split. The counts match the deterministic construction plan.}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\textwidth]{results/04_surrogate_dataset/v1_small_grid/figures/v1_diagnostic_thresholds.png}
+\caption{Obstacle, equation, and complementarity diagnostics by regime. The maxima remain below the v1 acceptance thresholds.}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.78\textwidth]{results/04_surrogate_dataset/v1_small_grid/figures/v1_premium_distribution.png}
+\caption{Continuation-premium distribution over accepted rows. This supports price and premium label QA, not production risk claims.}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.70\textwidth]{results/04_surrogate_dataset/v1_small_grid/figures/v1_boundary_availability.png}
+\caption{Mean boundary-found time rows by option family. Boundary values remain threshold-based diagnostics.}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.70\textwidth]{results/04_surrogate_dataset/v1_small_grid/figures/v1_gamma_mask_summary.png}
+\caption{Greek mask node counts by option family. Gamma remains a cautioned diagnostic field and should be used only with masks.}
+\end{figure}
+
+\section{Higher-Grid Confirmation}
+
+Four representative regimes were rerun at \(M=N=180\) for QA only. These confirmation rows were
+not mixed into the v1 dataset arrays. All four confirmation runs passed the same diagnostic
+acceptance rule. The maximum selected-node value difference versus the v1 grid was about
+\(1.11\times 10^{-2}\), with mean absolute value differences near \(1.98\times 10^{-3}\).
+This confirms basic scale consistency while preserving the v1 dataset as an \(M=N=120\) package.
+
+\section{v1 Dataset Review Decision}
+
+The v1 review decision is:
+\begin{center}
+\fbox{\code{READY_FOR_PRICE_SURROGATE_PLANNING}}
+\end{center}
+
+This means the small-grid package is ready to support a future price-surrogate planning step. It
+does not automatically approve neural training, production deployment, or unmasked Greek labels.
+
+\section{Limitations}
+
+\begin{itemize}
+  \item The dataset is a small-grid package, not a production-scale dataset.
+  \item Boundary labels remain threshold-based diagnostics, not exact free-boundary truth.
+  \item Delta and scaled Gamma remain diagnostic fields. Gamma is high caution near payoff kinks,
+  maturity rows, and extracted boundary bands.
+  \item The \(M=N=180\) confirmation is small and QA-oriented; it is not a full convergence proof.
+  \item No neural model has been trained or validated from this dataset.
+\end{itemize}
+
+\section{What This Dataset Supports}
+
+The v1 package supports price-surrogate planning with normalized features, reliable price and
+premium labels, split metadata, diagnostic boundary fields, Greek masks, solver diagnostics, and
+regime-level manifests. It also supports human review of whether the first surrogate experiment
+should target price and continuation premium before using any Greek diagnostic targets.
+
+\section{What This Dataset Does Not Support}
+
+The v1 package does not support production risk claims, final paper conclusions by itself,
+production Greek labels, broad extrapolation to regimes outside the approved grid, or automatic
+approval to train neural surrogates without a separate surrogate-planning gate.
+
+\section{Recommended Next Step}
+
+The recommended next step is a price-surrogate planning gate. That gate should decide the first
+model family, training objective, loss functions, regime-level evaluation protocol, and whether
+Greek fields remain metadata-only for the first surrogate experiment.
+
+\bibliographystyle{plainnat}
+\bibliography{reports/03_solver/references}
+
+\end{document}

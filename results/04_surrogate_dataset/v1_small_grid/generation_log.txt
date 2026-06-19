@@ -1,0 +1,581 @@
+v1 Small-Grid Dataset generation log
+regime_count=288
+downstream_use_status=v1_small_grid_only
+start regime_index=0 regime_id=put_T025_s020_r001_q000
+finish regime_id=put_T025_s020_r001_q000 status=accepted rows=5203
+start regime_index=1 regime_id=put_T025_s020_r001_q003
+finish regime_id=put_T025_s020_r001_q003 status=accepted rows=5203
+start regime_index=2 regime_id=put_T025_s020_r001_q006
+finish regime_id=put_T025_s020_r001_q006 status=accepted rows=5203
+start regime_index=3 regime_id=put_T025_s020_r001_q010
+finish regime_id=put_T025_s020_r001_q010 status=accepted rows=5203
+start regime_index=4 regime_id=put_T025_s020_r005_q000
+finish regime_id=put_T025_s020_r005_q000 status=accepted rows=5203
+start regime_index=5 regime_id=put_T025_s020_r005_q003
+finish regime_id=put_T025_s020_r005_q003 status=accepted rows=5203
+start regime_index=6 regime_id=put_T025_s020_r005_q006
+finish regime_id=put_T025_s020_r005_q006 status=accepted rows=5203
+start regime_index=7 regime_id=put_T025_s020_r005_q010
+finish regime_id=put_T025_s020_r005_q010 status=accepted rows=5203
+start regime_index=8 regime_id=put_T025_s020_r010_q000
+finish regime_id=put_T025_s020_r010_q000 status=accepted rows=5203
+start regime_index=9 regime_id=put_T025_s020_r010_q003
+finish regime_id=put_T025_s020_r010_q003 status=accepted rows=5203
+start regime_index=10 regime_id=put_T025_s020_r010_q006
+finish regime_id=put_T025_s020_r010_q006 status=accepted rows=5203
+start regime_index=11 regime_id=put_T025_s020_r010_q010
+finish regime_id=put_T025_s020_r010_q010 status=accepted rows=5203
+start regime_index=12 regime_id=put_T025_s040_r001_q000
+finish regime_id=put_T025_s040_r001_q000 status=accepted rows=5203
+start regime_index=13 regime_id=put_T025_s040_r001_q003
+finish regime_id=put_T025_s040_r001_q003 status=accepted rows=5203
+start regime_index=14 regime_id=put_T025_s040_r001_q006
+finish regime_id=put_T025_s040_r001_q006 status=accepted rows=5203
+start regime_index=15 regime_id=put_T025_s040_r001_q010
+finish regime_id=put_T025_s040_r001_q010 status=accepted rows=5203
+start regime_index=16 regime_id=put_T025_s040_r005_q000
+finish regime_id=put_T025_s040_r005_q000 status=accepted rows=5203
+start regime_index=17 regime_id=put_T025_s040_r005_q003
+finish regime_id=put_T025_s040_r005_q003 status=accepted rows=5203
+start regime_index=18 regime_id=put_T025_s040_r005_q006
+finish regime_id=put_T025_s040_r005_q006 status=accepted rows=5203
+start regime_index=19 regime_id=put_T025_s040_r005_q010
+finish regime_id=put_T025_s040_r005_q010 status=accepted rows=5203
+start regime_index=20 regime_id=put_T025_s040_r010_q000
+finish regime_id=put_T025_s040_r010_q000 status=accepted rows=5203
+start regime_index=21 regime_id=put_T025_s040_r010_q003
+finish regime_id=put_T025_s040_r010_q003 status=accepted rows=5203
+start regime_index=22 regime_id=put_T025_s040_r010_q006
+finish regime_id=put_T025_s040_r010_q006 status=accepted rows=5203
+start regime_index=23 regime_id=put_T025_s040_r010_q010
+finish regime_id=put_T025_s040_r010_q010 status=accepted rows=5203
+start regime_index=24 regime_id=put_T025_s060_r001_q000
+finish regime_id=put_T025_s060_r001_q000 status=accepted rows=5203
+start regime_index=25 regime_id=put_T025_s060_r001_q003
+finish regime_id=put_T025_s060_r001_q003 status=accepted rows=5203
+start regime_index=26 regime_id=put_T025_s060_r001_q006
+finish regime_id=put_T025_s060_r001_q006 status=accepted rows=5203
+start regime_index=27 regime_id=put_T025_s060_r001_q010
+finish regime_id=put_T025_s060_r001_q010 status=accepted rows=5203
+start regime_index=28 regime_id=put_T025_s060_r005_q000
+finish regime_id=put_T025_s060_r005_q000 status=accepted rows=5203
+start regime_index=29 regime_id=put_T025_s060_r005_q003
+finish regime_id=put_T025_s060_r005_q003 status=accepted rows=5203
+start regime_index=30 regime_id=put_T025_s060_r005_q006
+finish regime_id=put_T025_s060_r005_q006 status=accepted rows=5203
+start regime_index=31 regime_id=put_T025_s060_r005_q010
+finish regime_id=put_T025_s060_r005_q010 status=accepted rows=5203
+start regime_index=32 regime_id=put_T025_s060_r010_q000
+finish regime_id=put_T025_s060_r010_q000 status=accepted rows=5203
+start regime_index=33 regime_id=put_T025_s060_r010_q003
+finish regime_id=put_T025_s060_r010_q003 status=accepted rows=5203
+start regime_index=34 regime_id=put_T025_s060_r010_q006
+finish regime_id=put_T025_s060_r010_q006 status=accepted rows=5203
+start regime_index=35 regime_id=put_T025_s060_r010_q010
+finish regime_id=put_T025_s060_r010_q010 status=accepted rows=5203
+start regime_index=36 regime_id=put_T050_s020_r001_q000
+finish regime_id=put_T050_s020_r001_q000 status=accepted rows=5203
+start regime_index=37 regime_id=put_T050_s020_r001_q003
+finish regime_id=put_T050_s020_r001_q003 status=accepted rows=5203
+start regime_index=38 regime_id=put_T050_s020_r001_q006
+finish regime_id=put_T050_s020_r001_q006 status=accepted rows=5203
+start regime_index=39 regime_id=put_T050_s020_r001_q010
+finish regime_id=put_T050_s020_r001_q010 status=accepted rows=5203
+start regime_index=40 regime_id=put_T050_s020_r005_q000
+finish regime_id=put_T050_s020_r005_q000 status=accepted rows=5203
+start regime_index=41 regime_id=put_T050_s020_r005_q003
+finish regime_id=put_T050_s020_r005_q003 status=accepted rows=5203
+start regime_index=42 regime_id=put_T050_s020_r005_q006
+finish regime_id=put_T050_s020_r005_q006 status=accepted rows=5203
+start regime_index=43 regime_id=put_T050_s020_r005_q010
+finish regime_id=put_T050_s020_r005_q010 status=accepted rows=5203
+start regime_index=44 regime_id=put_T050_s020_r010_q000
+finish regime_id=put_T050_s020_r010_q000 status=accepted rows=5203
+start regime_index=45 regime_id=put_T050_s020_r010_q003
+finish regime_id=put_T050_s020_r010_q003 status=accepted rows=5203
+start regime_index=46 regime_id=put_T050_s020_r010_q006
+finish regime_id=put_T050_s020_r010_q006 status=accepted rows=5203
+start regime_index=47 regime_id=put_T050_s020_r010_q010
+finish regime_id=put_T050_s020_r010_q010 status=accepted rows=5203
+start regime_index=48 regime_id=put_T050_s040_r001_q000
+finish regime_id=put_T050_s040_r001_q000 status=accepted rows=5203
+start regime_index=49 regime_id=put_T050_s040_r001_q003
+finish regime_id=put_T050_s040_r001_q003 status=accepted rows=5203
+start regime_index=50 regime_id=put_T050_s040_r001_q006
+finish regime_id=put_T050_s040_r001_q006 status=accepted rows=5203
+start regime_index=51 regime_id=put_T050_s040_r001_q010
+finish regime_id=put_T050_s040_r001_q010 status=accepted rows=5203
+start regime_index=52 regime_id=put_T050_s040_r005_q000
+finish regime_id=put_T050_s040_r005_q000 status=accepted rows=5203
+start regime_index=53 regime_id=put_T050_s040_r005_q003
+finish regime_id=put_T050_s040_r005_q003 status=accepted rows=5203
+start regime_index=54 regime_id=put_T050_s040_r005_q006
+finish regime_id=put_T050_s040_r005_q006 status=accepted rows=5203
+start regime_index=55 regime_id=put_T050_s040_r005_q010
+finish regime_id=put_T050_s040_r005_q010 status=accepted rows=5203
+start regime_index=56 regime_id=put_T050_s040_r010_q000
+finish regime_id=put_T050_s040_r010_q000 status=accepted rows=5203
+start regime_index=57 regime_id=put_T050_s040_r010_q003
+finish regime_id=put_T050_s040_r010_q003 status=accepted rows=5203
+start regime_index=58 regime_id=put_T050_s040_r010_q006
+finish regime_id=put_T050_s040_r010_q006 status=accepted rows=5203
+start regime_index=59 regime_id=put_T050_s040_r010_q010
+finish regime_id=put_T050_s040_r010_q010 status=accepted rows=5203
+start regime_index=60 regime_id=put_T050_s060_r001_q000
+finish regime_id=put_T050_s060_r001_q000 status=accepted rows=5203
+start regime_index=61 regime_id=put_T050_s060_r001_q003
+finish regime_id=put_T050_s060_r001_q003 status=accepted rows=5203
+start regime_index=62 regime_id=put_T050_s060_r001_q006
+finish regime_id=put_T050_s060_r001_q006 status=accepted rows=5203
+start regime_index=63 regime_id=put_T050_s060_r001_q010
+finish regime_id=put_T050_s060_r001_q010 status=accepted rows=5203
+start regime_index=64 regime_id=put_T050_s060_r005_q000
+finish regime_id=put_T050_s060_r005_q000 status=accepted rows=5203
+start regime_index=65 regime_id=put_T050_s060_r005_q003
+finish regime_id=put_T050_s060_r005_q003 status=accepted rows=5203
+start regime_index=66 regime_id=put_T050_s060_r005_q006
+finish regime_id=put_T050_s060_r005_q006 status=accepted rows=5203
+start regime_index=67 regime_id=put_T050_s060_r005_q010
+finish regime_id=put_T050_s060_r005_q010 status=accepted rows=5203
+start regime_index=68 regime_id=put_T050_s060_r010_q000
+finish regime_id=put_T050_s060_r010_q000 status=accepted rows=5203
+start regime_index=69 regime_id=put_T050_s060_r010_q003
+finish regime_id=put_T050_s060_r010_q003 status=accepted rows=5203
+start regime_index=70 regime_id=put_T050_s060_r010_q006
+finish regime_id=put_T050_s060_r010_q006 status=accepted rows=5203
+start regime_index=71 regime_id=put_T050_s060_r010_q010
+finish regime_id=put_T050_s060_r010_q010 status=accepted rows=5203
+start regime_index=72 regime_id=put_T100_s020_r001_q000
+finish regime_id=put_T100_s020_r001_q000 status=accepted rows=5203
+start regime_index=73 regime_id=put_T100_s020_r001_q003
+finish regime_id=put_T100_s020_r001_q003 status=accepted rows=5203
+start regime_index=74 regime_id=put_T100_s020_r001_q006
+finish regime_id=put_T100_s020_r001_q006 status=accepted rows=5203
+start regime_index=75 regime_id=put_T100_s020_r001_q010
+finish regime_id=put_T100_s020_r001_q010 status=accepted rows=5203
+start regime_index=76 regime_id=put_T100_s020_r005_q000
+finish regime_id=put_T100_s020_r005_q000 status=accepted rows=5203
+start regime_index=77 regime_id=put_T100_s020_r005_q003
+finish regime_id=put_T100_s020_r005_q003 status=accepted rows=5203
+start regime_index=78 regime_id=put_T100_s020_r005_q006
+finish regime_id=put_T100_s020_r005_q006 status=accepted rows=5203
+start regime_index=79 regime_id=put_T100_s020_r005_q010
+finish regime_id=put_T100_s020_r005_q010 status=accepted rows=5203
+start regime_index=80 regime_id=put_T100_s020_r010_q000
+finish regime_id=put_T100_s020_r010_q000 status=accepted rows=5203
+start regime_index=81 regime_id=put_T100_s020_r010_q003
+finish regime_id=put_T100_s020_r010_q003 status=accepted rows=5203
+start regime_index=82 regime_id=put_T100_s020_r010_q006
+finish regime_id=put_T100_s020_r010_q006 status=accepted rows=5203
+start regime_index=83 regime_id=put_T100_s020_r010_q010
+finish regime_id=put_T100_s020_r010_q010 status=accepted rows=5203
+start regime_index=84 regime_id=put_T100_s040_r001_q000
+finish regime_id=put_T100_s040_r001_q000 status=accepted rows=5203
+start regime_index=85 regime_id=put_T100_s040_r001_q003
+finish regime_id=put_T100_s040_r001_q003 status=accepted rows=5203
+start regime_index=86 regime_id=put_T100_s040_r001_q006
+finish regime_id=put_T100_s040_r001_q006 status=accepted rows=5203
+start regime_index=87 regime_id=put_T100_s040_r001_q010
+finish regime_id=put_T100_s040_r001_q010 status=accepted rows=5203
+start regime_index=88 regime_id=put_T100_s040_r005_q000
+finish regime_id=put_T100_s040_r005_q000 status=accepted rows=5203
+start regime_index=89 regime_id=put_T100_s040_r005_q003
+finish regime_id=put_T100_s040_r005_q003 status=accepted rows=5203
+start regime_index=90 regime_id=put_T100_s040_r005_q006
+finish regime_id=put_T100_s040_r005_q006 status=accepted rows=5203
+start regime_index=91 regime_id=put_T100_s040_r005_q010
+finish regime_id=put_T100_s040_r005_q010 status=accepted rows=5203
+start regime_index=92 regime_id=put_T100_s040_r010_q000
+finish regime_id=put_T100_s040_r010_q000 status=accepted rows=5203
+start regime_index=93 regime_id=put_T100_s040_r010_q003
+finish regime_id=put_T100_s040_r010_q003 status=accepted rows=5203
+start regime_index=94 regime_id=put_T100_s040_r010_q006
+finish regime_id=put_T100_s040_r010_q006 status=accepted rows=5203
+start regime_index=95 regime_id=put_T100_s040_r010_q010
+finish regime_id=put_T100_s040_r010_q010 status=accepted rows=5203
+start regime_index=96 regime_id=put_T100_s060_r001_q000
+finish regime_id=put_T100_s060_r001_q000 status=accepted rows=5203
+start regime_index=97 regime_id=put_T100_s060_r001_q003
+finish regime_id=put_T100_s060_r001_q003 status=accepted rows=5203
+start regime_index=98 regime_id=put_T100_s060_r001_q006
+finish regime_id=put_T100_s060_r001_q006 status=accepted rows=5203
+start regime_index=99 regime_id=put_T100_s060_r001_q010
+finish regime_id=put_T100_s060_r001_q010 status=accepted rows=5203
+start regime_index=100 regime_id=put_T100_s060_r005_q000
+finish regime_id=put_T100_s060_r005_q000 status=accepted rows=5203
+start regime_index=101 regime_id=put_T100_s060_r005_q003
+finish regime_id=put_T100_s060_r005_q003 status=accepted rows=5203
+start regime_index=102 regime_id=put_T100_s060_r005_q006
+finish regime_id=put_T100_s060_r005_q006 status=accepted rows=5203
+start regime_index=103 regime_id=put_T100_s060_r005_q010
+finish regime_id=put_T100_s060_r005_q010 status=accepted rows=5203
+start regime_index=104 regime_id=put_T100_s060_r010_q000
+finish regime_id=put_T100_s060_r010_q000 status=accepted rows=5203
+start regime_index=105 regime_id=put_T100_s060_r010_q003
+finish regime_id=put_T100_s060_r010_q003 status=accepted rows=5203
+start regime_index=106 regime_id=put_T100_s060_r010_q006
+finish regime_id=put_T100_s060_r010_q006 status=accepted rows=5203
+start regime_index=107 regime_id=put_T100_s060_r010_q010
+finish regime_id=put_T100_s060_r010_q010 status=accepted rows=5203
+start regime_index=108 regime_id=put_T200_s020_r001_q000
+finish regime_id=put_T200_s020_r001_q000 status=accepted rows=5203
+start regime_index=109 regime_id=put_T200_s020_r001_q003
+finish regime_id=put_T200_s020_r001_q003 status=accepted rows=5203
+start regime_index=110 regime_id=put_T200_s020_r001_q006
+finish regime_id=put_T200_s020_r001_q006 status=accepted rows=5203
+start regime_index=111 regime_id=put_T200_s020_r001_q010
+finish regime_id=put_T200_s020_r001_q010 status=accepted rows=5203
+start regime_index=112 regime_id=put_T200_s020_r005_q000
+finish regime_id=put_T200_s020_r005_q000 status=accepted rows=5203
+start regime_index=113 regime_id=put_T200_s020_r005_q003
+finish regime_id=put_T200_s020_r005_q003 status=accepted rows=5203
+start regime_index=114 regime_id=put_T200_s020_r005_q006
+finish regime_id=put_T200_s020_r005_q006 status=accepted rows=5203
+start regime_index=115 regime_id=put_T200_s020_r005_q010
+finish regime_id=put_T200_s020_r005_q010 status=accepted rows=5203
+start regime_index=116 regime_id=put_T200_s020_r010_q000
+finish regime_id=put_T200_s020_r010_q000 status=accepted rows=5203
+start regime_index=117 regime_id=put_T200_s020_r010_q003
+finish regime_id=put_T200_s020_r010_q003 status=accepted rows=5203
+start regime_index=118 regime_id=put_T200_s020_r010_q006
+finish regime_id=put_T200_s020_r010_q006 status=accepted rows=5203
+start regime_index=119 regime_id=put_T200_s020_r010_q010
+finish regime_id=put_T200_s020_r010_q010 status=accepted rows=5203
+start regime_index=120 regime_id=put_T200_s040_r001_q000
+finish regime_id=put_T200_s040_r001_q000 status=accepted rows=5203
+start regime_index=121 regime_id=put_T200_s040_r001_q003
+finish regime_id=put_T200_s040_r001_q003 status=accepted rows=5203
+start regime_index=122 regime_id=put_T200_s040_r001_q006
+finish regime_id=put_T200_s040_r001_q006 status=accepted rows=5203
+start regime_index=123 regime_id=put_T200_s040_r001_q010
+finish regime_id=put_T200_s040_r001_q010 status=accepted rows=5203
+start regime_index=124 regime_id=put_T200_s040_r005_q000
+finish regime_id=put_T200_s040_r005_q000 status=accepted rows=5203
+start regime_index=125 regime_id=put_T200_s040_r005_q003
+finish regime_id=put_T200_s040_r005_q003 status=accepted rows=5203
+start regime_index=126 regime_id=put_T200_s040_r005_q006
+finish regime_id=put_T200_s040_r005_q006 status=accepted rows=5203
+start regime_index=127 regime_id=put_T200_s040_r005_q010
+finish regime_id=put_T200_s040_r005_q010 status=accepted rows=5203
+start regime_index=128 regime_id=put_T200_s040_r010_q000
+finish regime_id=put_T200_s040_r010_q000 status=accepted rows=5203
+start regime_index=129 regime_id=put_T200_s040_r010_q003
+finish regime_id=put_T200_s040_r010_q003 status=accepted rows=5203
+start regime_index=130 regime_id=put_T200_s040_r010_q006
+finish regime_id=put_T200_s040_r010_q006 status=accepted rows=5203
+start regime_index=131 regime_id=put_T200_s040_r010_q010
+finish regime_id=put_T200_s040_r010_q010 status=accepted rows=5203
+start regime_index=132 regime_id=put_T200_s060_r001_q000
+finish regime_id=put_T200_s060_r001_q000 status=accepted rows=5203
+start regime_index=133 regime_id=put_T200_s060_r001_q003
+finish regime_id=put_T200_s060_r001_q003 status=accepted rows=5203
+start regime_index=134 regime_id=put_T200_s060_r001_q006
+finish regime_id=put_T200_s060_r001_q006 status=accepted rows=5203
+start regime_index=135 regime_id=put_T200_s060_r001_q010
+finish regime_id=put_T200_s060_r001_q010 status=accepted rows=5203
+start regime_index=136 regime_id=put_T200_s060_r005_q000
+finish regime_id=put_T200_s060_r005_q000 status=accepted rows=5203
+start regime_index=137 regime_id=put_T200_s060_r005_q003
+finish regime_id=put_T200_s060_r005_q003 status=accepted rows=5203
+start regime_index=138 regime_id=put_T200_s060_r005_q006
+finish regime_id=put_T200_s060_r005_q006 status=accepted rows=5203
+start regime_index=139 regime_id=put_T200_s060_r005_q010
+finish regime_id=put_T200_s060_r005_q010 status=accepted rows=5203
+start regime_index=140 regime_id=put_T200_s060_r010_q000
+finish regime_id=put_T200_s060_r010_q000 status=accepted rows=5203
+start regime_index=141 regime_id=put_T200_s060_r010_q003
+finish regime_id=put_T200_s060_r010_q003 status=accepted rows=5203
+start regime_index=142 regime_id=put_T200_s060_r010_q006
+finish regime_id=put_T200_s060_r010_q006 status=accepted rows=5203
+start regime_index=143 regime_id=put_T200_s060_r010_q010
+finish regime_id=put_T200_s060_r010_q010 status=accepted rows=5203
+start regime_index=144 regime_id=call_T025_s020_r001_q000
+finish regime_id=call_T025_s020_r001_q000 status=accepted rows=5203
+start regime_index=145 regime_id=call_T025_s020_r001_q003
+finish regime_id=call_T025_s020_r001_q003 status=accepted rows=5203
+start regime_index=146 regime_id=call_T025_s020_r001_q006
+finish regime_id=call_T025_s020_r001_q006 status=accepted rows=5203
+start regime_index=147 regime_id=call_T025_s020_r001_q010
+finish regime_id=call_T025_s020_r001_q010 status=accepted rows=5203
+start regime_index=148 regime_id=call_T025_s020_r005_q000
+finish regime_id=call_T025_s020_r005_q000 status=accepted rows=5203
+start regime_index=149 regime_id=call_T025_s020_r005_q003
+finish regime_id=call_T025_s020_r005_q003 status=accepted rows=5203
+start regime_index=150 regime_id=call_T025_s020_r005_q006
+finish regime_id=call_T025_s020_r005_q006 status=accepted rows=5203
+start regime_index=151 regime_id=call_T025_s020_r005_q010
+finish regime_id=call_T025_s020_r005_q010 status=accepted rows=5203
+start regime_index=152 regime_id=call_T025_s020_r010_q000
+finish regime_id=call_T025_s020_r010_q000 status=accepted rows=5203
+start regime_index=153 regime_id=call_T025_s020_r010_q003
+finish regime_id=call_T025_s020_r010_q003 status=accepted rows=5203
+start regime_index=154 regime_id=call_T025_s020_r010_q006
+finish regime_id=call_T025_s020_r010_q006 status=accepted rows=5203
+start regime_index=155 regime_id=call_T025_s020_r010_q010
+finish regime_id=call_T025_s020_r010_q010 status=accepted rows=5203
+start regime_index=156 regime_id=call_T025_s040_r001_q000
+finish regime_id=call_T025_s040_r001_q000 status=accepted rows=5203
+start regime_index=157 regime_id=call_T025_s040_r001_q003
+finish regime_id=call_T025_s040_r001_q003 status=accepted rows=5203
+start regime_index=158 regime_id=call_T025_s040_r001_q006
+finish regime_id=call_T025_s040_r001_q006 status=accepted rows=5203
+start regime_index=159 regime_id=call_T025_s040_r001_q010
+finish regime_id=call_T025_s040_r001_q010 status=accepted rows=5203
+start regime_index=160 regime_id=call_T025_s040_r005_q000
+finish regime_id=call_T025_s040_r005_q000 status=accepted rows=5203
+start regime_index=161 regime_id=call_T025_s040_r005_q003
+finish regime_id=call_T025_s040_r005_q003 status=accepted rows=5203
+start regime_index=162 regime_id=call_T025_s040_r005_q006
+finish regime_id=call_T025_s040_r005_q006 status=accepted rows=5203
+start regime_index=163 regime_id=call_T025_s040_r005_q010
+finish regime_id=call_T025_s040_r005_q010 status=accepted rows=5203
+start regime_index=164 regime_id=call_T025_s040_r010_q000
+finish regime_id=call_T025_s040_r010_q000 status=accepted rows=5203
+start regime_index=165 regime_id=call_T025_s040_r010_q003
+finish regime_id=call_T025_s040_r010_q003 status=accepted rows=5203
+start regime_index=166 regime_id=call_T025_s040_r010_q006
+finish regime_id=call_T025_s040_r010_q006 status=accepted rows=5203
+start regime_index=167 regime_id=call_T025_s040_r010_q010
+finish regime_id=call_T025_s040_r010_q010 status=accepted rows=5203
+start regime_index=168 regime_id=call_T025_s060_r001_q000
+finish regime_id=call_T025_s060_r001_q000 status=accepted rows=5203
+start regime_index=169 regime_id=call_T025_s060_r001_q003
+finish regime_id=call_T025_s060_r001_q003 status=accepted rows=5203
+start regime_index=170 regime_id=call_T025_s060_r001_q006
+finish regime_id=call_T025_s060_r001_q006 status=accepted rows=5203
+start regime_index=171 regime_id=call_T025_s060_r001_q010
+finish regime_id=call_T025_s060_r001_q010 status=accepted rows=5203
+start regime_index=172 regime_id=call_T025_s060_r005_q000
+finish regime_id=call_T025_s060_r005_q000 status=accepted rows=5203
+start regime_index=173 regime_id=call_T025_s060_r005_q003
+finish regime_id=call_T025_s060_r005_q003 status=accepted rows=5203
+start regime_index=174 regime_id=call_T025_s060_r005_q006
+finish regime_id=call_T025_s060_r005_q006 status=accepted rows=5203
+start regime_index=175 regime_id=call_T025_s060_r005_q010
+finish regime_id=call_T025_s060_r005_q010 status=accepted rows=5203
+start regime_index=176 regime_id=call_T025_s060_r010_q000
+finish regime_id=call_T025_s060_r010_q000 status=accepted rows=5203
+start regime_index=177 regime_id=call_T025_s060_r010_q003
+finish regime_id=call_T025_s060_r010_q003 status=accepted rows=5203
+start regime_index=178 regime_id=call_T025_s060_r010_q006
+finish regime_id=call_T025_s060_r010_q006 status=accepted rows=5203
+start regime_index=179 regime_id=call_T025_s060_r010_q010
+finish regime_id=call_T025_s060_r010_q010 status=accepted rows=5203
+start regime_index=180 regime_id=call_T050_s020_r001_q000
+finish regime_id=call_T050_s020_r001_q000 status=accepted rows=5203
+start regime_index=181 regime_id=call_T050_s020_r001_q003
+finish regime_id=call_T050_s020_r001_q003 status=accepted rows=5203
+start regime_index=182 regime_id=call_T050_s020_r001_q006
+finish regime_id=call_T050_s020_r001_q006 status=accepted rows=5203
+start regime_index=183 regime_id=call_T050_s020_r001_q010
+finish regime_id=call_T050_s020_r001_q010 status=accepted rows=5203
+start regime_index=184 regime_id=call_T050_s020_r005_q000
+finish regime_id=call_T050_s020_r005_q000 status=accepted rows=5203
+start regime_index=185 regime_id=call_T050_s020_r005_q003
+finish regime_id=call_T050_s020_r005_q003 status=accepted rows=5203
+start regime_index=186 regime_id=call_T050_s020_r005_q006
+finish regime_id=call_T050_s020_r005_q006 status=accepted rows=5203
+start regime_index=187 regime_id=call_T050_s020_r005_q010
+finish regime_id=call_T050_s020_r005_q010 status=accepted rows=5203
+start regime_index=188 regime_id=call_T050_s020_r010_q000
+finish regime_id=call_T050_s020_r010_q000 status=accepted rows=5203
+start regime_index=189 regime_id=call_T050_s020_r010_q003
+finish regime_id=call_T050_s020_r010_q003 status=accepted rows=5203
+start regime_index=190 regime_id=call_T050_s020_r010_q006
+finish regime_id=call_T050_s020_r010_q006 status=accepted rows=5203
+start regime_index=191 regime_id=call_T050_s020_r010_q010
+finish regime_id=call_T050_s020_r010_q010 status=accepted rows=5203
+start regime_index=192 regime_id=call_T050_s040_r001_q000
+finish regime_id=call_T050_s040_r001_q000 status=accepted rows=5203
+start regime_index=193 regime_id=call_T050_s040_r001_q003
+finish regime_id=call_T050_s040_r001_q003 status=accepted rows=5203
+start regime_index=194 regime_id=call_T050_s040_r001_q006
+finish regime_id=call_T050_s040_r001_q006 status=accepted rows=5203
+start regime_index=195 regime_id=call_T050_s040_r001_q010
+finish regime_id=call_T050_s040_r001_q010 status=accepted rows=5203
+start regime_index=196 regime_id=call_T050_s040_r005_q000
+finish regime_id=call_T050_s040_r005_q000 status=accepted rows=5203
+start regime_index=197 regime_id=call_T050_s040_r005_q003
+finish regime_id=call_T050_s040_r005_q003 status=accepted rows=5203
+start regime_index=198 regime_id=call_T050_s040_r005_q006
+finish regime_id=call_T050_s040_r005_q006 status=accepted rows=5203
+start regime_index=199 regime_id=call_T050_s040_r005_q010
+finish regime_id=call_T050_s040_r005_q010 status=accepted rows=5203
+start regime_index=200 regime_id=call_T050_s040_r010_q000
+finish regime_id=call_T050_s040_r010_q000 status=accepted rows=5203
+start regime_index=201 regime_id=call_T050_s040_r010_q003
+finish regime_id=call_T050_s040_r010_q003 status=accepted rows=5203
+start regime_index=202 regime_id=call_T050_s040_r010_q006
+finish regime_id=call_T050_s040_r010_q006 status=accepted rows=5203
+start regime_index=203 regime_id=call_T050_s040_r010_q010
+finish regime_id=call_T050_s040_r010_q010 status=accepted rows=5203
+start regime_index=204 regime_id=call_T050_s060_r001_q000
+finish regime_id=call_T050_s060_r001_q000 status=accepted rows=5203
+start regime_index=205 regime_id=call_T050_s060_r001_q003
+finish regime_id=call_T050_s060_r001_q003 status=accepted rows=5203
+start regime_index=206 regime_id=call_T050_s060_r001_q006
+finish regime_id=call_T050_s060_r001_q006 status=accepted rows=5203
+start regime_index=207 regime_id=call_T050_s060_r001_q010
+finish regime_id=call_T050_s060_r001_q010 status=accepted rows=5203
+start regime_index=208 regime_id=call_T050_s060_r005_q000
+finish regime_id=call_T050_s060_r005_q000 status=accepted rows=5203
+start regime_index=209 regime_id=call_T050_s060_r005_q003
+finish regime_id=call_T050_s060_r005_q003 status=accepted rows=5203
+start regime_index=210 regime_id=call_T050_s060_r005_q006
+finish regime_id=call_T050_s060_r005_q006 status=accepted rows=5203
+start regime_index=211 regime_id=call_T050_s060_r005_q010
+finish regime_id=call_T050_s060_r005_q010 status=accepted rows=5203
+start regime_index=212 regime_id=call_T050_s060_r010_q000
+finish regime_id=call_T050_s060_r010_q000 status=accepted rows=5203
+start regime_index=213 regime_id=call_T050_s060_r010_q003
+finish regime_id=call_T050_s060_r010_q003 status=accepted rows=5203
+start regime_index=214 regime_id=call_T050_s060_r010_q006
+finish regime_id=call_T050_s060_r010_q006 status=accepted rows=5203
+start regime_index=215 regime_id=call_T050_s060_r010_q010
+finish regime_id=call_T050_s060_r010_q010 status=accepted rows=5203
+start regime_index=216 regime_id=call_T100_s020_r001_q000
+finish regime_id=call_T100_s020_r001_q000 status=accepted rows=5203
+start regime_index=217 regime_id=call_T100_s020_r001_q003
+finish regime_id=call_T100_s020_r001_q003 status=accepted rows=5203
+start regime_index=218 regime_id=call_T100_s020_r001_q006
+finish regime_id=call_T100_s020_r001_q006 status=accepted rows=5203
+start regime_index=219 regime_id=call_T100_s020_r001_q010
+finish regime_id=call_T100_s020_r001_q010 status=accepted rows=5203
+start regime_index=220 regime_id=call_T100_s020_r005_q000
+finish regime_id=call_T100_s020_r005_q000 status=accepted rows=5203
+start regime_index=221 regime_id=call_T100_s020_r005_q003
+finish regime_id=call_T100_s020_r005_q003 status=accepted rows=5203
+start regime_index=222 regime_id=call_T100_s020_r005_q006
+finish regime_id=call_T100_s020_r005_q006 status=accepted rows=5203
+start regime_index=223 regime_id=call_T100_s020_r005_q010
+finish regime_id=call_T100_s020_r005_q010 status=accepted rows=5203
+start regime_index=224 regime_id=call_T100_s020_r010_q000
+finish regime_id=call_T100_s020_r010_q000 status=accepted rows=5203
+start regime_index=225 regime_id=call_T100_s020_r010_q003
+finish regime_id=call_T100_s020_r010_q003 status=accepted rows=5203
+start regime_index=226 regime_id=call_T100_s020_r010_q006
+finish regime_id=call_T100_s020_r010_q006 status=accepted rows=5203
+start regime_index=227 regime_id=call_T100_s020_r010_q010
+finish regime_id=call_T100_s020_r010_q010 status=accepted rows=5203
+start regime_index=228 regime_id=call_T100_s040_r001_q000
+finish regime_id=call_T100_s040_r001_q000 status=accepted rows=5203
+start regime_index=229 regime_id=call_T100_s040_r001_q003
+finish regime_id=call_T100_s040_r001_q003 status=accepted rows=5203
+start regime_index=230 regime_id=call_T100_s040_r001_q006
+finish regime_id=call_T100_s040_r001_q006 status=accepted rows=5203
+start regime_index=231 regime_id=call_T100_s040_r001_q010
+finish regime_id=call_T100_s040_r001_q010 status=accepted rows=5203
+start regime_index=232 regime_id=call_T100_s040_r005_q000
+finish regime_id=call_T100_s040_r005_q000 status=accepted rows=5203
+start regime_index=233 regime_id=call_T100_s040_r005_q003
+finish regime_id=call_T100_s040_r005_q003 status=accepted rows=5203
+start regime_index=234 regime_id=call_T100_s040_r005_q006
+finish regime_id=call_T100_s040_r005_q006 status=accepted rows=5203
+start regime_index=235 regime_id=call_T100_s040_r005_q010
+finish regime_id=call_T100_s040_r005_q010 status=accepted rows=5203
+start regime_index=236 regime_id=call_T100_s040_r010_q000
+finish regime_id=call_T100_s040_r010_q000 status=accepted rows=5203
+start regime_index=237 regime_id=call_T100_s040_r010_q003
+finish regime_id=call_T100_s040_r010_q003 status=accepted rows=5203
+start regime_index=238 regime_id=call_T100_s040_r010_q006
+finish regime_id=call_T100_s040_r010_q006 status=accepted rows=5203
+start regime_index=239 regime_id=call_T100_s040_r010_q010
+finish regime_id=call_T100_s040_r010_q010 status=accepted rows=5203
+start regime_index=240 regime_id=call_T100_s060_r001_q000
+finish regime_id=call_T100_s060_r001_q000 status=accepted rows=5203
+start regime_index=241 regime_id=call_T100_s060_r001_q003
+finish regime_id=call_T100_s060_r001_q003 status=accepted rows=5203
+start regime_index=242 regime_id=call_T100_s060_r001_q006
+finish regime_id=call_T100_s060_r001_q006 status=accepted rows=5203
+start regime_index=243 regime_id=call_T100_s060_r001_q010
+finish regime_id=call_T100_s060_r001_q010 status=accepted rows=5203
+start regime_index=244 regime_id=call_T100_s060_r005_q000
+finish regime_id=call_T100_s060_r005_q000 status=accepted rows=5203
+start regime_index=245 regime_id=call_T100_s060_r005_q003
+finish regime_id=call_T100_s060_r005_q003 status=accepted rows=5203
+start regime_index=246 regime_id=call_T100_s060_r005_q006
+finish regime_id=call_T100_s060_r005_q006 status=accepted rows=5203
+start regime_index=247 regime_id=call_T100_s060_r005_q010
+finish regime_id=call_T100_s060_r005_q010 status=accepted rows=5203
+start regime_index=248 regime_id=call_T100_s060_r010_q000
+finish regime_id=call_T100_s060_r010_q000 status=accepted rows=5203
+start regime_index=249 regime_id=call_T100_s060_r010_q003
+finish regime_id=call_T100_s060_r010_q003 status=accepted rows=5203
+start regime_index=250 regime_id=call_T100_s060_r010_q006
+finish regime_id=call_T100_s060_r010_q006 status=accepted rows=5203
+start regime_index=251 regime_id=call_T100_s060_r010_q010
+finish regime_id=call_T100_s060_r010_q010 status=accepted rows=5203
+start regime_index=252 regime_id=call_T200_s020_r001_q000
+finish regime_id=call_T200_s020_r001_q000 status=accepted rows=5203
+start regime_index=253 regime_id=call_T200_s020_r001_q003
+finish regime_id=call_T200_s020_r001_q003 status=accepted rows=5203
+start regime_index=254 regime_id=call_T200_s020_r001_q006
+finish regime_id=call_T200_s020_r001_q006 status=accepted rows=5203
+start regime_index=255 regime_id=call_T200_s020_r001_q010
+finish regime_id=call_T200_s020_r001_q010 status=accepted rows=5203
+start regime_index=256 regime_id=call_T200_s020_r005_q000
+finish regime_id=call_T200_s020_r005_q000 status=accepted rows=5203
+start regime_index=257 regime_id=call_T200_s020_r005_q003
+finish regime_id=call_T200_s020_r005_q003 status=accepted rows=5203
+start regime_index=258 regime_id=call_T200_s020_r005_q006
+finish regime_id=call_T200_s020_r005_q006 status=accepted rows=5203
+start regime_index=259 regime_id=call_T200_s020_r005_q010
+finish regime_id=call_T200_s020_r005_q010 status=accepted rows=5203
+start regime_index=260 regime_id=call_T200_s020_r010_q000
+finish regime_id=call_T200_s020_r010_q000 status=accepted rows=5203
+start regime_index=261 regime_id=call_T200_s020_r010_q003
+finish regime_id=call_T200_s020_r010_q003 status=accepted rows=5203
+start regime_index=262 regime_id=call_T200_s020_r010_q006
+finish regime_id=call_T200_s020_r010_q006 status=accepted rows=5203
+start regime_index=263 regime_id=call_T200_s020_r010_q010
+finish regime_id=call_T200_s020_r010_q010 status=accepted rows=5203
+start regime_index=264 regime_id=call_T200_s040_r001_q000
+finish regime_id=call_T200_s040_r001_q000 status=accepted rows=5203
+start regime_index=265 regime_id=call_T200_s040_r001_q003
+finish regime_id=call_T200_s040_r001_q003 status=accepted rows=5203
+start regime_index=266 regime_id=call_T200_s040_r001_q006
+finish regime_id=call_T200_s040_r001_q006 status=accepted rows=5203
+start regime_index=267 regime_id=call_T200_s040_r001_q010
+finish regime_id=call_T200_s040_r001_q010 status=accepted rows=5203
+start regime_index=268 regime_id=call_T200_s040_r005_q000
+finish regime_id=call_T200_s040_r005_q000 status=accepted rows=5203
+start regime_index=269 regime_id=call_T200_s040_r005_q003
+finish regime_id=call_T200_s040_r005_q003 status=accepted rows=5203
+start regime_index=270 regime_id=call_T200_s040_r005_q006
+finish regime_id=call_T200_s040_r005_q006 status=accepted rows=5203
+start regime_index=271 regime_id=call_T200_s040_r005_q010
+finish regime_id=call_T200_s040_r005_q010 status=accepted rows=5203
+start regime_index=272 regime_id=call_T200_s040_r010_q000
+finish regime_id=call_T200_s040_r010_q000 status=accepted rows=5203
+start regime_index=273 regime_id=call_T200_s040_r010_q003
+finish regime_id=call_T200_s040_r010_q003 status=accepted rows=5203
+start regime_index=274 regime_id=call_T200_s040_r010_q006
+finish regime_id=call_T200_s040_r010_q006 status=accepted rows=5203
+start regime_index=275 regime_id=call_T200_s040_r010_q010
+finish regime_id=call_T200_s040_r010_q010 status=accepted rows=5203
+start regime_index=276 regime_id=call_T200_s060_r001_q000
+finish regime_id=call_T200_s060_r001_q000 status=accepted rows=5203
+start regime_index=277 regime_id=call_T200_s060_r001_q003
+finish regime_id=call_T200_s060_r001_q003 status=accepted rows=5203
+start regime_index=278 regime_id=call_T200_s060_r001_q006
+finish regime_id=call_T200_s060_r001_q006 status=accepted rows=5203
+start regime_index=279 regime_id=call_T200_s060_r001_q010
+finish regime_id=call_T200_s060_r001_q010 status=accepted rows=5203
+start regime_index=280 regime_id=call_T200_s060_r005_q000
+finish regime_id=call_T200_s060_r005_q000 status=accepted rows=5203
+start regime_index=281 regime_id=call_T200_s060_r005_q003
+finish regime_id=call_T200_s060_r005_q003 status=accepted rows=5203
+start regime_index=282 regime_id=call_T200_s060_r005_q006
+finish regime_id=call_T200_s060_r005_q006 status=accepted rows=5203
+start regime_index=283 regime_id=call_T200_s060_r005_q010
+finish regime_id=call_T200_s060_r005_q010 status=accepted rows=5203
+start regime_index=284 regime_id=call_T200_s060_r010_q000
+finish regime_id=call_T200_s060_r010_q000 status=accepted rows=5203
+start regime_index=285 regime_id=call_T200_s060_r010_q003
+finish regime_id=call_T200_s060_r010_q003 status=accepted rows=5203
+start regime_index=286 regime_id=call_T200_s060_r010_q006
+finish regime_id=call_T200_s060_r010_q006 status=accepted rows=5203
+start regime_index=287 regime_id=call_T200_s060_r010_q010
+finish regime_id=call_T200_s060_r010_q010 status=accepted rows=5203
+review_decision=READY_FOR_PRICE_SURROGATE_PLANNING
+accepted_row_count=1498464
