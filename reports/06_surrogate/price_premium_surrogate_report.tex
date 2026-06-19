@@ -1,0 +1,256 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{fontspec}
+\IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{\setmainfont{TeX Gyre Termes}}
+\IfFontExistsTF{Menlo}{\setmonofont{Menlo}}{\setmonofont{Latin Modern Mono}}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage[round,authoryear]{natbib}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+\usepackage{microtype}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.65em}
+\setlist[itemize]{leftmargin=1.4em}
+\newcommand{\file}[1]{\path{#1}}
+\newcommand{\code}[1]{\path{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small Stage 3 Surrogate Experiment}
+\rhead{\small Price / Premium Comparison}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\title{\textbf{Stage 3 Price / Premium Surrogate Report}\\
+\large Direct Value Versus Positive Continuation-Premium Prediction}
+\author{Codex-assisted surrogate modelling review}
+\date{June 19, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This report reviews the Stage 3 surrogate experiment on the v1 small-grid American option dataset.
+Two fixed multilayer perceptrons were compared: a direct value surrogate and a positive-premium
+surrogate that predicts continuation premium and reconstructs value as payoff plus premium. The
+experiment uses the existing v1 dataset read-only, keeps Delta, Gamma, and boundary fields as
+diagnostics only, does not save model weights, and does not train boundary or Greek heads. The
+Stage 3 review decision is \code{READY_FOR_BOUNDARY_DIAGNOSTIC_STAGE}.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Purpose of Stage 3}
+
+Stage 3 asks a narrow modelling question: does predicting nonnegative continuation premium help
+preserve the American payoff obstacle better than predicting option value directly? The experiment
+is intentionally small and fixed. It is not an architecture search, not a production-risk model,
+and not a final research conclusion.
+
+\section{Link to v1 Dataset QA}
+
+The source dataset is \file{results/04_surrogate_dataset/v1_small_grid/dataset_v1_small_grid.npz}.
+The v1 QA report accepted 288 regimes and 1,498,464 sampled rows for price-surrogate planning. The
+solver source remains the validated baseline American CN/PSOR solver, grounded in the finite
+difference American option formulation used throughout the validation ladder
+\citep{black_scholes_1973,merton_1973,brennan_schwartz_1977,wilmott_howison_dewynne_1995}.
+
+\begin{longtable}{L{0.26\textwidth} L{0.22\textwidth} L{0.40\textwidth}}
+\toprule
+Split & Rows & Role \\
+\midrule
+\endhead
+Train & 1,051,006 & Training split; preprocessing fit only here. \\
+Validation & 98,857 & Regime-level validation split. \\
+Test & 223,729 & Regime-level test split. \\
+Stress holdout & 124,872 & Held-out stress combinations. \\
+\bottomrule
+\end{longtable}
+
+\section{Model Families}
+
+\textbf{Direct value model.} The direct baseline uses the seven normalized v1 features and predicts
+\code{value_over_K} with a linear output layer.
+
+\textbf{Positive-premium model.} The premium model uses the same seven features plus
+\code{payoff_over_K}, predicts \code{premium_over_K}, and applies a Softplus output so the
+predicted premium is nonnegative. The value prediction is reconstructed as
+\[
+\widehat U/K = \Phi/K + \widehat{(U-\Phi)}/K.
+\]
+The payoff is analytic contract information computed from spot, strike, and option type. It is not
+target leakage: it is known before pricing and is used only for reconstruction and obstacle-aware
+structure.
+
+\section{Target Policy}
+
+The only training targets are \code{value_over_K} and \code{premium_over_K}. The fields
+\code{boundary_spot_over_K}, \code{delta}, and \code{scaled_gamma} remain diagnostic only.
+No boundary head, Delta head, Gamma head, or production Greek target is trained in this stage.
+
+\section{Preprocessing Policy}
+
+Both models use \code{StandardScaler} fit on training rows only. Validation, test, and stress
+holdout rows do not influence scaling. The train subset is capped deterministically:
+\[
+\text{seed}=20260619,\quad \text{cap}=250,000,\quad
+\text{selected rows}=250,000.
+\]
+If the train split exceeds the cap, rows are selected with
+\code{np.random.default_rng(20260619).choice(train_indices, replace=False)} and sorted before
+batching.
+
+\section{Loss Functions and Training}
+
+Both MLPs use mean squared error and Adam with learning rate \(10^-3\). Training used
+10 epochs and batch size 8192. No model weights or \code{.pt} files were saved.
+
+\begin{longtable}{L{0.28\textwidth} L{0.24\textwidth} L{0.24\textwidth}}
+\toprule
+Model & Final train loss & Final validation loss \\
+\midrule
+\endhead
+Direct value MLP & 2.558e-04 & 2.742e-04 \\
+Positive-premium MLP & 4.389e-05 & 2.359e-05 \\
+\bottomrule
+\end{longtable}
+
+\section{Evaluation Protocol}
+
+Metrics are reported by regime-level split and by diagnostic region. Relative errors use a stable
+denominator floor of \(10^-4\). Obstacle and negative-premium rates use a near-zero rate tolerance
+of \(10^-4\), with violation amounts counted only above \(10^-10\).
+
+\section{Results by Split}
+
+\begin{longtable}{L{0.24\textwidth} L{0.16\textwidth} L{0.16\textwidth} L{0.16\textwidth} L{0.16\textwidth}}
+\toprule
+Model & Split & Value RMSE & Value MAE & Premium RMSE \\
+\midrule
+\endhead
+direct\_value\_mlp & validation & 0.016558 & 0.013540 & 0.016558 \\
+direct\_value\_mlp & test & 0.033351 & 0.023965 & 0.033351 \\
+direct\_value\_mlp & stress\_holdout & 0.028907 & 0.023260 & 0.028907 \\
+positive\_premium\_mlp & validation & 0.004857 & 0.003073 & 0.004857 \\
+positive\_premium\_mlp & test & 0.012269 & 0.007788 & 0.012269 \\
+positive\_premium\_mlp & stress\_holdout & 0.009516 & 0.006607 & 0.009516 \\
+\bottomrule
+\end{longtable}
+
+\section{Direct Value Versus Positive Premium}
+
+The direct model is the plain baseline. The positive-premium model adds American-option structure by
+learning the continuation premium and reconstructing value from the analytic payoff. This comparison
+therefore tests whether the obstacle-aware representation reduces payoff-obstacle violations while
+keeping price accuracy close to the direct value baseline.
+
+\section{Obstacle and Negative-Premium Diagnostics}
+
+\begin{longtable}{L{0.18\textwidth} L{0.20\textwidth} L{0.20\textwidth} L{0.20\textwidth}}
+\toprule
+Split & Obstacle rate & Negative premium rate & Review \\
+\midrule
+\endhead
+train & 0 & 0 & PASS \\
+validation & 0 & 0 & PASS \\
+test & 0 & 0 & PASS \\
+stress\_holdout & 0 & 0 & PASS \\
+\bottomrule
+\end{longtable}
+
+\section{Near-Boundary and Strict-Interior Diagnostics}
+
+Boundary-near rows use the v1 diagnostic mask inherited from Ticket 09/10 logic. Strict-interior rows
+exclude maturity, payoff-kink, boundary-near, and nonfinite Greek regions. These regions are not
+separate training targets; they are evaluation slices.
+
+\begin{longtable}{L{0.22\textwidth} L{0.16\textwidth} L{0.18\textwidth} L{0.15\textwidth} L{0.16\textwidth}}
+\toprule
+Model & Split & Region & Rows & Value RMSE \\
+\midrule
+\endhead
+direct\_value\_mlp & test & boundary\_near & 2,219 & 0.013360 \\
+direct\_value\_mlp & test & strict\_interior & 193,872 & 0.034586 \\
+direct\_value\_mlp & stress\_holdout & boundary\_near & 6,341 & 0.023537 \\
+direct\_value\_mlp & stress\_holdout & strict\_interior & 103,124 & 0.029066 \\
+positive\_premium\_mlp & test & boundary\_near & 2,219 & 0.008631 \\
+positive\_premium\_mlp & test & strict\_interior & 193,872 & 0.011874 \\
+positive\_premium\_mlp & stress\_holdout & boundary\_near & 6,341 & 0.002972 \\
+positive\_premium\_mlp & stress\_holdout & strict\_interior & 103,124 & 0.008976 \\
+\bottomrule
+\end{longtable}
+
+\section{Figures}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.78\textwidth]{results/05_surrogate_models/price_premium/figures/loss_curves.png}
+\caption{Loss curves.}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.78\textwidth]{results/05_surrogate_models/price_premium/figures/value_prediction_scatter.png}
+\caption{Value prediction scatter.}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.78\textwidth]{results/05_surrogate_models/price_premium/figures/premium_prediction_scatter.png}
+\caption{Premium prediction scatter.}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.78\textwidth]{results/05_surrogate_models/price_premium/figures/error_by_split.png}
+\caption{Error by split.}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.78\textwidth]{results/05_surrogate_models/price_premium/figures/obstacle_violation_comparison.png}
+\caption{Obstacle violation comparison.}
+\end{figure}
+
+
+\section{Limitations}
+
+This experiment uses one fixed MLP configuration and a capped training subset. It does not search
+architectures, tune hyperparameters broadly, train a boundary head, train Greek heads, or save model
+weights. Delta and Gamma remain diagnostic fields. The stress-holdout results are informative but
+not a production-risk guarantee.
+
+\section{What Stage 3 Supports}
+
+Stage 3 supports a first comparison between direct value prediction and an obstacle-aware
+positive-premium representation. It also verifies that preprocessing can respect regime-level split
+separation and that metrics can be reported by split, boundary-near region, and strict-interior
+region.
+
+\section{What Stage 3 Does Not Support}
+
+This stage does not approve production deployment, production Greek labels, broad architecture
+selection, boundary-head training, or final paper claims. It does not modify the validated solver and
+does not regenerate the v1 dataset.
+
+\section{Recommended Next Stage}
+
+If the review decision is \code{READY_FOR_BOUNDARY_DIAGNOSTIC_STAGE}, the next stage may plan a
+boundary-diagnostic modelling experiment. If the decision is \code{REVIEW_REQUIRED_BEFORE_BOUNDARY_STAGE},
+the next step is human review of the price/premium errors, obstacle diagnostics, and training setup
+before adding any new target heads.
+
+\bibliographystyle{plainnat}
+\bibliography{reports/03_solver/references}
+
+\end{document}

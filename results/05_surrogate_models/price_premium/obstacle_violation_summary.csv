@@ -1,0 +1,9 @@
+model_name,split,row_count,obstacle_violation_rate,negative_premium_rate,max_obstacle_violation,min_predicted_premium,near_zero_rate_tolerance,violation_amount_tolerance,review_flag,downstream_use_status
+direct_value_mlp,train,1051006,0.31816849761086047,0.31816849761086047,0.09039877653121953,-0.09039877653121953,0.0001,1e-10,REVIEW,stage3_surrogate_diagnostic_only
+direct_value_mlp,validation,98857,0.3683502432806984,0.3683502432806984,0.055777776241302535,-0.055777776241302535,0.0001,1e-10,REVIEW,stage3_surrogate_diagnostic_only
+direct_value_mlp,test,223729,0.22946958150262148,0.22946958150262148,0.13428078889846806,-0.13428078889846806,0.0001,1e-10,REVIEW,stage3_surrogate_diagnostic_only
+direct_value_mlp,stress_holdout,124872,0.17115125888910243,0.17115125888910243,0.08307068347930913,-0.08307068347930913,0.0001,1e-10,REVIEW,stage3_surrogate_diagnostic_only
+positive_premium_mlp,train,1051006,0.0,0.0,0.0,3.3865621844597626e-06,0.0001,1e-10,PASS,stage3_surrogate_diagnostic_only
+positive_premium_mlp,validation,98857,0.0,0.0,0.0,6.5151089074788615e-06,0.0001,1e-10,PASS,stage3_surrogate_diagnostic_only
+positive_premium_mlp,test,223729,0.0,0.0,0.0,1.0693363947211765e-05,0.0001,1e-10,PASS,stage3_surrogate_diagnostic_only
+positive_premium_mlp,stress_holdout,124872,0.0,0.0,0.0,2.265091097797267e-05,0.0001,1e-10,PASS,stage3_surrogate_diagnostic_only
