@@ -1,0 +1,14 @@
+metric,metric_value,status,review_decision,notes
+total_regimes,288,INFO,READY_FOR_PRICE_SURROGATE_PLANNING,Planned v1 regimes.
+accepted_regimes,288,PASS,READY_FOR_PRICE_SURROGATE_PLANNING,Regimes accepted into arrays.
+accepted_rows,1498464,INFO,READY_FOR_PRICE_SURROGATE_PLANNING,Accepted sampled rows.
+npz_file_bytes,50262900,INFO,READY_FOR_PRICE_SURROGATE_PLANNING,Compressed package size.
+train_accepted_rows,1051006,INFO,READY_FOR_PRICE_SURROGATE_PLANNING,Accepted rows by split.
+validation_accepted_rows,98857,INFO,READY_FOR_PRICE_SURROGATE_PLANNING,Accepted rows by split.
+test_accepted_rows,223729,INFO,READY_FOR_PRICE_SURROGATE_PLANNING,Accepted rows by split.
+stress_holdout_accepted_rows,124872,INFO,READY_FOR_PRICE_SURROGATE_PLANNING,Accepted rows by split.
+max_obstacle_violation,0.0,PASS,READY_FOR_PRICE_SURROGATE_PLANNING,Tolerance 1e-08.
+max_equation_violation,1.018713113865033e-07,PASS,READY_FOR_PRICE_SURROGATE_PLANNING,Tolerance 1e-06.
+max_abs_complementarity_product,1.819355477882301e-08,PASS,READY_FOR_PRICE_SURROGATE_PLANNING,Tolerance 1e-06.
+boundary_found_total,29795.0,INFO,READY_FOR_PRICE_SURROGATE_PLANNING,Boundary-found time rows across regimes.
+strict_interior_node_total,3825842.0,INFO,READY_FOR_PRICE_SURROGATE_PLANNING,Full-grid strict Greek mask nodes across regimes.
