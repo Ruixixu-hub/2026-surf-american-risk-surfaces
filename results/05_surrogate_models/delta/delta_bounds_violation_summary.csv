@@ -1,0 +1,13 @@
+method_name,split,row_count,bounds_violation_rate,sign_violation_rate,max_bounds_violation,max_sign_violation,delta_bound_tolerance,review_flag,downstream_use_status
+direct_value_implied_delta,train,861030,0.3298108079857845,0.2061043169227553,0.9197321118856645,0.9197321118856645,0.0001,REVIEW,stage5_delta_diagnostic_only
+direct_value_implied_delta,validation,78983,0.383652178316853,0.2206930605320132,0.679893305830958,0.679893305830958,0.0001,REVIEW,stage5_delta_diagnostic_only
+direct_value_implied_delta,test,193872,0.21770549641000247,0.17230440703144342,0.9445471977504453,0.9445471977504453,0.0001,REVIEW,stage5_delta_diagnostic_only
+direct_value_implied_delta,stress_holdout,103124,0.20457895349288235,0.18917031922733796,0.4247303057669717,0.4247303057669717,0.0001,REVIEW,stage5_delta_diagnostic_only
+positive_premium_implied_delta,train,861030,1.161399718941268e-06,0.0,0.00120785353776931,9.132133723513138e-05,0.0001,PASS,stage5_delta_diagnostic_only
+positive_premium_implied_delta,validation,78983,0.0,0.0,0.0,0.0,0.0001,PASS,stage5_delta_diagnostic_only
+positive_premium_implied_delta,test,193872,0.0012585623504167698,0.0,0.16162885668042692,0.0,0.0001,REVIEW,stage5_delta_diagnostic_only
+positive_premium_implied_delta,stress_holdout,103124,0.0,0.0,0.0,0.0,0.0001,PASS,stage5_delta_diagnostic_only
+supervised_delta_head,train,861030,0.0,0.0,0.0,0.0,0.0001,PASS,stage5_delta_diagnostic_only
+supervised_delta_head,validation,78983,0.0,0.0,0.0,0.0,0.0001,PASS,stage5_delta_diagnostic_only
+supervised_delta_head,test,193872,0.0,0.0,0.0,0.0,0.0001,PASS,stage5_delta_diagnostic_only
+supervised_delta_head,stress_holdout,103124,0.0,0.0,0.0,0.0,0.0001,PASS,stage5_delta_diagnostic_only
