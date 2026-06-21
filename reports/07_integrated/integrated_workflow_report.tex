@@ -1,0 +1,259 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{fontspec}
+\IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{\setmainfont{TeX Gyre Termes}}
+\IfFontExistsTF{Menlo}{\setmonofont{Menlo}}{\setmonofont{Latin Modern Mono}}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage[round,authoryear]{natbib}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+\usepackage{microtype}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.65em}
+\setlist[itemize]{leftmargin=1.4em}
+\newcommand{\file}[1]{\path{#1}}
+\newcommand{\code}[1]{\path{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small Stage 6 Integrated Workflow}
+\rhead{\small Claim Synthesis}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\title{\textbf{Stage 6 Integrated Workflow Report}\\
+\large Claim Synthesis and Final Paper Preparation}
+\author{Codex-assisted integrated workflow review}
+\date{June 21, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This report synthesizes the completed solver validation, v1 small-grid dataset, price/premium
+surrogate, boundary diagnostic component, and Delta diagnostic component. It does not train a
+new model, regenerate the dataset, introduce a Gamma head, or modify solver code. The Stage 6
+review decision is \code{READY\_FOR\_FINAL\_PAPER\_DRAFTING}.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Purpose of Stage 6}
+
+Stage 6 is an integrated review and final-paper preparation pass. Its job is to connect each
+technical component to a claim that can safely appear in a draft paper. The methodology guides
+emphasize that American option risk-surface work should begin with a validated finite-difference
+benchmark and only then add constrained, diagnostic neural components \citep{brennan_schwartz_1977,wilmott_howison_dewynne_1995}.
+
+\section{Compressed Roadmap Status}
+
+The compressed roadmap has completed five stages before this synthesis: v0 dry run, v1 dataset
+QA, price/premium surrogate comparison, boundary diagnostics, and Delta diagnostics. Stage 6
+does not add a sixth model; it audits the evidence produced by those stages.
+
+\section{Component Evidence Summary}
+
+\begin{longtable}{L{0.19\textwidth} L{0.24\textwidth} L{0.31\textwidth} L{0.16\textwidth}}
+\toprule
+Component & Method & Key Metric & Status \\
+\midrule
+\endhead
+CN/PSOR solver benchmark & Baseline American Crank-Nicolson / PSOR LCP solver & PASS\_SOLVER\_VALIDATION\_WITH\_LIMITATIONS & READY\_WITH\_LIMITATIONS \\
+v1 small-grid dataset & 288 approved regimes sampled on S/K in [0.4,1.8] & 288 accepted regimes; 1498464 rows; max obstacle 0.0 & READY\_WITH\_LIMITATIONS \\
+price/premium surrogate & Positive-premium MLP with analytic payoff reconstruction & test value RMSE 0.012269; stress RMSE 0.009516; test obstacle rate 0.000e+00 & READY\_WITH\_LIMITATIONS \\
+boundary diagnostic component & Direct boundary-head diagnostic baseline & test RMSE 0.041007; stress RMSE 0.084293 & READY\_WITH\_LIMITATIONS \\
+Delta diagnostic component & Supervised bounded Delta-head diagnostic baseline & test RMSE 0.057626; stress RMSE 0.048061; test bounds rate 0.000e+00 & READY\_WITH\_LIMITATIONS \\
+Gamma component & No Gamma head trained & Gamma remains blocked & BLOCKED \\
+\bottomrule
+\end{longtable}
+
+\section{Integrated Workflow Description}
+
+The retained workflow is modular. A validated CN/PSOR benchmark generates diagnostic surfaces.
+The v1 small-grid dataset records regime-level splits, labels, masks, and diagnostics. The
+positive-premium model handles price and continuation premium. A direct boundary-head diagnostic
+component handles threshold-based free-boundary labels. A supervised Delta-head diagnostic
+component handles finite-difference Delta labels. Gamma remains blocked rather than silently
+converted into a model claim.
+
+\section{Headline Metrics}
+
+\begin{longtable}{L{0.18\textwidth} L{0.32\textwidth} L{0.20\textwidth} L{0.20\textwidth}}
+\toprule
+Component & Metric Name & Split Or Region & Value \\
+\midrule
+\endhead
+dataset & accepted\_regimes & v1\_small\_grid & 288 \\
+dataset & accepted\_rows & v1\_small\_grid & 1498464 \\
+dataset & max\_obstacle\_violation & v1\_small\_grid & 0.0 \\
+price/premium & positive\_premium\_value\_rmse & test & 0.012268641982174276 \\
+price/premium & positive\_premium\_value\_rmse & stress\_holdout & 0.009515969641226743 \\
+boundary & direct\_boundary\_head\_rmse & test & 0.04100654163466295 \\
+boundary & direct\_boundary\_head\_rmse & stress\_holdout & 0.08429296961550176 \\
+Delta & supervised\_delta\_head\_rmse & test & 0.05762588026155442 \\
+Delta & supervised\_delta\_head\_rmse & stress\_holdout & 0.04806100815073663 \\
+Gamma & gamma\_head\_status & overall & BLOCKED \\
+\bottomrule
+\end{longtable}
+
+\section{Price/Premium Component Synthesis}
+
+The Stage 3 evidence supports the positive-premium representation. Predicting nonnegative
+continuation premium and reconstructing value with analytic payoff aligns the surrogate with the
+American obstacle. This supports a price and premium surface claim, but not a boundary or Greek
+claim by itself.
+
+\section{Boundary Component Synthesis}
+
+The Stage 4 evidence is deliberately two-part. The premium-implied boundary method is not reliable
+in this test because many rows have no comparable boundary-error points. The direct boundary-head
+diagnostic baseline satisfies the boundary diagnostics and supports a separate boundary-focused
+component. The boundary remains a threshold-based CN/PSOR diagnostic, not exact analytical truth.
+
+\section{Delta Component Synthesis}
+
+The Stage 5 evidence shows that good price or premium accuracy does not automatically imply
+production-quality Delta. Price-implied Delta diagnostics are informative, but the supervised
+Delta head is the retained diagnostic component because it satisfies the RMSE and bounds/sign
+criteria. Delta labels remain finite-difference diagnostics.
+
+\section{Blocked Gamma and Production Claims}
+
+No Gamma head is trained in the compressed roadmap. Production pricing, exact free-boundary,
+production Greek, broad extrapolation, and one-model-solves-all claims are blocked. This is a
+strength of the synthesis: weak claims are removed rather than hidden.
+
+\section{Claim Evidence Matrix}
+
+\begin{longtable}{L{0.09\textwidth} L{0.43\textwidth} L{0.20\textwidth} L{0.20\textwidth}}
+\toprule
+Claim Id & Claim Text & Status & Final Paper Use \\
+\midrule
+\endhead
+C01 & A validated baseline CN/PSOR benchmark can generate consistent American-option diagnostic surfaces within the approved one-dimensional Black-Scholes grid. & SUPPORTED\_WITH\_LIMITATIONS & Benchmark and dataset construction sections. \\
+C02 & Positive continuation-premium prediction is better aligned with the American payoff obstacle than direct value prediction. & SUPPORTED\_WITH\_LIMITATIONS & Price / premium surrogate section. \\
+C03 & Boundary behavior should be handled by a boundary-focused diagnostic component rather than only thresholding price/premium predictions. & SUPPORTED\_WITH\_LIMITATIONS & Boundary diagnostic component section. \\
+C04 & Delta behavior should be handled with a Delta-focused diagnostic component rather than assumed from price accuracy. & SUPPORTED\_WITH\_LIMITATIONS & Delta diagnostic component section. \\
+C05 & The project contribution is a modular research workflow, not a single universal neural solver. & SUPPORTED\_WITH\_LIMITATIONS & Integrated workflow and conclusion sections. \\
+\bottomrule
+\end{longtable}
+
+\section{Blocked Claims Matrix}
+
+\begin{longtable}{L{0.28\textwidth} L{0.33\textwidth} L{0.30\textwidth}}
+\toprule
+Blocked Claim & Reason Blocked & Possible Future Work \\
+\midrule
+\endhead
+Production pricing or production risk-system readiness & The workflow is validated as a research diagnostic pipeline only. & Add calibration, monitoring, runtime SLAs, and independent production QA. \\
+Exact analytical free-boundary accuracy & Boundary labels are threshold-based CN/PSOR diagnostics. & Compare against high-resolution references and alternative boundary methods. \\
+Production Greek reliability & Delta is a finite-difference diagnostic label and Gamma remains fragile. & Add higher-grid Greek confirmation, hedging diagnostics, and uncertainty checks. \\
+Gamma-head or Gamma-surrogate claims & No Gamma head is trained in the compressed roadmap. & Design a separate masked Gamma diagnostic stage after human review. \\
+Broad extrapolation outside the approved v1 grid & The dataset uses a fixed small Cartesian grid and regime-level splits. & Run a larger-regime envelope study with PSOR spot checks. \\
+One surrogate model solves price, boundary, and Greeks together & Stages 4 and 5 show separate boundary and Delta components are needed. & Study integrated multi-head architectures only after preserving component diagnostics. \\
+\bottomrule
+\end{longtable}
+
+\section{Final Paper Outline}
+
+\begin{longtable}{L{0.08\textwidth} L{0.20\textwidth} L{0.35\textwidth} L{0.28\textwidth}}
+\toprule
+Section Number & Section Title & Purpose & Key Evidence \\
+\midrule
+\endhead
+1 & Introduction & Motivate American option risk surfaces and the free-boundary challenge. & Planning report and methodology guide. \\
+2 & Research question & State the modular structure-preserving surrogate question. & Application strength gate and Stage 6 claim matrix. \\
+3 & Background and American option formulation & Define payoff obstacle, LCP, boundary, Delta, and Gamma caveats. & Formulation note and references. \\
+4 & Numerical benchmark: CN/PSOR and LCP validation & Document the validated finite-difference benchmark. & Ticket 12 synthesis and v1 QA. \\
+5 & Dataset construction & Explain v1 regimes, splits, masks, and diagnostics. & v1 small-grid report. \\
+6 & Price / premium surrogate & Show why positive premium is the retained price component. & Stage 3 metrics and obstacle summary. \\
+7 & Boundary diagnostic component & Explain why direct boundary diagnostics are needed. & Stage 4 boundary metrics. \\
+8 & Delta diagnostic component & Explain why Delta needs a supervised diagnostic head. & Stage 5 metrics and bounds summary. \\
+9 & Integrated workflow & Assemble the component workflow and claim matrix. & Stage 6 readiness matrices. \\
+10 & Limitations & State blocked claims and scope boundaries. & Blocked claims matrix. \\
+11 & Conclusion & Summarize the cautious research contribution. & Supported claim matrix. \\
+12 & Future work & Describe larger regimes, active learning, Gamma diagnostics, and production gaps. & Handouts and blocked claims. \\
+\bottomrule
+\end{longtable}
+
+\section{Figure and Table Inventory}
+
+\begin{longtable}{L{0.10\textwidth} L{0.13\textwidth} L{0.25\textwidth} L{0.42\textwidth}}
+\toprule
+Item Id & Item Type & Recommended Final Paper Section & Purpose \\
+\midrule
+\endhead
+F01 & figure & Price / premium surrogate & Compare direct value and positive-premium held-out errors. \\
+F02 & figure & Price / premium surrogate & Show obstacle and negative-premium behavior. \\
+F03 & figure & Boundary diagnostic component & Show direct boundary-head diagnostics and premium-implied limitations. \\
+F04 & figure & Boundary diagnostic component & Show representative put boundary curves. \\
+F05 & figure & Delta diagnostic component & Show Delta error across held-out splits. \\
+F06 & figure & Delta diagnostic component & Show bounds/sign diagnostics. \\
+T01 & table & Integrated workflow & Summarize component readiness. \\
+T02 & table & Integrated workflow & Map final claims to evidence. \\
+\bottomrule
+\end{longtable}
+
+\section{Stage 6 Figures}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\textwidth]{results/06_integrated_workflow/figures/component_readiness_overview.png}
+\caption{Component readiness overview.}
+\end{figure}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\textwidth]{results/06_integrated_workflow/figures/workflow_evidence_map.png}
+\caption{Workflow evidence map.}
+\end{figure}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\textwidth]{results/06_integrated_workflow/figures/stress_holdout_summary.png}
+\caption{Stress-holdout summary across retained components.}
+\end{figure}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\textwidth]{results/06_integrated_workflow/figures/final_claims_status.png}
+\caption{Final supported and blocked claim counts.}
+\end{figure}
+
+\section{Limitations}
+
+\begin{itemize}
+  \item The integrated workflow is a synthesis of existing evidence, not a fresh PSOR benchmark run.
+  \item The v1 dataset is limited to the approved small-grid Black-Scholes regime envelope.
+  \item Boundary labels are threshold-based diagnostics.
+  \item Delta labels are finite-difference diagnostics.
+  \item Gamma is blocked from surrogate claims.
+  \item The final paper still needs careful prose, citation integration, and human review.
+\end{itemize}
+
+\section{Final Readiness Decision}
+
+\[
+\boxed{\text{\code{READY\_FOR\_FINAL\_PAPER\_DRAFTING}}}
+\]
+
+The evidence is strong enough to begin final paper drafting, provided the paper keeps the modular
+claim structure and the blocked-claims language intact.
+
+\section{Recommended Next Step}
+
+Draft the final paper from \file{reports/07_integrated/final_paper_outline.md} and the Stage 6
+matrices. Do not add a Gamma claim, production claim, or universal neural-superiority claim unless
+new evidence is generated in a separate approved stage.
+
+\bibliographystyle{plainnat}
+\bibliography{reports/03_solver/references}
+
+\end{document}

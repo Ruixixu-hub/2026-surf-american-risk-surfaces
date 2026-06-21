@@ -1,0 +1,13 @@
+section_number,section_title,purpose,key_evidence,figures_or_tables,writing_status
+1,Introduction,Motivate American option risk surfaces and the free-boundary challenge.,Planning report and methodology guide.,Integrated workflow diagram,planned_not_written
+2,Research question,State the modular structure-preserving surrogate question.,Application strength gate and Stage 6 claim matrix.,Claim evidence matrix,planned_not_written
+3,Background and American option formulation,"Define payoff obstacle, LCP, boundary, Delta, and Gamma caveats.",Formulation note and references.,Mathematical formulation table,planned_not_written
+4,Numerical benchmark: CN/PSOR and LCP validation,Document the validated finite-difference benchmark.,Ticket 12 synthesis and v1 QA.,Solver validation table,planned_not_written
+5,Dataset construction,"Explain v1 regimes, splits, masks, and diagnostics.",v1 small-grid report.,Dataset QA table,planned_not_written
+6,Price / premium surrogate,Show why positive premium is the retained price component.,Stage 3 metrics and obstacle summary.,Price and obstacle figures,planned_not_written
+7,Boundary diagnostic component,Explain why direct boundary diagnostics are needed.,Stage 4 boundary metrics.,Boundary error and curve figures,planned_not_written
+8,Delta diagnostic component,Explain why Delta needs a supervised diagnostic head.,Stage 5 metrics and bounds summary.,Delta error and bounds figures,planned_not_written
+9,Integrated workflow,Assemble the component workflow and claim matrix.,Stage 6 readiness matrices.,Component overview and evidence map,planned_not_written
+10,Limitations,State blocked claims and scope boundaries.,Blocked claims matrix.,Blocked claims table,planned_not_written
+11,Conclusion,Summarize the cautious research contribution.,Supported claim matrix.,Final claims status,planned_not_written
+12,Future work,"Describe larger regimes, active learning, Gamma diagnostics, and production gaps.",Handouts and blocked claims.,Future work table,planned_not_written

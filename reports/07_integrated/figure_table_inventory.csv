@@ -1,0 +1,10 @@
+item_id,item_type,source_file,recommended_final_paper_section,purpose,status
+F01,figure,results/05_surrogate_models/price_premium/figures/error_by_split.png,Price / premium surrogate,Compare direct value and positive-premium held-out errors.,recommended
+F02,figure,results/05_surrogate_models/price_premium/figures/obstacle_violation_comparison.png,Price / premium surrogate,Show obstacle and negative-premium behavior.,recommended
+F03,figure,results/05_surrogate_models/boundary/figures/boundary_error_by_split.png,Boundary diagnostic component,Show direct boundary-head diagnostics and premium-implied limitations.,recommended
+F04,figure,results/05_surrogate_models/boundary/figures/sample_put_boundary_curves.png,Boundary diagnostic component,Show representative put boundary curves.,optional
+F05,figure,results/05_surrogate_models/delta/figures/delta_error_by_split.png,Delta diagnostic component,Show Delta error across held-out splits.,recommended
+F06,figure,results/05_surrogate_models/delta/figures/delta_bounds_violation_comparison.png,Delta diagnostic component,Show bounds/sign diagnostics.,recommended
+T01,table,reports/07_integrated/component_readiness_matrix.csv,Integrated workflow,Summarize component readiness.,include
+T02,table,reports/07_integrated/claim_evidence_matrix.csv,Integrated workflow,Map final claims to evidence.,include
+T03,table,reports/07_integrated/blocked_claims_matrix.csv,Limitations,Prevent overclaiming.,include

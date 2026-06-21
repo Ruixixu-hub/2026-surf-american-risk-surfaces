@@ -1,0 +1,26 @@
+component,metric_name,split_or_region,value,interpretation,source_file
+solver,validation_gate_decision,overall,PASS_SOLVER_VALIDATION_WITH_LIMITATIONS,Solver validation passed with explicit limitations.,reports/03_solver/tickets/ticket_12_solver_validation_synthesis.tex
+dataset,accepted_regimes,v1_small_grid,288,Regimes accepted into arrays.,results/04_surrogate_dataset/v1_small_grid/v1_dataset_quality_summary.csv
+dataset,accepted_rows,v1_small_grid,1498464,Accepted sampled rows.,results/04_surrogate_dataset/v1_small_grid/v1_dataset_quality_summary.csv
+dataset,max_obstacle_violation,v1_small_grid,0.0,Tolerance 1e-08.,results/04_surrogate_dataset/v1_small_grid/v1_dataset_quality_summary.csv
+dataset,max_equation_violation,v1_small_grid,1.018713113865033e-07,Tolerance 1e-06.,results/04_surrogate_dataset/v1_small_grid/v1_dataset_quality_summary.csv
+dataset,max_abs_complementarity_product,v1_small_grid,1.819355477882301e-08,Tolerance 1e-06.,results/04_surrogate_dataset/v1_small_grid/v1_dataset_quality_summary.csv
+price/premium,positive_premium_value_rmse,validation,0.0048568913758458175,Primary Stage 3 value error.,results/05_surrogate_models/price_premium/surrogate_metrics_by_split.csv
+price/premium,positive_premium_obstacle_rate,validation,0.0,Obstacle diagnostic for reconstructed value.,results/05_surrogate_models/price_premium/obstacle_violation_summary.csv
+price/premium,positive_premium_value_rmse,test,0.012268641982174276,Primary Stage 3 value error.,results/05_surrogate_models/price_premium/surrogate_metrics_by_split.csv
+price/premium,positive_premium_obstacle_rate,test,0.0,Obstacle diagnostic for reconstructed value.,results/05_surrogate_models/price_premium/obstacle_violation_summary.csv
+price/premium,positive_premium_value_rmse,stress_holdout,0.009515969641226743,Primary Stage 3 value error.,results/05_surrogate_models/price_premium/surrogate_metrics_by_split.csv
+price/premium,positive_premium_obstacle_rate,stress_holdout,0.0,Obstacle diagnostic for reconstructed value.,results/05_surrogate_models/price_premium/obstacle_violation_summary.csv
+boundary,direct_boundary_head_rmse,validation,0.03536189627390184,Direct boundary-head diagnostic error.,results/05_surrogate_models/boundary/boundary_metrics_by_split.csv
+boundary,premium_implied_boundary_rmse,validation,nan,NA means no comparable boundary-error points; not a zero-error result.,results/05_surrogate_models/boundary/boundary_metrics_by_split.csv
+boundary,direct_boundary_head_rmse,test,0.04100654163466295,Direct boundary-head diagnostic error.,results/05_surrogate_models/boundary/boundary_metrics_by_split.csv
+boundary,premium_implied_boundary_rmse,test,nan,NA means no comparable boundary-error points; not a zero-error result.,results/05_surrogate_models/boundary/boundary_metrics_by_split.csv
+boundary,direct_boundary_head_rmse,stress_holdout,0.08429296961550176,Direct boundary-head diagnostic error.,results/05_surrogate_models/boundary/boundary_metrics_by_split.csv
+boundary,premium_implied_boundary_rmse,stress_holdout,nan,NA means no comparable boundary-error points; not a zero-error result.,results/05_surrogate_models/boundary/boundary_metrics_by_split.csv
+Delta,supervised_delta_head_rmse,validation,0.03816971673385201,Supervised finite-difference Delta diagnostic error.,results/05_surrogate_models/delta/delta_metrics_by_split.csv
+Delta,supervised_delta_head_bounds_rate,validation,0.0,Bounds violation diagnostic for Delta head.,results/05_surrogate_models/delta/delta_bounds_violation_summary.csv
+Delta,supervised_delta_head_rmse,test,0.05762588026155442,Supervised finite-difference Delta diagnostic error.,results/05_surrogate_models/delta/delta_metrics_by_split.csv
+Delta,supervised_delta_head_bounds_rate,test,0.0,Bounds violation diagnostic for Delta head.,results/05_surrogate_models/delta/delta_bounds_violation_summary.csv
+Delta,supervised_delta_head_rmse,stress_holdout,0.04806100815073663,Supervised finite-difference Delta diagnostic error.,results/05_surrogate_models/delta/delta_metrics_by_split.csv
+Delta,supervised_delta_head_bounds_rate,stress_holdout,0.0,Bounds violation diagnostic for Delta head.,results/05_surrogate_models/delta/delta_bounds_violation_summary.csv
+Gamma,gamma_head_status,overall,BLOCKED,No Gamma head is trained or claimed.,reports/06_surrogate/delta_diagnostic_report.tex
