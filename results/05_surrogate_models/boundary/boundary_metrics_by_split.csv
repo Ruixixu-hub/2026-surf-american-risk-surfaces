@@ -1,0 +1,9 @@
+method_name,split,row_count,reference_found_count,predicted_found_count,comparable_error_count,reference_outside_sample_window_count,boundary_mae,boundary_rmse,boundary_max_abs_error,boundary_found_agreement_rate,missed_boundary_rate,false_boundary_rate,no_dividend_call_false_boundary_rate,review_flag,downstream_use_status
+premium_implied_boundary,train,24442,23882,0,0,7880,nan,nan,nan,0.022911382047295637,1.0,0.0,nan,REVIEW,stage4_boundary_diagnostic_only
+premium_implied_boundary,validation,2299,2280,0,0,272,nan,nan,nan,0.008264462809917356,1.0,0.0,nan,REVIEW,stage4_boundary_diagnostic_only
+premium_implied_boundary,test,5203,753,0,0,204,nan,nan,nan,0.8552758024216798,1.0,0.0,0.0,REVIEW,stage4_boundary_diagnostic_only
+premium_implied_boundary,stress_holdout,2904,2880,0,0,1346,nan,nan,nan,0.008264462809917356,1.0,0.0,nan,REVIEW,stage4_boundary_diagnostic_only
+direct_boundary_head,train,24442,23882,23882,16002,7880,0.022766831276702253,0.030942801282747633,0.2971486700183974,0.9999181736355454,0.0,0.0017857142857142857,nan,PASS,stage4_boundary_diagnostic_only
+direct_boundary_head,validation,2299,2280,2280,2008,272,0.027600083984116362,0.03536189627390184,0.18298293344937888,1.0,0.0,0.0,nan,PASS,stage4_boundary_diagnostic_only
+direct_boundary_head,test,5203,753,788,549,204,0.03264928925229986,0.04100654163466295,0.10902313623965032,0.9932731116663464,0.0,0.007865168539325843,0.0,PASS,stage4_boundary_diagnostic_only
+direct_boundary_head,stress_holdout,2904,2880,2880,1534,1346,0.06945379844462708,0.08429296961550176,0.311119999923438,1.0,0.0,0.0,nan,PASS,stage4_boundary_diagnostic_only

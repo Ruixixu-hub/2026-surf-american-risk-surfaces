@@ -1,0 +1,198 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{fontspec}
+\IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{\setmainfont{TeX Gyre Termes}}
+\IfFontExistsTF{Menlo}{\setmonofont{Menlo}}{\setmonofont{Latin Modern Mono}}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage[round,authoryear]{natbib}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+\usepackage{microtype}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.65em}
+\setlist[itemize]{leftmargin=1.4em}
+\newcommand{\file}[1]{\path{#1}}
+\newcommand{\code}[1]{\path{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small Stage 4 Boundary Diagnostic}
+\rhead{\small Boundary Head Comparison}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\title{\textbf{Stage 4 Boundary Diagnostic Report}\\
+\large Premium-Implied Boundaries and a Direct Boundary-Head Baseline}
+\author{Codex-assisted surrogate modelling review}
+\date{June 19, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This report reviews Stage 4 of the compressed roadmap. It checks whether the Stage 3
+positive-premium surrogate can recover early-exercise boundary behavior from predicted
+continuation premium, and compares it with a small direct boundary-head baseline. Boundary labels
+remain threshold-based CN/PSOR diagnostics, not exact analytical free boundaries. No Delta or
+Gamma head is trained. The Stage 4 review decision is \code{READY_FOR_DELTA_DIAGNOSTIC_STAGE}.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Purpose of Stage 4}
+
+Stage 4 is a diagnostic boundary experiment. Stage 3 showed that predicting continuation premium
+helped preserve the American payoff obstacle. The next question is whether that premium surrogate
+also gives coherent early-exercise boundary behavior when the same threshold extraction logic is
+applied to predicted premium curves. The boundary interpretation follows the American-option
+finite-difference and free-boundary setting documented in the solver reports
+\citep{brennan_schwartz_1977,wilmott_howison_dewynne_1995}.
+
+\section{Link to Stage 3 Result}
+
+The Stage 3 review decision was \code{READY_FOR_BOUNDARY_DIAGNOSTIC_STAGE}. Stage 4 uses the same
+v1 small-grid dataset and retrains the positive-premium MLP deterministically because Stage 3 did
+not save model weights.
+
+\section{Boundary Target Construction}
+
+The v1 dataset stores \code{boundary_spot_over_K} on sampled rows. Stage 4 collapses those rows to
+one target per regime-time pair. The resulting target table contains 34,848 rows,
+with 29,795 finite reference boundaries and 20,093 finite boundaries inside
+the sampled \(S/K\in[0.4,1.8]\) support. There are 4,356 no-dividend call control
+time rows.
+
+\section{Premium-Implied Boundary Method}
+
+The premium-implied method retrains the Stage 3 positive-premium MLP in memory, predicts
+\code{premium_over_K} over v1 sampled rows, sorts each regime-time curve by moneyness, and applies
+the Ticket 09 threshold crossing with threshold \(10^-6\). It is a diagnostic extraction, not a
+new solver. In this Stage 4 test, the premium-implied boundary method is not reliable: it often has
+no comparable boundary-error points, so its RMSE is reported as \code{NA} rather than zero error.
+
+\section{Direct Boundary-Head Method}
+
+The direct boundary head is a small baseline. It uses only
+\code{tau_fraction}, \(r\), \(q\), \(\sigma\), \(T\), and \code{is_call}. A histogram-gradient
+classifier predicts whether a boundary exists, and a bounded histogram-gradient regressor predicts
+\code{boundary_spot_over_K} for finite-boundary rows. Maturity rows and no-dividend call controls
+are postprocessed as no-boundary diagnostic cases. No Delta, Gamma, or production boundary head is
+introduced.
+
+\section{Metrics and Evaluation Protocol}
+
+Metrics include boundary MAE, RMSE, maximum absolute error, found/not-found agreement, missed
+boundary rate, false boundary rate, and no-dividend-call false-boundary rate. Boundary errors are
+computed only where a reference boundary exists, the prediction found a boundary, and the reference
+boundary is inside the sampled support.
+
+\section{Results by Split}
+
+\begin{longtable}{L{0.23\textwidth} L{0.16\textwidth} L{0.15\textwidth} L{0.15\textwidth} L{0.16\textwidth}}
+\toprule
+Method & Split & RMSE & Found agreement & No-div false rate \\
+\midrule
+\endhead
+premium\_implied\_boundary & train & NA & 0.022911 & NA \\
+premium\_implied\_boundary & validation & NA & 0.008264 & NA \\
+premium\_implied\_boundary & test & NA & 0.855276 & 0 \\
+premium\_implied\_boundary & stress\_holdout & NA & 0.008264 & NA \\
+direct\_boundary\_head & train & 0.030943 & 0.999918 & NA \\
+direct\_boundary\_head & validation & 0.035362 & 1.000000 & NA \\
+direct\_boundary\_head & test & 0.041007 & 0.993273 & 0 \\
+direct\_boundary\_head & stress\_holdout & 0.084293 & 1.000000 & NA \\
+\bottomrule
+\end{longtable}
+
+Stage 4 passes because the direct boundary-head baseline satisfies the boundary diagnostics, not
+because the premium-implied threshold extraction succeeds. The premium-implied method is useful as a
+diagnostic stress test of the price/premium surrogate, but it did not recover dependable boundary
+curves in this run. This supports using a separate boundary-focused model for boundary diagnostics
+instead of relying only on price/premium threshold extraction.
+
+\section{Results by Option Family}
+
+\begin{longtable}{L{0.26\textwidth} L{0.15\textwidth} L{0.16\textwidth} L{0.16\textwidth} L{0.16\textwidth}}
+\toprule
+Method & Option & RMSE & MAE & Found agreement \\
+\midrule
+\endhead
+premium\_implied\_boundary & put & NA & NA & 0.008264 \\
+premium\_implied\_boundary & call & NA & NA & 0.281738 \\
+direct\_boundary\_head & put & 0.032305 & 0.023906 & 1.000000 \\
+direct\_boundary\_head & call & 0.046284 & 0.031983 & 0.997876 \\
+\bottomrule
+\end{longtable}
+
+\section{Sample Boundary Curves}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.78\textwidth]{results/05_surrogate_models/boundary/figures/boundary_error_by_split.png}
+\caption{Boundary error by split.}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.78\textwidth]{results/05_surrogate_models/boundary/figures/boundary_error_by_option_type.png}
+\caption{Boundary error by option type.}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.78\textwidth]{results/05_surrogate_models/boundary/figures/sample_put_boundary_curves.png}
+\caption{Sample put boundary curves.}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.78\textwidth]{results/05_surrogate_models/boundary/figures/sample_call_boundary_curves.png}
+\caption{Sample call boundary curves.}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.78\textwidth]{results/05_surrogate_models/boundary/figures/boundary_found_rate_comparison.png}
+\caption{Boundary found rate comparison.}
+\end{figure}
+
+
+\section{Limitations}
+
+Boundary labels are threshold-based diagnostics from the finite-difference solver. They are not
+analytical free-boundary truth. Premium-implied extraction is limited by the sampled \(S/K\) window,
+and some reference boundaries lie outside that support. The direct boundary head is a small
+diagnostic baseline, not a solver replacement.
+
+\section{What Stage 4 Supports}
+
+Stage 4 supports comparing premium-implied and direct boundary diagnostic behavior by split,
+option family, and sampled boundary curves. It also records no-dividend call false-boundary
+behavior as a control. The evidence supports a separate boundary-focused model as the coherent
+Stage 4 boundary diagnostic path.
+
+\section{What Stage 4 Does Not Support}
+
+This stage does not support production boundary reliability, Delta or Gamma target training, exact
+free-boundary claims, broad architecture search, or final surrogate conclusions.
+
+\section{Recommended Next Stage}
+
+If the decision is \code{READY_FOR_DELTA_DIAGNOSTIC_STAGE}, the next stage may plan a cautious
+Delta diagnostic experiment. If the decision is \code{REVIEW_REQUIRED_BEFORE_DELTA_STAGE}, human
+review should inspect boundary failures before adding any new diagnostic heads.
+
+\bibliographystyle{plainnat}
+\bibliography{reports/03_solver/references}
+
+\end{document}
