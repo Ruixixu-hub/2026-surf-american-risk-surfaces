@@ -1,0 +1,11 @@
+{
+  "heldout_non_z": 4,
+  "m_matrix_sufficient_conditions": 256,
+  "nonpositive_offdiagonals": 256,
+  "positive_diagonal": 288,
+  "protocol_hash": "5dfed35c9af78a2e7b944c129a761d09430be6b9721e3dd180cc37b740a5aca2",
+  "reconstruction_pass": 288,
+  "regime_count": 288,
+  "status": "PROTOCOL_READY",
+  "strict_diagonal_dominance": 288
+}

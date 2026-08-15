@@ -1,0 +1,36 @@
+{
+  "artifact_role": "lcp_warmstart_only",
+  "batch_size": 8192,
+  "checkpoint_path": "results/07_method_extensions/02_warmstart/checkpoints/positive_premium_mlp.pt",
+  "checkpoint_sha256": "a13cb7156c4cf4579a160d9449f3d031d4e2c10bfd23665401cd58ab53acfa73",
+  "dataset_path": "repository:results/04_surrogate_dataset/v1_small_grid/dataset_v1_small_grid.npz",
+  "dataset_sha256": "bc467831347ff73d28b631bf0a35dd5a563f46666d5af5d3ce04f192df48dc8b",
+  "epochs": 10,
+  "feature_names": [
+    "log_moneyness",
+    "tau_fraction",
+    "r",
+    "q",
+    "sigma",
+    "T",
+    "is_call"
+  ],
+  "final_train_loss": 4.389309036661871e-05,
+  "final_validation_loss": 2.3589393094880506e-05,
+  "hidden_units": 64,
+  "model_seed": 20260636,
+  "numpy": "1.26.4",
+  "output_reconstruction": "value=payoff+K*softplus(raw)",
+  "python": "3.13.5",
+  "seed": 20260619,
+  "selected_train_rows": 250000,
+  "source_stage": "deterministic_stage3_positive_premium_retraining",
+  "support_moneyness": [
+    0.4,
+    1.8
+  ],
+  "target": "premium_over_K",
+  "torch": "2.7.1",
+  "train_cap": 250000,
+  "training_seconds": 6.38299516600091
+}

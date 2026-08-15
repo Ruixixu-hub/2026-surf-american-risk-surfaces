@@ -1,0 +1,87 @@
+{
+  "audit_regime_ids": [
+    "put_T100_s020_r005_q003",
+    "call_T100_s020_r005_q006",
+    "call_T100_s020_r005_q000",
+    "put_T025_s020_r001_q000",
+    "call_T025_s020_r001_q000",
+    "put_T200_s060_r010_q010",
+    "call_T200_s060_r010_q010",
+    "put_T200_s020_r001_q010",
+    "call_T200_s020_r010_q010",
+    "put_T050_s060_r005_q003",
+    "call_T050_s060_r005_q010",
+    "call_T100_s060_r001_q006"
+  ],
+  "candidate_lcp_tolerances": [
+    1e-08,
+    1e-10,
+    1e-12
+  ],
+  "dataset_scope": "frozen_288_regime_v1_small_grid",
+  "environment": {
+    "cpu_count": 10,
+    "float_precision": "float64",
+    "git_commit": "3111b58403a9e6033f43e5ec9ab4684561eccc55",
+    "machine": "arm64",
+    "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+    "processor": "arm",
+    "python": "3.13.5",
+    "versions": {
+      "matplotlib": "3.10.3",
+      "numpy": "1.26.4",
+      "scipy": "1.16.0",
+      "sklearn": "1.7.1",
+      "torch": "2.7.1"
+    }
+  },
+  "frozen_inputs": [
+    {
+      "bytes": 50262900,
+      "exists": true,
+      "path": "results/04_surrogate_dataset/v1_small_grid/dataset_v1_small_grid.npz",
+      "sha256": "bc467831347ff73d28b631bf0a35dd5a563f46666d5af5d3ce04f192df48dc8b"
+    },
+    {
+      "bytes": 129209,
+      "exists": true,
+      "path": "results/04_surrogate_dataset/v1_small_grid/regime_manifest.csv",
+      "sha256": "0e10c5e57cca88a1b941e532b1c0d2f4ef69a6e5d9e2ec4e18392515bd24297d"
+    },
+    {
+      "bytes": 42878,
+      "exists": true,
+      "path": "results/04_surrogate_dataset/v1_small_grid/split_assignment.csv",
+      "sha256": "e891e20acbea1458c249c9418ac73ded7b9aaf964ef4ab7d97459c4de65dfa1f"
+    },
+    {
+      "bytes": 3089,
+      "exists": true,
+      "path": "results/04_surrogate_dataset/v1_small_grid/schema_snapshot.csv",
+      "sha256": "d66c01dd6d6d3af6ffb28c144552935b2cc1c64c29109380ce27cce0c14438e8"
+    },
+    {
+      "bytes": 1771,
+      "exists": true,
+      "path": "results/05_surrogate_models/price_premium/model_run_manifest.csv",
+      "sha256": "90455032c0a35e54cc29861dceb80eb73b378e3c32e4dd69b41826c1e0fea378"
+    },
+    {
+      "bytes": 2109,
+      "exists": true,
+      "path": "results/05_surrogate_models/price_premium/surrogate_metrics_by_split.csv",
+      "sha256": "017bbec3ce45c65aa64df0a3edc929bd96c14d3d6115d288ff9e0de5a2256070"
+    },
+    {
+      "bytes": 1374,
+      "exists": true,
+      "path": "results/05_surrogate_models/price_premium/obstacle_violation_summary.csv",
+      "sha256": "cc6ede78c44b9c224ad11197774f2d5ab5fa88316a2bf799d02912e93beaf7dc"
+    }
+  ],
+  "gamma_status": "BLOCKED",
+  "protocol_version": "method_extensions_v1",
+  "split_policy": "immutable_regime_level_splits",
+  "target_normalized_lcp_tolerance": 1e-10,
+  "target_normalized_obstacle_tolerance": 1e-12
+}

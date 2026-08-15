@@ -1,0 +1,3 @@
+option_type,status,best_stable_dimension_by_price,worst_reduction_price_rmse,worst_boundary_mae,worst_delta_ratio_vs_cn,worst_gamma_ratio_vs_cn
+put,STOP_ACCURACY,24,6.911624767789392e-05,0.12720032317559576,1.2716032261654127,2.3255381461703974
+call,STOP_ACCURACY,32,0.0011214510333842278,2.7181157430586587,8.945137618166633,42.74403014148413

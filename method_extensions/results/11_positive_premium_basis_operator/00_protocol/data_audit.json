@@ -1,0 +1,25 @@
+{
+  "heldout_counts": {
+    "dividend_call": 15,
+    "put": 16,
+    "q0_call_analytic": 36
+  },
+  "learned_vector_size": 14280,
+  "protocol": "results/11_positive_premium_basis_operator/00_protocol/protocol_manifest.json",
+  "q0_primary_route": "EUROPEAN_BSM_ANALYTIC",
+  "split_counts": {
+    "stress_holdout": 24,
+    "test": 43,
+    "train": 202,
+    "validation": 19
+  },
+  "status": "PASS",
+  "train_snapshot_counts": {
+    "call": 85,
+    "put": 117
+  },
+  "validation_family_counts": {
+    "dividend_call": 8,
+    "put": 11
+  }
+}

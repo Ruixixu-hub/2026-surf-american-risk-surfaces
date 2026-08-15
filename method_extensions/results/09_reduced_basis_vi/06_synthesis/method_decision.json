@@ -1,0 +1,111 @@
+{
+  "families": {
+    "call": {
+      "best_stable_dimension_by_price": 32,
+      "ladder": [
+        {
+          "dimension": 4,
+          "worst_boundary_mae": 2.622901084776914,
+          "worst_delta_ratio_vs_cn": 29.892329371699443,
+          "worst_gamma_ratio_vs_cn": 108.18824463285888,
+          "worst_reduction_price_rmse": 0.00434548994690733
+        },
+        {
+          "dimension": 8,
+          "worst_boundary_mae": 2.7866318514749184,
+          "worst_delta_ratio_vs_cn": 13.289225357799662,
+          "worst_gamma_ratio_vs_cn": 56.187675149473286,
+          "worst_reduction_price_rmse": 0.002055638857717148
+        },
+        {
+          "dimension": 12,
+          "worst_boundary_mae": 2.73878254625642,
+          "worst_delta_ratio_vs_cn": 11.941382009889605,
+          "worst_gamma_ratio_vs_cn": 46.98615207555906,
+          "worst_reduction_price_rmse": 0.00200831387115605
+        },
+        {
+          "dimension": 16,
+          "worst_boundary_mae": 2.6879319237076396,
+          "worst_delta_ratio_vs_cn": 13.689173002874611,
+          "worst_gamma_ratio_vs_cn": 48.595826198574166,
+          "worst_reduction_price_rmse": 0.0020174164989758634
+        },
+        {
+          "dimension": 24,
+          "worst_boundary_mae": 2.720716350297079,
+          "worst_delta_ratio_vs_cn": 8.953387160636938,
+          "worst_gamma_ratio_vs_cn": 42.79055790769639,
+          "worst_reduction_price_rmse": 0.0011222762102231975
+        },
+        {
+          "dimension": 32,
+          "worst_boundary_mae": 2.7181157430586587,
+          "worst_delta_ratio_vs_cn": 8.945137618166633,
+          "worst_gamma_ratio_vs_cn": 42.74403014148413,
+          "worst_reduction_price_rmse": 0.0011214510333842278
+        }
+      ],
+      "stability_failures": [],
+      "status": "STOP_ACCURACY",
+      "worst_boundary_mae": 2.7181157430586587,
+      "worst_delta_ratio_vs_cn": 8.945137618166633,
+      "worst_gamma_ratio_vs_cn": 42.74403014148413,
+      "worst_reduction_price_rmse": 0.0011214510333842278
+    },
+    "put": {
+      "best_stable_dimension_by_price": 24,
+      "ladder": [
+        {
+          "dimension": 4,
+          "worst_boundary_mae": 0.45835493499899715,
+          "worst_delta_ratio_vs_cn": 23.481045018760266,
+          "worst_gamma_ratio_vs_cn": 83.87975695967948,
+          "worst_reduction_price_rmse": 0.0014630572783791733
+        },
+        {
+          "dimension": 8,
+          "worst_boundary_mae": Infinity,
+          "worst_delta_ratio_vs_cn": 7.560145089493825,
+          "worst_gamma_ratio_vs_cn": 28.165853187870642,
+          "worst_reduction_price_rmse": 0.0006379362908919009
+        },
+        {
+          "dimension": 12,
+          "worst_boundary_mae": 0.5329933920438413,
+          "worst_delta_ratio_vs_cn": 5.754235997995369,
+          "worst_gamma_ratio_vs_cn": 24.186877459631415,
+          "worst_reduction_price_rmse": 0.00027725697365666834
+        },
+        {
+          "dimension": 16,
+          "worst_boundary_mae": 0.6983803212002424,
+          "worst_delta_ratio_vs_cn": 2.61289037195699,
+          "worst_gamma_ratio_vs_cn": 8.946809582967251,
+          "worst_reduction_price_rmse": 0.0002652689762534765
+        },
+        {
+          "dimension": 24,
+          "worst_boundary_mae": 0.12720032317559576,
+          "worst_delta_ratio_vs_cn": 1.2716032261654127,
+          "worst_gamma_ratio_vs_cn": 2.3255381461703974,
+          "worst_reduction_price_rmse": 6.911624767789392e-05
+        }
+      ],
+      "stability_failures": [
+        {
+          "dimension": 32,
+          "reason": "reduced inf-sup constant 0.000e+00 is below 1e-8"
+        }
+      ],
+      "status": "STOP_ACCURACY",
+      "worst_boundary_mae": 0.12720032317559576,
+      "worst_delta_ratio_vs_cn": 1.2716032261654127,
+      "worst_gamma_ratio_vs_cn": 2.3255381461703974,
+      "worst_reduction_price_rmse": 6.911624767789392e-05
+    }
+  },
+  "heldout_scoring_performed": false,
+  "reason": "Neither option family passed the pre-registered validation accuracy/structure gate.",
+  "status": "STOP_ACCURACY"
+}

@@ -1,0 +1,6 @@
+{
+  "heldout_read": false,
+  "protocol_hash": "a4128b3088cbf6bb6a5e67eb1105c50c52cc27e37c59dd2944e1c054aeefc159",
+  "reason": "no family passed five-seed approximate-quality validation",
+  "status": "SKIPPED_VALIDATION_GATE"
+}

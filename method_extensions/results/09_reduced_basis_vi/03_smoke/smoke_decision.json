@@ -1,0 +1,50 @@
+{
+  "cases": [
+    {
+      "boundaries_finite": true,
+      "converged": true,
+      "failure_reason": "",
+      "full_lcp_residual_max": 0.00041552567264129675,
+      "max_iterations": 3,
+      "option_type": "put",
+      "q": 0.0,
+      "reduced_residual_max": 3.5464071890021573e-16,
+      "regime_id": "put_T025_s020_r001_q000"
+    },
+    {
+      "boundaries_finite": true,
+      "converged": true,
+      "failure_reason": "",
+      "full_lcp_residual_max": 0.0030308764029557955,
+      "max_iterations": 4,
+      "option_type": "put",
+      "q": 0.1,
+      "reduced_residual_max": 2.476623684749373e-16,
+      "regime_id": "put_T025_s060_r001_q010"
+    },
+    {
+      "boundaries_finite": true,
+      "converged": true,
+      "failure_reason": "",
+      "full_lcp_residual_max": 0.0001215906947316999,
+      "max_iterations": 2,
+      "option_type": "call",
+      "q": 0.03,
+      "reduced_residual_max": 4.440892098500626e-16,
+      "regime_id": "call_T025_s020_r001_q003"
+    },
+    {
+      "boundaries_finite": true,
+      "converged": true,
+      "failure_reason": "",
+      "full_lcp_residual_max": 0.00013450331038535114,
+      "max_iterations": 1,
+      "option_type": "call",
+      "q": 0.0,
+      "reduced_residual_max": 2.373032912991771e-16,
+      "regime_id": "call_T025_s020_r001_q000"
+    }
+  ],
+  "status": "GO_VALIDATION",
+  "synthetic_reproduction": true
+}

@@ -1,0 +1,25 @@
+{
+  "all_tolerance_pass": true,
+  "best_classical_arm": "B_previous_policy",
+  "best_ml_arm": "D_mlp_policy",
+  "break_even_surface_queries": null,
+  "checkpoint_path": "results/07_method_extensions/02_warmstart/checkpoints/positive_premium_mlp.pt",
+  "evaluated_regimes": 67,
+  "existing_v1_label_cost_treatment": "sunk_cost_reported_separately",
+  "frozen_tolerance": 1e-12,
+  "go_threshold_fraction": 0.2,
+  "incremental_training_seconds": 6.38299516600091,
+  "median_speedup_fraction": -0.44428701279749094,
+  "model_load_seconds": 0.00942524999845773,
+  "p95_preserved": false,
+  "positive_speedup_on_test_and_stress": false,
+  "protocol_complete": true,
+  "repeats": 30,
+  "selected_method": "policy_iteration_previous_slice",
+  "split_speedup_fraction": {
+    "stress_holdout": -0.5168056594890624,
+    "test": -0.36711535928000116
+  },
+  "status": "STOP_LEARNED_ACCELERATION_KEEP_POLICY_ITERATION",
+  "warmups": 5
+}

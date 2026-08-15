@@ -1,0 +1,866 @@
+{
+  "allowed_splits": [
+    "train",
+    "validation"
+  ],
+  "arms": [
+    "U",
+    "A",
+    "L",
+    "AL"
+  ],
+  "boundary_threshold": 1e-06,
+  "budgets": {
+    "active_dimension": 32,
+    "stored_dual_generators": 128,
+    "stored_primal_modes": 128
+  },
+  "canonical_point_ladder": [
+    1921,
+    3841
+  ],
+  "dimension_ladder": [
+    4,
+    8,
+    12,
+    16,
+    24,
+    32
+  ],
+  "environment": {
+    "git_commit": "3111b58403a9e6033f43e5ec9ab4684561eccc55",
+    "numpy": "1.26.4",
+    "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+    "python": "3.13.5"
+  },
+  "frozen_input_hashes": {
+    "regime_manifest": "0e10c5e57cca88a1b941e532b1c0d2f4ef69a6e5d9e2ec4e18392515bd24297d",
+    "split_manifest": "e891e20acbea1458c249c9418ac73ded7b9aaf964ef4ab7d97459c4de65dfa1f"
+  },
+  "interpolation": "PCHIP",
+  "lcp_tolerance": 1e-12,
+  "local_bin_ladder": [
+    2,
+    4,
+    8
+  ],
+  "protocol": "surf_oracle_boundary_aligned_localized_basis_v1",
+  "protocol_hash": "6860d2055a115760c9f74dbedf5c85797dced8f69274dd8398b52a3656fcc392",
+  "question": "moving-boundary representability falsification; not an online solver",
+  "sealed": [
+    "test",
+    "stress_holdout",
+    "q=0 call"
+  ],
+  "source_snapshot_count": 202,
+  "source_snapshot_hashes": [
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T025_s020_r001_q000.npz",
+      "sha256": "a5deea49c3318ef014facbc45433277b0bf0397ed5bd2b33b721d9b1c46d4b8a"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T025_s020_r001_q003.npz",
+      "sha256": "8491c7205846f14185aab19cc0de9ceb92e570f4f04053fea9805ca5c2aaf47e"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T025_s020_r001_q006.npz",
+      "sha256": "f86a9bcef273512c93c76d546ae54b3f95014aefb90833638a3987021f38248c"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T025_s020_r001_q010.npz",
+      "sha256": "c12d08d9cbd6d7686dc8000457f7a1b4bf4c545c73c4b139ef468f913e14eee7"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T025_s020_r005_q000.npz",
+      "sha256": "954a0dff64a1b1e7797428a94a84935abfbad6df373b98e1014bc46aa0c8bc88"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T025_s020_r005_q003.npz",
+      "sha256": "d90ea78a26398cd77ae7348f8d405e54e4d1e87e74ffc0cd6728675d76f91057"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T025_s020_r005_q006.npz",
+      "sha256": "0a85c9d7ed7098b3ff5bf397544146d9b41ab96544fd12468f7491d6848364e5"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T025_s020_r005_q010.npz",
+      "sha256": "1ed59522c6b0442369ecf7bb9f1e43760729784d20448c59df4a38a5065d75f4"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T025_s020_r010_q000.npz",
+      "sha256": "7cea98c847240e0073c30e956abad8ff99a75b2b644179c9cca40996a851502f"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T025_s020_r010_q003.npz",
+      "sha256": "b48da45913ca78e219e506dd0bd1a89178b77594e1cabc31adb18b3a7783f350"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T025_s020_r010_q006.npz",
+      "sha256": "e1f681e062a69eade12e6228c38c5ebe53bb5025ed9f6f528140ce1ba6fc3f6f"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T025_s020_r010_q010.npz",
+      "sha256": "426aee797c2e57055397931237d8689d42d698a9abaed1d5f67d1b6ddcd1883b"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T025_s040_r001_q000.npz",
+      "sha256": "4b185361ececb2d6edfe1c620f6568a9344a52014fee9eaed6369c6a28dda3ca"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T025_s040_r001_q003.npz",
+      "sha256": "ddd2943b9cbe2ff7a999617fdad78ac49148a7ad5fc79aa1e06dbe7a846764e8"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T025_s040_r001_q006.npz",
+      "sha256": "7647b2ffe2144a8ad5a6f0e110d8adb807b59b8a760a60e77cd1884318362be0"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T025_s040_r001_q010.npz",
+      "sha256": "c974fb6e5d73dd35ad122a713765ffd5dd716481e3fa8a38ac0e2696933fcdc9"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T025_s040_r005_q000.npz",
+      "sha256": "08acaccfb765f965122cfc27db9afd416b58886f141c7325848aaf8194468cdb"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T025_s040_r005_q003.npz",
+      "sha256": "dc8ee14244c86d1d75fece0b616e3e686ece5714e1f20a550dd32ec740eaf722"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T025_s040_r005_q006.npz",
+      "sha256": "a0ec5298efaaa521e1fa0264618a2f6177133fe4884555a62d997c464ea6ee34"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T025_s040_r005_q010.npz",
+      "sha256": "810e84cf6b69f2109b7b8e9eab3ee280569a82ae2b70c007dc8c62fdc1cea1e4"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T025_s040_r010_q000.npz",
+      "sha256": "b065b61d1c589e1288de13066e4644833378a0b903e0877f92ed863dbe238156"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T025_s040_r010_q003.npz",
+      "sha256": "de928b34eac2f797c27b264e327a9bce7225c18188cafe39b5318495b4294332"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T025_s040_r010_q006.npz",
+      "sha256": "710f559efda3fca8630f17b4bfb58878fc0acd8993970d7521455da7e6b8c928"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T025_s040_r010_q010.npz",
+      "sha256": "4a928c342729467a1093268d3c6a85772ecea219c6350f0f6ab27d79be9df941"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T025_s060_r001_q000.npz",
+      "sha256": "15e1ac94f0961f20f17d33e7002e821a48a1833c73cd79aed4bda0c021b22b78"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T025_s060_r001_q003.npz",
+      "sha256": "6d3cafb741ef043b577f5664f8658cc3041e1e37c235b4ec478471a8971c30f0"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T025_s060_r001_q006.npz",
+      "sha256": "835658081d3b2061ac8bdde311d1021f0115e812207ac729bf760d6d9f4c5a96"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T025_s060_r005_q000.npz",
+      "sha256": "67a9bd20345c9af28d9111ec1be21beb4c6acff5b2e51b8af17178578e74e666"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T025_s060_r005_q003.npz",
+      "sha256": "47b42961346f9d17d6693a61803d65ade7cada9a4e855c34e76073805b03e1a1"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T025_s060_r005_q006.npz",
+      "sha256": "c8395961bfa26993d1fa77b74c021dc2e7ffa62f0f18358740847bf29dffbac8"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T025_s060_r010_q000.npz",
+      "sha256": "bf68e10dc89f129c2269c6aa049c4094842a3f3f661e339c0dd15175e997f9a9"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T025_s060_r010_q003.npz",
+      "sha256": "0623ae1dd81a0ea61949a9514e67c218892f432ca77d5a000a03d43230158086"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T025_s060_r010_q006.npz",
+      "sha256": "46cb656304d1eddc426ab87591dd4c8ca2a8983044e1781117a24db78b31108d"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T050_s020_r001_q000.npz",
+      "sha256": "6b16fd0c258dd5614114c5977f62b53dfda5c210a63406f45e112463a7ab4744"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T050_s020_r001_q003.npz",
+      "sha256": "f1aa5e99e827ebfc2b522b51d882ae5795f597317b4c128bc7673c5c9b02c505"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T050_s020_r001_q006.npz",
+      "sha256": "c0556e4b14a8ec254783580c70361b9ccd7df62f97b7f220a29871bc1863757d"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T050_s020_r001_q010.npz",
+      "sha256": "21de3a8ba3f63292aa5cfcf5c5ba0049948778dc2eb2cdb6efba105b344a7cf1"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T050_s020_r010_q000.npz",
+      "sha256": "32d9adfe9259179de244da397346862299a2753497f533d35a8a2e971bddbdcb"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T050_s020_r010_q003.npz",
+      "sha256": "fb43f91793ef858233d3f9c4b6e23aab176bf3e76542072695b96bb112f0e0da"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T050_s020_r010_q006.npz",
+      "sha256": "83d303966158601077a35c12a3d69f2529de94b335e745da2fa5666c0af037e8"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T050_s020_r010_q010.npz",
+      "sha256": "dcfebe18c3356a11131cbf0d7c3333e72fbeac4efc1ec79d265739c24237c97e"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T050_s040_r001_q000.npz",
+      "sha256": "1ab39015b9c079feab38db48dc790681e5a70b1260295e26a5b76201c73fc0de"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T050_s040_r001_q003.npz",
+      "sha256": "801be17419bb46c53d573f070d50c973584a65e6d42925c4bebbf138e17361d5"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T050_s040_r001_q006.npz",
+      "sha256": "1ab6b854ea13f92fef86538aadb109aeeec912673218cdbbb6bad9ccfcd6e349"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T050_s040_r001_q010.npz",
+      "sha256": "7e1fd07b6712f6ce6e83b47691f57eae0bdb49b2ee316a11c00e917119631fff"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T050_s040_r010_q000.npz",
+      "sha256": "0a79297b632c18acf43d4b40f962f1f698b79ba41cc7404880299b71203c42ac"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T050_s040_r010_q003.npz",
+      "sha256": "e12c0ad7d413f7e71104bc6a80baeaa2db42435e152ab5212917bc9240c92b1e"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T050_s040_r010_q006.npz",
+      "sha256": "795f7f9b87ef0b8c1d93c75f14176d235d5985c28cd8964ffd1fb06770476d4d"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T050_s040_r010_q010.npz",
+      "sha256": "943a4982c83fcdcad769b531130bd6738dcf94cda1e4008a1c85bc7fbf2eb7ce"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T050_s060_r001_q000.npz",
+      "sha256": "99f7cfceb8f331a182e874fc628f2d65cb6955d3897a96a846520982d01b1d53"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T050_s060_r001_q003.npz",
+      "sha256": "7a6a39f70a1680935a0c8e4938ba0f173bb2f0dbf8ae248e27cf62434c97c278"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T050_s060_r001_q006.npz",
+      "sha256": "37a04669fbe7276fedf15929f29fe3959d1db8c5237ab46d38e34bd6bda8be76"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T050_s060_r010_q000.npz",
+      "sha256": "c197be689d04316688d6062beff31b33b3a54a083bf0566a92fefdd646f81ba3"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T050_s060_r010_q003.npz",
+      "sha256": "9e41540d44185f271bbf7fd7b203f0bf3c4c0ec7d54497806c5cc6a63abfc5ef"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T050_s060_r010_q006.npz",
+      "sha256": "933f054c7c25188df9e3f1faabf8b31c1d65271cd8c8a5d5333e24fab797ae59"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T100_s020_r001_q000.npz",
+      "sha256": "a709c1187d1ecc174e00e9c764270092d12a18533d13c8138b76790161acc8e7"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T100_s020_r001_q003.npz",
+      "sha256": "b8cd066913911fa4963614261dfee4aa3ea65bc6ca51ab379b3bfb0787a2950d"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T100_s020_r001_q006.npz",
+      "sha256": "49f5982dec473b608a4d892398d44cdbd1c9ea1248d67c48aed1ac7de7e485ce"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T100_s020_r001_q010.npz",
+      "sha256": "eda869dc2417e6f11c14a9fdc759b37358ebac0bd9ec05ae13513c5875283105"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T100_s020_r005_q000.npz",
+      "sha256": "69a9e80de9f604d7fc61ebaad9998c448b172d2ab0f4bb5d6a19cf91c19dc481"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T100_s020_r005_q003.npz",
+      "sha256": "5e622e3736d830d88063780ec7967d9bb9152f3f02a01d81f576a8cdfc338e9d"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T100_s020_r005_q006.npz",
+      "sha256": "62f46f6c68029c85a98bd74daa4ff1de2549bdab3ccc9315ecceb03fa16ec47c"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T100_s020_r005_q010.npz",
+      "sha256": "13eca048f2920526b22761d39a49ec7338a42d028ce6f8596bf821f7bc143a8f"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T100_s020_r010_q000.npz",
+      "sha256": "5edd81e95ccf6b9559cca73181b390e0e76cb2e91184882f715068be6796a02a"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T100_s020_r010_q003.npz",
+      "sha256": "c3b58fbfe5e315aa91aa4c99d5a669bc2331b744c6eac3fef9fa075c9d39d64c"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T100_s020_r010_q006.npz",
+      "sha256": "9f376b84b94303292bd4a493d1f5a8d414d9031469d43f3ec7575b1a235ea52a"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T100_s020_r010_q010.npz",
+      "sha256": "2e857ec9e85df3e080240c85cb2ce7513eef4b3b751e792def55e7711c3a198d"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T100_s040_r001_q000.npz",
+      "sha256": "30d6ec2ec8390e7f6e88242e229d754f13609de452e09d4fbc008ee783bec6e5"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T100_s040_r001_q003.npz",
+      "sha256": "fd52b8890cdc7736eeb3f4baebc2ed415def2aeeb60939d8d239029fff7e9717"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T100_s040_r001_q006.npz",
+      "sha256": "7a529e38710344b25eb439ae727c31e033a4313f85495507199f7a8badfc6c1a"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T100_s040_r001_q010.npz",
+      "sha256": "152a44aeba2612f678ad9f5c47dcda0d5ff7f1671e12bfb30670504e3575d3f2"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T100_s040_r005_q000.npz",
+      "sha256": "91cbcd2506d86591dd78249cf8df3515c09e4caeefb3a1858f2c0c5697d83222"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T100_s040_r005_q003.npz",
+      "sha256": "74c06a337ffd50880392b584b22f63686204b2aa77baf2dc7253a53b198000b6"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T100_s040_r005_q006.npz",
+      "sha256": "8353de4502a643ab49d0df93eb5d5285851c13829ce8e663b5ae5a1cc6a71d92"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T100_s040_r005_q010.npz",
+      "sha256": "0f1dd55a090c2887bf78cf4e98925910da9798f375244f82eeee43f8996948f6"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T100_s040_r010_q000.npz",
+      "sha256": "455c4c2cca350a760826e17251f900b7252241e4a7ed1869f0befa2efd162176"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T100_s040_r010_q003.npz",
+      "sha256": "4af441568edfad28582c2b945f1e9a65cf8ba54c406f5f168dafd39d8d7948ab"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T100_s040_r010_q006.npz",
+      "sha256": "fa785d28e7329ae0ee924cfa347139b5abef18b82896911a691d0b5a5832383d"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T100_s040_r010_q010.npz",
+      "sha256": "f9db69de80260187f70ab643027ea651908e934c3601dcff2d7cf150e4b511c1"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T100_s060_r001_q000.npz",
+      "sha256": "38ec0b20ea4950d169908c7fb37a715b85569ef63e311f1521deeff593abe923"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T100_s060_r001_q003.npz",
+      "sha256": "e8d28db844413b8c38f9452d811c61bee7dbe2e4c554eca6d94cb0bd6ececa74"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T100_s060_r001_q006.npz",
+      "sha256": "f7ec173e270baff314e435cf3c50cdc1d4f68bfbbcf9928abda40a4a0e6b774f"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T100_s060_r005_q000.npz",
+      "sha256": "477e7d0e8c487b97aab34eb41ffcd70cde683f52c49cd8615d5f788eb44e9406"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T100_s060_r005_q003.npz",
+      "sha256": "ab911c2bf9462aaa5f40c7b2966b3854aa3850950c19341d65fdf60d76bfd1fd"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T100_s060_r005_q006.npz",
+      "sha256": "65a817ae656f864dd93115be6a21289314dcd55562a977c967656f1f158ce013"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T100_s060_r010_q000.npz",
+      "sha256": "526e39c72e9315d5c8f4c353f3d5b1a0799f6e132ab017974e14bbb3632b4e7d"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T100_s060_r010_q003.npz",
+      "sha256": "fbfc74f0fbcf420e24b611252030c3158c28d5074d722d590f52488c1fbe3d8f"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T100_s060_r010_q006.npz",
+      "sha256": "1564710ea95202dd487700e08565c074a843c9eec042b9d75892efbdc6fe847b"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T200_s020_r001_q000.npz",
+      "sha256": "4443c354eaf314d899c27972addd9ab31bd994303b89f838fb05dd610f10f50e"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T200_s020_r001_q003.npz",
+      "sha256": "0d5b45efa42f7f0ab124c2f5f872b69abc1c8ec68cbeecc8f37118e629666e5c"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T200_s020_r001_q006.npz",
+      "sha256": "b0718d3e0d14650d1d6b3958dd47fea9b75a08e1b09e8276ed99107efc53e970"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T200_s020_r001_q010.npz",
+      "sha256": "a4644edba30adfc11aa39e28a1461c78f670a96bdeb2c5ad6c3e06974ffbbbd0"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T200_s020_r005_q000.npz",
+      "sha256": "588ce2b0130f7b59cabeab4341f618573c8b9607c57ba33c823e8d5af7f1bd7c"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T200_s020_r005_q003.npz",
+      "sha256": "30603c9e317b6d16bcedda1f3877109f0c11551810c5cc8966ede3a633284ed2"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T200_s020_r005_q006.npz",
+      "sha256": "b97efac4925c72d69181effb95be54246e55709d89bf9d40e56af1908d271c92"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T200_s020_r005_q010.npz",
+      "sha256": "87cabb62b6c738235cf128caf516e4d8c11d3d6a2f0c51b4a8002a52ab71a3b5"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T200_s020_r010_q000.npz",
+      "sha256": "c2ca67a2a63e1b1e67199dabc225b8e4995e97b0ac815d87813e1aa02cf4dc67"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T200_s020_r010_q003.npz",
+      "sha256": "a3918e9e09285a535f421a1b05790627467b7827a0b58abd0237dd9c1361951e"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T200_s020_r010_q006.npz",
+      "sha256": "e50969bbe07c9b0d25b7a71f3f586ed9ee2038b6a5c67a26507a7fa679fb8b19"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T200_s020_r010_q010.npz",
+      "sha256": "d2cd88b615766ff8b2471790fa268c840bc2b28b85e9acb1ee7dbf6b774fb4ef"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T200_s040_r001_q000.npz",
+      "sha256": "60898dcd5b9c69120bf339b8ef9729a008854ab5b48c31bb653528e2efaae543"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T200_s040_r001_q003.npz",
+      "sha256": "da848566acfedb352e35146f73534c6b874b9dbe2e7f2b00a0339ce76922ee5c"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T200_s040_r001_q006.npz",
+      "sha256": "c81b62613cdf0afffb23c8d59819dd9d0a4777574d130963a8c1e57e0f5f8714"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T200_s040_r001_q010.npz",
+      "sha256": "894f9fcbf737f45ac35c85a9b548fa003ec8a24e4b1edb39e4c4e7b3665a5bc5"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T200_s040_r005_q000.npz",
+      "sha256": "858ee939fb8964ac315c8fc9c7dca9bb82c374679adf6daf69e2b3cb36d76b6e"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T200_s040_r005_q003.npz",
+      "sha256": "d63f04ba92efa95d3c978e1650b8b2f75b44e77dd29e13db6e174f3905a13b06"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T200_s040_r005_q006.npz",
+      "sha256": "ae57514a685bc6a103a4d11c134a9e7d33bf4ebe1381e6ddc7b6f5f42d63f5b5"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T200_s040_r005_q010.npz",
+      "sha256": "d64f9cd6c6509be14eda3c222cb64e6a4f40aad1990053016f53ff655fee0449"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T200_s060_r001_q000.npz",
+      "sha256": "ed76f1c1c809da1afc206decd01bcf0e767b67400122a0a685c1796dd3452b54"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T200_s060_r001_q003.npz",
+      "sha256": "26816cc8a6d63f272d04379b0f55d7eb8c2aa182dc654c517a8569274d6381c5"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T200_s060_r001_q006.npz",
+      "sha256": "1c7e2893316ffe8bfc30f77d82a9843006d728cec2a06b3e2e4fc16a8a8a8bdf"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T200_s060_r005_q000.npz",
+      "sha256": "fe67079a8b2ba29dcf0180e626dfc3ae65afd15d7d3a02ba06b8153e2b3c6d0c"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T200_s060_r005_q003.npz",
+      "sha256": "c29e6ed5f2a4f876305691a4e70ba980e81b0d6ff28ccd900a45d4114cf4e7db"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T200_s060_r005_q006.npz",
+      "sha256": "e0027eaa0ef074e5c88a91769f97d378065313c3c2925fa2db8cb2e26f64c244"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T200_s060_r010_q000.npz",
+      "sha256": "96e3ab2817055822e8b85b3201afd3341b4916a241691388731b015ab0041b7f"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T200_s060_r010_q003.npz",
+      "sha256": "cb4e0c642e2b2dfdabfd156f203a4b47ca49a9f1fe9fe9a0064fab937b408247"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/put/put_T200_s060_r010_q006.npz",
+      "sha256": "12fe1faef40b04e54223464b5a024d68d68908de006ec7b75ae2b66a53e8724a"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T025_s020_r001_q003.npz",
+      "sha256": "f88dddceb1b31fe483753bb92c48493c16f0fab31e601b8d1e69db15e988bc5e"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T025_s020_r001_q006.npz",
+      "sha256": "87800f167f045afeeae90b66f5e18d02eb43ca6787f5274e319ad25be23ece12"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T025_s020_r001_q010.npz",
+      "sha256": "30611dbb00a802f8d10891251def6c3c5a0638ed3398b46c8896a4bcff8d0633"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T025_s020_r005_q003.npz",
+      "sha256": "95ebaa7ea72424b69b0ae7dff91a8373e2f9c9cdf4b60dd6030e9733d2a4f8cd"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T025_s020_r005_q006.npz",
+      "sha256": "a13233b1833e3e2f76ec4dc43faf7c99db455e4245fbad4341dda5525d840b17"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T025_s020_r005_q010.npz",
+      "sha256": "115789eb6252dcf4ee0047f997939402ac3f8e26d2452380a551f6b380836474"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T025_s020_r010_q003.npz",
+      "sha256": "168fb7f8cc8fdcac3bce06863be971957134afb1f3e7aaf8cd1468272cfb0886"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T025_s020_r010_q006.npz",
+      "sha256": "98c5a94fa0389ec73c439dc093635689eafe97afab0465ac8f15c261ac439e1f"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T025_s020_r010_q010.npz",
+      "sha256": "104b72b9942b7c7bb6c6f6e7dbd9edbc6ca136c542f5021b0ed2dc3404186c81"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T025_s040_r001_q003.npz",
+      "sha256": "e636e621dc0cafb4a703cd4becb0877ea5be504649546c1d41b6ca67bfd267c5"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T025_s040_r001_q006.npz",
+      "sha256": "49c8808c06a07be086e71c1d7f7e7721c95a1e5fcc96c2dbf9a47bd4b744404c"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T025_s040_r001_q010.npz",
+      "sha256": "d59656ea07a7e97f987658dcb051514253e7ae79fb4225c9fe2298244446d5b0"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T025_s040_r005_q003.npz",
+      "sha256": "8c13975c0b80ff6eafa21c87acd23eebce9b72e6c692e3feadeb5a52b27f67fd"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T025_s040_r005_q006.npz",
+      "sha256": "5d164accb54d67827323969759c33d940b06948c194550af8b3a07e2710b1a6c"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T025_s040_r005_q010.npz",
+      "sha256": "a4f0a52290f59035532da74424f3e6b624b8817f4e4e3d1ab8d43a73ec677955"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T025_s040_r010_q003.npz",
+      "sha256": "2295ac6803d8bc79318bcf0315a9ed3c9a75b679b237e8fce6969bac686c45f6"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T025_s040_r010_q006.npz",
+      "sha256": "ab51a44846f738b7a8048dfcd5cf759cbfb3ad54058f9021efdc4e189d60823d"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T025_s040_r010_q010.npz",
+      "sha256": "05f1003c0be19e804a9648a325b6a0ecdba099ef4a28115ab60ceeaf48f74c53"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T025_s060_r001_q003.npz",
+      "sha256": "866cd7cfc5ed1be6b4c2f7faf5fe53163efcfd66f2e9361e7d7ee9b27c6560a9"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T025_s060_r001_q006.npz",
+      "sha256": "416f89bfe006bad87d44f1f9bbde6a1b0362e7232c3517f37a2424137b40a4a2"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T025_s060_r005_q003.npz",
+      "sha256": "097c50a6cbfcd7016c77f51ffa5ad7941bcee68c104fb469ba6e6d4c629fda2c"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T025_s060_r005_q006.npz",
+      "sha256": "d9498c6ad81afd31714523f277e265c036d09e6b72dc648fcafaf3c92bdcd7a2"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T025_s060_r010_q003.npz",
+      "sha256": "51419ee5f4d10ac2824b281bbb0e42032359eb06a2d3b2e5132a548e9208def9"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T025_s060_r010_q006.npz",
+      "sha256": "99e90e3d90c721719d6fb05c0bedd8907ff875b27d9994c336d1574c88d69845"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T050_s020_r001_q003.npz",
+      "sha256": "f8f33502757a9852cf5fb2e08282eec31c52d1289ab8516551c853d19bf3d4ea"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T050_s020_r001_q006.npz",
+      "sha256": "ad47516c8cb8351f34edb3fefd87c5a71e4d6a0a302e5291e0b05c7ab5bb8525"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T050_s020_r001_q010.npz",
+      "sha256": "6da4bf0b61f48569eb7e0c8e70d8431a0a4df3722ba3c9a4087c065e08f92cc5"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T050_s020_r010_q003.npz",
+      "sha256": "6ed9f951dd5a3d0e06057c165b4602c19a0335b0ca2daae6fff895ebc4ccadca"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T050_s020_r010_q006.npz",
+      "sha256": "a9a04ad2ee5eae9dc73305b17776b6bec6e553fc99feb11918f1b9caa249d14d"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T050_s020_r010_q010.npz",
+      "sha256": "8fa77acf6403aaa7b0f7beee04b69d72a9109308a224f5cef4e3414383765478"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T050_s040_r001_q003.npz",
+      "sha256": "54bdcd1324152214aa28a748fe1cdb582d5853f3bf726805b7cbf3354967f320"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T050_s040_r001_q006.npz",
+      "sha256": "6161ecce2062bf367ea91ec406267041a9511739557d209bace2788478fc7b57"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T050_s040_r001_q010.npz",
+      "sha256": "49070cb05f80e3489344fb2e984b266406dadc5747ff35d53b3eea3c97b18de1"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T050_s040_r010_q003.npz",
+      "sha256": "2d2b5dfbcb80becb161e9a4c07b386ca8003b838231d9143cec69370b396eca0"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T050_s040_r010_q006.npz",
+      "sha256": "dec60ad6321ecb2ad2927c39dabfb51107ac5fa0a5f7bfbe9780b158875f82b0"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T050_s040_r010_q010.npz",
+      "sha256": "65033b6740e9b2ee5cfffe54685bbebad6e42ecbc09923c4ad9b6138ef9fbe8f"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T050_s060_r001_q003.npz",
+      "sha256": "74c61ade0a67b81dd18332e124f64a8af94317c46ca6f609ed1f8dcc73b38baf"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T050_s060_r001_q006.npz",
+      "sha256": "eca94c6b7cdf6caf8ebba407aa39ccb6176c663cbfe8cc36a854d33b20a049df"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T050_s060_r010_q003.npz",
+      "sha256": "8f91c6f44d502cf69689be99ec223be3aa54a5a324859e3e14207cfbb5c299bc"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T050_s060_r010_q006.npz",
+      "sha256": "9b6a9330e30716829283efbca542f0183f988f2e576829ca2077ef425b3cef0d"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T100_s020_r001_q003.npz",
+      "sha256": "251bc5df5938cb1f979e3ca8ce29a69182b0b20c9bbdb5e48c554a92591ce45e"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T100_s020_r001_q006.npz",
+      "sha256": "efb1d3e43ddc65c316f759d69b818721413b79b227327b48cf9f79b2907f7b84"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T100_s020_r001_q010.npz",
+      "sha256": "f120148c8d3be07e0a79ff97d90eead4b4ea015b9199257a001f2ca90fcd954b"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T100_s020_r005_q003.npz",
+      "sha256": "24c8a49511b7bc011a09792bc26195116fc295fab007cf7db7f7e203df4d7fa1"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T100_s020_r005_q006.npz",
+      "sha256": "53eadefff9590aa900d889dcdf75b002b31310a0ed4227297b1d26d846049c1f"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T100_s020_r005_q010.npz",
+      "sha256": "d68e3cb424d7671424cba17eb7d0ca145390d2fecd9eb266d7c8949a648559fc"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T100_s020_r010_q003.npz",
+      "sha256": "0f1d4e3ef4eeb5955c7d7571dbb2acb4057cc0f3165d74ce31b78a681478c3ac"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T100_s020_r010_q006.npz",
+      "sha256": "ae5efcd22b8052d09cb08d7692542be81b53574e79c558f707976f1987ffa06f"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T100_s020_r010_q010.npz",
+      "sha256": "2372de2d604f72878941f6992b8e9190e267b7076e769e7bc5f2a00dcdc7daa3"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T100_s040_r001_q003.npz",
+      "sha256": "cd9c2544221bca38e356a6f057f65667fc638d067e6f5777aaeff42242b54a5a"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T100_s040_r001_q006.npz",
+      "sha256": "df5aec27812c27070dd2a531690367d3357233e4aedfca81d661b47ce68c94f8"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T100_s040_r001_q010.npz",
+      "sha256": "c0144e392bf48e59005161b0106a9f1fe5d207579097100cdf3302c4367fa3ca"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T100_s040_r005_q003.npz",
+      "sha256": "7be072a90b734070c6156764052d382d56bd76c3fe0aa8b2e05c75025eb20469"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T100_s040_r005_q006.npz",
+      "sha256": "c17f2d9718dfe934843e2ba2e0827e351f96ed453cdb7c9bd5ef495154bfacba"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T100_s040_r005_q010.npz",
+      "sha256": "553e1e49e085f6aa4bfe71555a672f96c9f92603985b7988bc4a059dafa02199"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T100_s040_r010_q003.npz",
+      "sha256": "5a070c64d88c0e421d9501fc24fc76834f42bbcfbcdb7db46f98ad2d79b6f68e"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T100_s040_r010_q006.npz",
+      "sha256": "5260001879c1b0a7b25c7d09cb697673cad19c019a2d8f3bb6f020351a6638d0"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T100_s040_r010_q010.npz",
+      "sha256": "e52b67aed56d45af1e434c2a0168253db3ac82cac73a80ba307aa835841979b1"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T100_s060_r001_q003.npz",
+      "sha256": "467ecc795d261ff29ef6d71f92cb4c11c314680d18394d34787db83e12c4bf7a"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T100_s060_r001_q006.npz",
+      "sha256": "f6e36cf919ad8a2555354fe06d2f157d97ed7b3d7bfbba74282483fa3237ff6e"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T100_s060_r005_q003.npz",
+      "sha256": "6cc09681803d78dc75d8deab4e377f36145a1eaed2166c7651b7f0d65469f79f"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T100_s060_r005_q006.npz",
+      "sha256": "5e349c9bb98b95ca22f40f8db661645788ec916bb29c977fe8ae9f18e91383f3"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T100_s060_r010_q003.npz",
+      "sha256": "73522551cb9c845bf7ef16f9c1d06df9c1c391c0fd9651c3127d790760aa2bc6"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T100_s060_r010_q006.npz",
+      "sha256": "b23b48f5ca1819e2dcfdbe7351ebfc20c424fd53203e10c25b492ea2311ee08a"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T200_s020_r001_q003.npz",
+      "sha256": "492c8de466a6d0a76e90da7d388570cf0b61daeeb3f29d3ec8c2da466f385db5"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T200_s020_r001_q006.npz",
+      "sha256": "a6ef1ed1b56422ff1a0622042a1ab6a15cd1981834037df755572038db173ac6"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T200_s020_r001_q010.npz",
+      "sha256": "917d90a5ea4cb5b5912b26162de8ea65d0c575929418ed8e60aab5cfad49e144"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T200_s020_r005_q003.npz",
+      "sha256": "1fd88eab2b85049840fc1fe810fdf3eb95749c266e2ad50b27eb9bfdd92ba8e9"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T200_s020_r005_q006.npz",
+      "sha256": "da99fdbf3ade459093a9466f89fdd5b7a157946f93e57aef9d8e0a307e713cec"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T200_s020_r005_q010.npz",
+      "sha256": "86c0338180ca126f4b23e1b99de23f001a7f6b2e8a22878b8b22fcbdba492c71"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T200_s020_r010_q003.npz",
+      "sha256": "bdb1e2745bd950b85c490d399e5c21c8f5607edb9d885b9d1df9584984009418"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T200_s020_r010_q006.npz",
+      "sha256": "02e2c84df51905aff24e5b379fb415f015b47885233fa32707fb65e6f57c6dd7"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T200_s020_r010_q010.npz",
+      "sha256": "6423bb1c2cecdef0c79a5266da45caf7c2e5d2a244c49d0974c2f07c58a079bf"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T200_s040_r001_q003.npz",
+      "sha256": "7c9f1ba53dff9a931ebddc1e484421a866e1f67b557b677cc62f21f04c350945"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T200_s040_r001_q006.npz",
+      "sha256": "74a3e853fb407a99751a35e388686318692353cd2024fbc78bbbfc0d050ff9e5"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T200_s040_r001_q010.npz",
+      "sha256": "d84ea64500235f76b30cbe959d2b895085f0e4a73e26eec61673f55f0de113eb"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T200_s040_r005_q003.npz",
+      "sha256": "9d70a2f3368a7af12bac14235e27da726c70274f85f428af56b86243f7e72545"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T200_s040_r005_q006.npz",
+      "sha256": "70c5f855e16fc8beebd4280da07ebcd26fc873f72c4c163d4f5bbe80a3a969e7"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T200_s040_r005_q010.npz",
+      "sha256": "f6898a4407155ad8b0d82e71c1bfba4599f35386fecb4b098e7690257ec31d52"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T200_s060_r001_q003.npz",
+      "sha256": "95854782a0e4a125b0eb9b5918f72b1115502b697070e0c9c9c8dd3c793bc7f8"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T200_s060_r001_q006.npz",
+      "sha256": "ba52053f3a46c12f489eed2f0a5aad2d505e9b03fea4ef5c5b97e500c0fb8af0"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T200_s060_r005_q003.npz",
+      "sha256": "2837fe5626d18cf56857123abec275d2cf397249b7ef10174aeda6e842f1230f"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T200_s060_r005_q006.npz",
+      "sha256": "8f70839815927e4ad46ae1f55c79e78dd7b7c38f5b41571056545630a8704d39"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T200_s060_r010_q003.npz",
+      "sha256": "ab063570733753cef2f1bb62b8e0b17f3e873f587b81fc2303d2591f885ed664"
+    },
+    {
+      "path": "results/09_reduced_basis_vi/01_snapshots/train_only/call/call_T200_s060_r010_q006.npz",
+      "sha256": "c61599e37d1249c7d025ade90b9d1b248cc067748c5f10d5d1f7c0004e43a1d6"
+    }
+  ]
+}

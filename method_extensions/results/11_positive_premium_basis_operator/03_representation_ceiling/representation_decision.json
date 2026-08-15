@@ -1,0 +1,103 @@
+{
+  "families": {
+    "call": {
+      "ladder": [
+        {
+          "modes": 4,
+          "passes_mapping_entry": false,
+          "worst_projected_obstacle": 0.0,
+          "worst_reduction_rmse": 0.0007428565941520962
+        },
+        {
+          "modes": 8,
+          "passes_mapping_entry": true,
+          "worst_projected_obstacle": 0.0,
+          "worst_reduction_rmse": 0.0002586265137396951
+        },
+        {
+          "modes": 12,
+          "passes_mapping_entry": true,
+          "worst_projected_obstacle": 0.0,
+          "worst_reduction_rmse": 0.0001356966781298661
+        },
+        {
+          "modes": 16,
+          "passes_mapping_entry": true,
+          "worst_projected_obstacle": 0.0,
+          "worst_reduction_rmse": 7.723566056059739e-05
+        },
+        {
+          "modes": 24,
+          "passes_mapping_entry": true,
+          "worst_projected_obstacle": 0.0,
+          "worst_reduction_rmse": 3.255920508310723e-05
+        },
+        {
+          "modes": 32,
+          "passes_mapping_entry": true,
+          "worst_projected_obstacle": 0.0,
+          "worst_reduction_rmse": 1.7626701427886813e-05
+        }
+      ],
+      "passing_modes": [
+        8,
+        12,
+        16,
+        24,
+        32
+      ],
+      "status": "PROCEED_MAPPING"
+    },
+    "put": {
+      "ladder": [
+        {
+          "modes": 4,
+          "passes_mapping_entry": false,
+          "worst_projected_obstacle": 0.0,
+          "worst_reduction_rmse": 0.001208507631191005
+        },
+        {
+          "modes": 8,
+          "passes_mapping_entry": true,
+          "worst_projected_obstacle": 0.0,
+          "worst_reduction_rmse": 0.00020227275012594875
+        },
+        {
+          "modes": 12,
+          "passes_mapping_entry": true,
+          "worst_projected_obstacle": 0.0,
+          "worst_reduction_rmse": 0.00010460470119062828
+        },
+        {
+          "modes": 16,
+          "passes_mapping_entry": true,
+          "worst_projected_obstacle": 0.0,
+          "worst_reduction_rmse": 6.090130848240818e-05
+        },
+        {
+          "modes": 24,
+          "passes_mapping_entry": true,
+          "worst_projected_obstacle": 0.0,
+          "worst_reduction_rmse": 2.368264212447095e-05
+        },
+        {
+          "modes": 32,
+          "passes_mapping_entry": true,
+          "worst_projected_obstacle": 0.0,
+          "worst_reduction_rmse": 1.3040350871078369e-05
+        }
+      ],
+      "passing_modes": [
+        8,
+        12,
+        16,
+        24,
+        32
+      ],
+      "status": "PROCEED_MAPPING"
+    }
+  },
+  "protocol_hash": "a4128b3088cbf6bb6a5e67eb1105c50c52cc27e37c59dd2944e1c054aeefc159",
+  "reduction_rmse_limit": 0.000494989,
+  "status": "COMPLETE"
+}

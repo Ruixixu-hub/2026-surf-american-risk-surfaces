@@ -1,0 +1,21 @@
+{
+  "audit_regimes": 12,
+  "boundary_within_local_cell_fraction": 1.0,
+  "front_fixing_status": "DEFERRED; not needed to decide the Greek label gate",
+  "frozen_lcp_tolerance": 1e-12,
+  "gamma_status": "REFERENCE_STABLE_MASK_ALLOWED",
+  "reference_M": 960,
+  "reference_grid": "sinh_strike_concentrated",
+  "selected_spatial_grid": "sinh_strike_concentrated",
+  "selected_time_integrator": "dirk_lstable_quadratic",
+  "spatial_gate_passed": true,
+  "spatial_levels": [
+    120,
+    240,
+    480
+  ],
+  "stable_second_order_fraction": 0.9166666666666666,
+  "status": "UNBLOCK_GAMMA_ON_STABLE_MASK",
+  "temporal_gate_passed": true,
+  "time_steps": 960
+}

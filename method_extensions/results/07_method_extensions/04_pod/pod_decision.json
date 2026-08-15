@@ -1,0 +1,20 @@
+{
+  "basis_fit_split": "train_only",
+  "label_floor": 0.0019799570496789242,
+  "label_floor_source": "median mean_abs_value_difference in v1 higher-grid confirmations",
+  "next_method": "pod_coefficient_map_then_reduced_basis_vi",
+  "oracle_alignment_warning": "True boundaries are used only to diagnose moving-interface rank; an online aligned model would require a predicted boundary.",
+  "selected_modes": 8,
+  "selected_representation": "unaligned",
+  "status": "GO_POD_BASIS_LADDER",
+  "tested_modes": [
+    4,
+    8,
+    16,
+    24,
+    32,
+    48,
+    64
+  ],
+  "worst_heldout_rmse": 0.0011537209890075905
+}

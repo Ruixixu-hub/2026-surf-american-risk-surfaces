@@ -1,0 +1,69 @@
+{
+  "audit_regime_ids": [
+    "put_T100_s020_r005_q003",
+    "call_T100_s020_r005_q006",
+    "call_T100_s020_r005_q000",
+    "put_T025_s020_r001_q000",
+    "call_T025_s020_r001_q000",
+    "put_T200_s060_r010_q010",
+    "call_T200_s060_r010_q010",
+    "put_T200_s020_r001_q010",
+    "call_T200_s020_r010_q010",
+    "put_T050_s060_r005_q003",
+    "call_T050_s060_r005_q010",
+    "call_T100_s060_r001_q006"
+  ],
+  "contact_tolerance_value_scale": 1e-10,
+  "eligibility_counts": {
+    "heldout_non_z": 4,
+    "m_matrix_sufficient_conditions": 256,
+    "nonpositive_offdiagonals": 256,
+    "positive_diagonal": 288,
+    "reconstruction_pass": 288,
+    "strict_diagonal_dominance": 288
+  },
+  "environment": {
+    "cpu_count": 10,
+    "float_precision": "float64",
+    "git_commit": "3111b58403a9e6033f43e5ec9ab4684561eccc55",
+    "machine": "arm64",
+    "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+    "processor": "arm",
+    "python": "3.13.5",
+    "thread_policy": "single_cpu_thread",
+    "threadpools": [],
+    "versions": {
+      "matplotlib": "3.10.3",
+      "numpy": "1.26.4",
+      "scipy": "1.16.0",
+      "sklearn": "1.7.1",
+      "torch": "2.7.1"
+    }
+  },
+  "frozen_grid": {
+    "K": 1.0,
+    "M": 120,
+    "N": 120,
+    "Smax": 4.0
+  },
+  "frozen_lcp_tolerance": 1e-12,
+  "frozen_obstacle_tolerance": 1e-12,
+  "heldout_contact_policy": "matrix_only_until_frozen_solver_selection",
+  "input_hashes": {
+    "results/04_surrogate_dataset/v1_small_grid/regime_manifest.csv": "0e10c5e57cca88a1b941e532b1c0d2f4ef69a6e5d9e2ec4e18392515bd24297d",
+    "results/04_surrogate_dataset/v1_small_grid/split_assignment.csv": "e891e20acbea1458c249c9418ac73ded7b9aaf964ef4ab7d97459c4de65dfa1f",
+    "results/07_method_extensions/00_protocol/tolerance_decision.json": "4c3d16c808663684753a0f7b299d27ef2ecf03a6f35c476a72ab8a478b3acb9a",
+    "results/07_method_extensions/02_warmstart/runtime_summary.csv": "bd38d991531b2d207e750683901984329ff85d55669bd57261b46a593dfbcdf2",
+    "src/american_risk_surfaces/solvers/american_lcp.py": "c0b21eb254079b3e3ef7c353dbd7b055dca7db394f1543c0b6022c6363b46e5c",
+    "src/american_risk_surfaces/solvers/projected_lu.py": "43ac57d25098b4e1a7e61a561bd1f8a8af29758593b306050fc1b47fe54678d5"
+  },
+  "pivot_tolerance": 1e-14,
+  "protocol_hash": "5dfed35c9af78a2e7b944c129a761d09430be6b9721e3dd180cc37b740a5aca2",
+  "protocol_version": "projected_lu_v1",
+  "reconstruction_tolerance": 1e-13,
+  "regime_count": 288,
+  "sign_tolerance": 1e-15,
+  "speed_ratio_gate": 0.8,
+  "stencil_policy": "frozen_central_difference_no_fitting_or_upwinding",
+  "value_match_tolerance_K": 1e-09
+}

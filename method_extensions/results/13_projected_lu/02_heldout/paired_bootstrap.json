@@ -1,0 +1,9 @@
+{
+  "confidence_interval_95": [
+    0.6789336272906578,
+    0.68121031932232
+  ],
+  "paired_median_lu_over_policy": 0.6803838126286267,
+  "replicates": 10000,
+  "seed": 20260814
+}

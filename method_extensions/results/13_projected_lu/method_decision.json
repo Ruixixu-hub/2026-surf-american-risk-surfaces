@@ -1,0 +1,29 @@
+{
+  "all_numerically_certified": true,
+  "all_theorem_eligible": false,
+  "claim_limit": "Frozen SURF numerical domain only; classical sufficient-condition theorem coverage is reported separately.",
+  "early_exercise_paired_median_lu_over_policy": 0.6607680033328687,
+  "early_exercise_regime_count": 31,
+  "frozen_config_hash": "d636b4aaca603c01bb6d1c209691bd942d1d20a517da221c8e50399096217b89",
+  "historical_absolute_targets": {
+    "decision_role": "secondary_continuity_check_only",
+    "median_seconds": 0.012785166827961802,
+    "p95_seconds": 0.02099762330763042
+  },
+  "new_primary_strict_solver": "projected_lu_single",
+  "paired_median_lu_over_policy": 0.6803838126286267,
+  "paired_median_lu_over_psor": 0.0387069112069576,
+  "policy_p95_seconds": 0.0161275837,
+  "pooled_policy_median_seconds": 0.013814270500000001,
+  "pooled_projected_lu_median_seconds": 0.0093837915,
+  "pooled_psor_median_seconds": 0.24361512500000002,
+  "projected_lu_p95_seconds": 0.009982214100000001,
+  "protocol_complete": true,
+  "psor_p95_seconds": 1.41542506005,
+  "regime_count": 67,
+  "repeats": 30,
+  "selected_solver": "projected_lu_single",
+  "speed_ratio_gate": 0.8,
+  "status": "GO_PROJECTED_LU_NUMERICALLY_CERTIFIED",
+  "warmups": 5
+}

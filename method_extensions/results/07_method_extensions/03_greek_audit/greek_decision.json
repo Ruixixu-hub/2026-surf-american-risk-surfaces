@@ -1,0 +1,23 @@
+{
+  "all_converged": true,
+  "audit_regimes": 12,
+  "best_temporal_method": "dirk_lstable_quadratic",
+  "boundary_within_one_grid_cell": true,
+  "front_fixing_status": "DEFERRED_TO_INDEPENDENT_BOUNDARY_STAGE",
+  "frozen_lcp_tolerance": 1e-12,
+  "gamma_status": "CANDIDATE_FOR_SPATIAL_AUDIT",
+  "lobatto_constraint_method": "published_coupled_penalty_iteration",
+  "nonuniform_spatial_grid_status": "DEFERRED_TO_SPATIAL_AUDIT",
+  "note": "Temporal evidence alone cannot unblock Gamma; spatial/nonuniform-grid audit remains required.",
+  "reference_time_steps": 960,
+  "required_stable_fraction": 0.9,
+  "spatial_intervals": 240,
+  "stable_second_order_fraction": 1.0,
+  "status": "GAMMA_REFERENCE_CANDIDATE",
+  "time_steps": [
+    60,
+    120,
+    240,
+    480
+  ]
+}

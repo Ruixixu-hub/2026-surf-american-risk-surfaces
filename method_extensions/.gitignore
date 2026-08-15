@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.DS_Store
+
+# Regenerable train snapshots and model artifacts are documented by manifests.
+results/08_pinn_gap/
+results/12_positive_premium_deeponet/
+results/09_reduced_basis_vi/**/*.npz
+results/10_boundary_aligned_localized_basis/**/*.npz
+results/11_positive_premium_basis_operator/**/*.npz
+results/11_positive_premium_basis_operator/**/*.pt
