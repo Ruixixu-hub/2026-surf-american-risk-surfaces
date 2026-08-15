@@ -1,0 +1,13 @@
+method,category,status,formal_evidence,heldout_access,role
+CN+PSOR,benchmark,HISTORICAL_BENCHMARK,yes,yes,historical benchmark
+CN+Policy Iteration,benchmark,STRENGTHENED_BENCHMARK_1,yes,yes,strict iterative benchmark
+CN+Projected LU,benchmark,STRENGTHENED_BENCHMARK_2_NUMERICALLY_CERTIFIED,yes,yes,strict direct benchmark on frozen domain
+DIRK/Greek nonuniform-grid reference,benchmark,HIGH_ACCURACY_REFERENCE,yes,audit only,accuracy and stable-mask Greek reference
+Positive-premium MLP warm start,neural,STOP_LEARNED_ACCELERATION,yes,yes,negative acceleration result
+POD/SVD representation,reduced order,REPRESENTATION_GO,yes,diagnostic only,rank diagnostic
+Polynomial POD coefficient map,reduced order,STOP_MAPPING,yes,yes,negative coefficient-map result
+Primal/dual RB-VI,reduced order,STOP_ACCURACY,validation only,no,negative validation result
+Boundary-aligned/localized basis,reduced order,STOP_RB_ROUTE,validation only,no,negative oracle diagnostic
+Positive-premium basis operator,reduced order/neural,STOP_BASIS_OPERATOR,validation only,no,negative structure result
+PINN Arms C/D/E,physics-informed neural,NO_FORMAL_RESULTS_YET,no,no,registered future experiment
+Positive-premium DeepONet,operator learning,NO_FORMAL_RESULTS_YET,no,no,registered future experiment

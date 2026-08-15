@@ -1,0 +1,23 @@
+{
+  "acceptance_threshold": 0.0024749463120986555,
+  "artifact_path": "results/07_method_extensions/05_pod_coefficient/pod_coefficient_model.npz",
+  "basis_fit_split": "train_only",
+  "batch_inference_seconds": 0.0030439579859375954,
+  "hyperparameter_split": "validation_only",
+  "median_single_surface_seconds": 1.2042000889778137e-05,
+  "modes": 8,
+  "next_method": "retain_pod_as_rank_diagnostic_only",
+  "obstacle_preserved_by_projection": true,
+  "p95_single_surface_seconds": 1.2292061001062393e-05,
+  "parameter_order": [
+    "T",
+    "sigma",
+    "r",
+    "q",
+    "is_call"
+  ],
+  "polynomial_degree": 3,
+  "selected_alpha": 1e-08,
+  "status": "STOP_POD_COEFFICIENT_AT_DIAGNOSTIC",
+  "worst_heldout_rmse": 0.006802752973705978
+}

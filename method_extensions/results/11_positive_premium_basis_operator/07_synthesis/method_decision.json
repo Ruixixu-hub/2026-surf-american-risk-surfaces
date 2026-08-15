@@ -1,0 +1,44 @@
+{
+  "claims_not_permitted": [
+    "GO_APPROXIMATE_SURROGATE",
+    "GO_BEATS_CN_PSOR",
+    "GO_BEATS_CN_POLICY",
+    "GO_EXACT_HYBRID_PSOR",
+    "GO_EXACT_HYBRID_POLICY"
+  ],
+  "families": {
+    "call": {
+      "five_seed_worst_seed_median_boundary_mae": 2.32534855519586,
+      "five_seed_worst_seed_median_price_rmse": 0.0004470612934710238,
+      "max_gate_ratio": 34.88005392766826,
+      "median_lcp_p95_ratio_to_oracle": 1.4245008806152724,
+      "price_gate_passes": true,
+      "representation_32_mode_worst_rmse": 1.7626701427886813e-05,
+      "representation_min_passing_modes": 8,
+      "selected_modes": 12,
+      "status": "STOP_STRUCTURE"
+    },
+    "put": {
+      "five_seed_worst_seed_median_boundary_mae": 0.7407892117908512,
+      "five_seed_worst_seed_median_price_rmse": 0.0003407428056215349,
+      "max_gate_ratio": 14.151380919461934,
+      "median_lcp_p95_ratio_to_oracle": 1.2663994225205433,
+      "price_gate_passes": true,
+      "representation_32_mode_worst_rmse": 1.3040350871078369e-05,
+      "representation_min_passing_modes": 8,
+      "selected_modes": 12,
+      "status": "STOP_STRUCTURE"
+    }
+  },
+  "heldout": {
+    "heldout_read": false,
+    "protocol_hash": "a4128b3088cbf6bb6a5e67eb1105c50c52cc27e37c59dd2944e1c054aeefc159",
+    "reason": "no family passed five-seed approximate-quality validation",
+    "status": "SKIPPED_VALIDATION_GATE"
+  },
+  "method": "P2 structure-aware hard-positive POD basis operator",
+  "next_method": "positive-premium DeepONet",
+  "protocol_hash": "a4128b3088cbf6bb6a5e67eb1105c50c52cc27e37c59dd2944e1c054aeefc159",
+  "reason": "POD representation and price mapping passed, but boundary/Greek/LCP structure gates failed on validation",
+  "status": "STOP_BASIS_OPERATOR"
+}

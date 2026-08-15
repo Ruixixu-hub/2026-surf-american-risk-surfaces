@@ -1,0 +1,3 @@
+solver,case_count,all_numerically_certified,all_converged,max_abs_trajectory_difference,max_normalized_lcp_residual,all_theorem_eligible
+projected_lu_single,55,True,True,1.4210854715202004e-14,3.7470027081099033e-16,False
+projected_lu_double,55,True,True,1.4654943925052066e-14,3.4569559877883147e-16,False

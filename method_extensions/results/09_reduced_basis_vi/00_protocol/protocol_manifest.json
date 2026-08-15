@@ -1,0 +1,52 @@
+{
+  "basis_policy": "train-only; separate put/call bases",
+  "dimension_ladder": [
+    4,
+    8,
+    12,
+    16,
+    24,
+    32
+  ],
+  "environment": {
+    "cpu_count": 10,
+    "git_commit": "3111b58403a9e6033f43e5ec9ab4684561eccc55",
+    "numpy": "1.26.4",
+    "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+    "python": "3.13.5"
+  },
+  "fom": "CN+Policy Iteration previous-slice",
+  "frozen_inputs": [
+    {
+      "path": "results/04_surrogate_dataset/v1_small_grid/regime_manifest.csv",
+      "sha256": "0e10c5e57cca88a1b941e532b1c0d2f4ef69a6e5d9e2ec4e18392515bd24297d"
+    },
+    {
+      "path": "results/04_surrogate_dataset/v1_small_grid/split_assignment.csv",
+      "sha256": "e891e20acbea1458c249c9418ac73ded7b9aaf964ef4ab7d97459c4de65dfa1f"
+    },
+    {
+      "path": "results/04_surrogate_dataset/v1_small_grid/dataset_v1_small_grid.npz",
+      "sha256": "bc467831347ff73d28b631bf0a35dd5a563f46666d5af5d3ce04f192df48dc8b"
+    }
+  ],
+  "grid": {
+    "K": 1.0,
+    "M": 120,
+    "N": 120,
+    "Smax": 4.0
+  },
+  "label_floor": 0.0019799570496789242,
+  "lcp_tolerance": 1e-12,
+  "obstacle_tolerance": 1e-12,
+  "protocol": "surf_fd_lcp_primal_dual_rb_vi_v1",
+  "protocol_hash": "eb94e95b98a28e73f7fd617c0c9aaae0816b5b17ad4bc8cdcdf9d9c6cc23e7e3",
+  "reduction_rmse_limit": 0.0004949892624197311,
+  "split_counts": {
+    "stress_holdout": 24,
+    "test": 43,
+    "train": 202,
+    "validation": 19
+  },
+  "total_error_floor": 0.0024749463120986555
+}

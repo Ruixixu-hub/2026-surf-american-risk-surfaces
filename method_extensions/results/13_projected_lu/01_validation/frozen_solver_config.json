@@ -1,0 +1,16 @@
+{
+  "audit_case_count": 12,
+  "evaluated_case_count": 55,
+  "frozen_config_hash": "d636b4aaca603c01bb6d1c209691bd942d1d20a517da221c8e50399096217b89",
+  "frozen_lcp_tolerance": 1e-12,
+  "frozen_obstacle_tolerance": 1e-12,
+  "non_z_train_edge_count": 26,
+  "protocol_hash": "5dfed35c9af78a2e7b944c129a761d09430be6b9721e3dd180cc37b740a5aca2",
+  "selected_solver": "projected_lu_single",
+  "selection_does_not_use_validation_timing": true,
+  "selection_rule": "single_if_all_correct_else_double_if_all_correct",
+  "status": "PROCEED_HELDOUT_SINGLE",
+  "validation_case_count": 19,
+  "validation_metrics_sha256": "eabc7d2f006c4b88026096943cdf1dece482df32d1cd81188b840696925e1c74",
+  "value_match_tolerance_K": 1e-09
+}

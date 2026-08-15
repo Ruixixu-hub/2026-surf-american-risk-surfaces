@@ -1,0 +1,66 @@
+[
+  {
+    "decision": "policy_iteration_previous_slice",
+    "evidence": "2x2 held-out timing plus exact residual and structure checks",
+    "hypothesis": "Beat PSOR at the identical frozen residual tolerance.",
+    "method": "Policy Iteration",
+    "role": "strict discrete-LCP solver",
+    "status": "GO"
+  },
+  {
+    "decision": "STOP_LEARNED_ACCELERATION_KEEP_POLICY_ITERATION",
+    "evidence": "learned-vs-classical median speedup -44.429%",
+    "hypothesis": "Reduce end-to-end median by at least 20% without worsening p95.",
+    "method": "Positive-premium MLP warm-start",
+    "role": "initializer only; never the final correctness mechanism",
+    "status": "STOP"
+  },
+  {
+    "decision": "UNBLOCK_GAMMA_ON_STABLE_MASK",
+    "evidence": "time and space refinements are kept separate",
+    "hypothesis": "Stable order >=1.5 in at least 90% of audit regimes.",
+    "method": "DIRK / Lobatto Greek reference",
+    "role": "high-accuracy label and convergence audit",
+    "status": "GO"
+  },
+  {
+    "decision": "8 unaligned modes",
+    "evidence": "worst held-out RMSE 0.00115372",
+    "hypothesis": "10-30 modes reach the numerical-label noise floor on held-out regimes.",
+    "method": "POD/SVD rank diagnostic",
+    "role": "falsification test before a large operator network",
+    "status": "GO"
+  },
+  {
+    "decision": "STOP_POD_COEFFICIENT_AT_DIAGNOSTIC",
+    "evidence": "worst held-out RMSE 0.00680275",
+    "hypothesis": "Held-out error <=1.25 times the reference-noise floor.",
+    "method": "Polynomial POD coefficient map",
+    "role": "minimal nonintrusive basis surrogate",
+    "status": "STOP"
+  },
+  {
+    "decision": "Needs full-grid primal and multiplier snapshots, stability enrichment, and an online VI estimator; a projected PCA solve is not an honest substitute.",
+    "evidence": "POD rank gate passed, but the nonintrusive coefficient-map gate failed",
+    "hypothesis": "Reach the reference floor with audited residual at lower online cost.",
+    "method": "Primal/dual Reduced-Basis VI",
+    "role": "intrusive many-query obstacle solver",
+    "status": "DEFER"
+  },
+  {
+    "decision": "Do not implement FNO: unaligned POD is already low-rank; revisit basis operator or DeepONet only after RB VI.",
+    "evidence": "stage-gated ordering",
+    "hypothesis": "Improve price by 20% or boundary/Delta by 15% under matched budgets.",
+    "method": "DeepONet / FNO / localized operator",
+    "role": "large learned operator",
+    "status": "DEFER"
+  },
+  {
+    "decision": "Requires a retained surrogate; no surrogate has passed its held-out gate yet.",
+    "evidence": "downstream prerequisite not met",
+    "hypothesis": "Save 30% fine solves; calibrated risky requests fall back to the classical solver.",
+    "method": "Multi-fidelity and UQ fallback",
+    "role": "label-efficiency and deployment safety",
+    "status": "DEFER"
+  }
+]

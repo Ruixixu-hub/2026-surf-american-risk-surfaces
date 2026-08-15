@@ -1,0 +1,5 @@
+{
+  "eligibility": "results/13_projected_lu/figures/eligibility_by_split.png",
+  "paired_ratio": "results/13_projected_lu/figures/paired_speed_ratio.png",
+  "runtime": "results/13_projected_lu/figures/solver_runtime.png"
+}

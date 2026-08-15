@@ -1,0 +1,31 @@
+{
+  "families": {
+    "call": {
+      "arm": "P2",
+      "modes": 12,
+      "seeds": [
+        17,
+        29,
+        43,
+        71,
+        101
+      ],
+      "status": "STOP_STRUCTURE",
+      "steps": 8000
+    },
+    "put": {
+      "arm": "P2",
+      "modes": 12,
+      "seeds": [
+        17,
+        29,
+        43,
+        71,
+        101
+      ],
+      "status": "STOP_STRUCTURE",
+      "steps": 8000
+    }
+  },
+  "protocol_hash": "a4128b3088cbf6bb6a5e67eb1105c50c52cc27e37c59dd2944e1c054aeefc159"
+}

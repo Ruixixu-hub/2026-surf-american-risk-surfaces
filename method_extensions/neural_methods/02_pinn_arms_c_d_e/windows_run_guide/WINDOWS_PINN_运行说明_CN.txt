@@ -1,0 +1,182 @@
+SURF Arm C/D/E PINN：Windows 手动运行说明
+=========================================
+
+一、运行前必须准备
+------------------
+
+1. 把整个项目文件夹复制到 Windows 本地磁盘，例如：
+   D:\2026-surf-american-risk-surfaces
+
+   不要只复制 experiments 或 scripts；src、tests、results/04_surrogate_dataset、
+   requirements-pinn.txt 都是必需的。
+
+2. 安装：
+   - Windows 10/11 64-bit
+   - NVIDIA 显卡和较新的 NVIDIA Driver
+   - Python 3.11 64-bit（安装时选择 Add Python to PATH）
+
+3. 打开 PowerShell，进入项目根目录：
+
+   cd D:\2026-surf-american-risk-surfaces
+
+4. 如果 Windows 阻止本地 PowerShell 脚本，只对当前窗口临时允许：
+
+   Set-ExecutionPolicy -Scope Process Bypass
+
+   这不会永久修改系统设置。
+
+
+二、推荐方法：只使用一个总入口文件
+----------------------------------
+
+总入口是：
+
+   scripts\windows\run_all_pinn_experiments.ps1
+
+它会按照正确顺序调用 Python 文件。不要把所有 Python 源码合并成一个巨型文件；
+保留模块化结构才能安全地断点恢复、做单元测试并保持 held-out 标签隔离。
+
+
+三、建议逐阶段运行（最安全）
+----------------------------
+
+第 1 步：创建环境、安装 CUDA PyTorch、检查 GPU、运行测试
+
+   .\scripts\windows\run_all_pinn_experiments.ps1 -Stage Setup
+
+默认安装 PyTorch 2.7.1 CUDA 12.8。如果显卡驱动不支持，可以改用：
+
+   .\scripts\windows\run_all_pinn_experiments.ps1 -Stage Setup -CudaWheel cu126
+
+成功标准：
+   - torch.cuda.is_available() 为 True
+   - float64 二阶自动微分检查通过
+   - PINN 测试全部通过
+
+
+第 2 步：短 smoke test
+
+   .\scripts\windows\run_all_pinn_experiments.ps1 -Stage Tiny -Resume
+
+这一步只确认 Arm C 和 Arm D 能在 Windows CUDA 上训练、保存和恢复，不是正式结果。
+
+
+第 3 步：架构、ablation 和五-seed validation
+
+   .\scripts\windows\run_all_pinn_experiments.ps1 -Stage Validation -Resume -AcknowledgeLongRun
+
+它会自动完成：
+   1. Arm C 四种架构敏感性
+   2. 自动选择架构
+   3. Arm D 的 D0/D1/D2/D_full/positive-premium ablation
+   4. 自动选择 D variant
+   5. Arm C/D 的 19 validation regimes × 5 seeds
+   6. 生成高精度 validation 参考
+   7. 根据预注册 gate 冻结正式配置
+
+如果 Arm D 没有通过 validation gate，脚本会停止。这不是程序错误，而是实验设计要求。
+
+
+第 4 步：正式 held-out 训练
+
+只有一台 GPU 时：
+
+   .\scripts\windows\run_all_pinn_experiments.ps1 -Stage Heldout -ShardIndex 0 -ShardCount 1 -Resume -AcknowledgeLongRun
+
+共有 670 个训练任务，最坏预算约 670 GPU-hours。中断后使用同一命令和 -Resume。
+不要改变 ShardCount，否则任务分配会改变。
+
+多台独立 GPU/电脑时，可以用固定的 ShardCount，例如 8。每台机器使用不同的
+ShardIndex（0 到 7）：
+
+   电脑 1：-ShardIndex 0 -ShardCount 8
+   电脑 2：-ShardIndex 1 -ShardCount 8
+   ...
+   电脑 8：-ShardIndex 7 -ShardCount 8
+
+所有机器必须使用同一个冻结配置和相同项目版本。结束后，需要把各机器
+results\08_pinn_gap\04_heldout\training 下的不同 shard 输出合并到同一个项目中；
+不能覆盖另一个 shard 的文件。
+
+
+第 5 步：生成 67 个 held-out 高精度参考
+
+   .\scripts\windows\run_all_pinn_experiments.ps1 -Stage Reference
+
+这一步可以断后重跑；已经存在的参考文件会跳过。
+
+
+第 6 步：一次性读取标签并评分
+
+   .\scripts\windows\run_all_pinn_experiments.ps1 -Stage Score
+
+注意：只有全部 670 个任务都有 COMPLETE、FAILED 或 BUDGET_EXHAUSTED 状态后才能运行。
+这一步会建立永久 scoring lock。运行以后不能根据 test/stress 结果重新训练或调参。
+
+
+第 7 步：Arm E 和最终报告
+
+   .\scripts\windows\run_all_pinn_experiments.ps1 -Stage ArmE
+
+只有 Arm D held-out gate 为 GO 时才运行 Arm E；否则会诚实跳过并生成 DEFER/STOP 报告。
+
+
+四、能否“一条命令全部运行”
+----------------------------
+
+可以，但只建议单 GPU 且你已经理解 670 GPU-hours 风险时使用：
+
+   .\scripts\windows\run_all_pinn_experiments.ps1 -Stage All -Resume -AcknowledgeLongRun
+
+它会从安装环境一直运行到最终报告。电脑重启或程序中断后，再执行同一条命令，
+checkpoint 会继续训练。
+
+如果已经完成环境安装、希望跳过重复 pip 安装：
+
+   .\scripts\windows\run_all_pinn_experiments.ps1 -Stage All -Resume -AcknowledgeLongRun -SkipPackageInstall
+
+对于多 GPU 分片，不要期待一台机器执行 All 后自动完成其他机器的 shard。
+先分别执行 Heldout，合并输出，再单独执行 Reference、Score、ArmE。
+
+
+五、在哪里查看进度和结果
+--------------------------
+
+总日志：
+   results\08_pinn_gap\windows_master_logs\
+
+每个训练任务：
+   *_heartbeat.json       当前 phase、step 和已用时间
+   *_history.csv          loss 和 gradient history
+   *_status.json          COMPLETE/FAILED/BUDGET_EXHAUSTED
+   checkpoints\           latest 和 best checkpoint
+   prediction_surface.npz 无标签预测面
+
+正式决策：
+   results\08_pinn_gap\03_validation_gates\
+   results\08_pinn_gap\04_heldout\arm_d_heldout_decision.json
+   results\08_pinn_gap\05_arm_e\arm_e_decision.json
+
+最终报告：
+   reports\10_pinn_gap\implementation_report.md
+
+
+六、常见问题
+------------
+
+1. “running scripts is disabled”
+   在当前 PowerShell 窗口运行：
+   Set-ExecutionPolicy -Scope Process Bypass
+
+2. “CUDA was requested but is not available”
+   检查 nvidia-smi；更新 NVIDIA driver；确认不是 AMD/Intel-only 机器；重新运行 Setup。
+
+3. 中断或关机
+   使用相同 Stage、ShardIndex、ShardCount 和 -Resume。不要删除 checkpoints。
+
+4. config hash mismatch
+   说明你改变了配置、架构、代码或 shard 协议。不要强行覆盖旧 checkpoint；先保留旧结果，
+   再使用新的输出目录或恢复原配置。
+
+5. validation 后没有 frozen_pinn_configuration.json
+   说明 Arm D 没有通过预注册 gate。应查看 decision JSON，而不是绕过 gate 跑 test。

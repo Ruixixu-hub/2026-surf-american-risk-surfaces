@@ -1,0 +1,3 @@
+grid,regime_count,all_converged,stable_second_order_fraction,boundary_within_local_cell_fraction,median_delta_max_error,median_gamma_max_error,median_runtime_seconds
+uniform,12,True,1.0,1.0,2.509936189185047e-05,0.00015208813531975007,0.9332070834934711
+sinh_strike_concentrated,12,True,0.9166666666666666,1.0,5.674951295248087e-06,2.591746864066824e-05,1.0026920000091195
