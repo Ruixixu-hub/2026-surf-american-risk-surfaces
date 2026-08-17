@@ -1,0 +1,30 @@
+{
+  "benchmark_roles": {
+    "dirk_policy_sinh": "High-Accuracy Numerical Reference",
+    "penalty_newton": "Candidate comparator; promotion requires the common correctness gate",
+    "policy_iteration": "Strengthened Classical Benchmark 1",
+    "projected_lu_single": "Strengthened Classical Benchmark 2",
+    "psor": "Basic / Original Classical Benchmark"
+  },
+  "early_exercise_paired_median_penalty_over_policy": 2.6403039165043602,
+  "early_exercise_paired_median_projected_lu_over_policy": 0.658196280766766,
+  "early_exercise_regime_count": 31,
+  "frozen_penalty_config_hash": "768ae9724bf74d92e53a477e82fc4d61f7e00afbd5b243e4db503a8a2b6f8afd",
+  "paired_median_penalty_over_policy": 1.006682038281491,
+  "paired_median_penalty_over_projected_lu": 1.4544863387947855,
+  "paired_median_policy_over_psor": 0.05568011632667002,
+  "paired_median_projected_lu_over_policy": 0.6776059594143335,
+  "penalty_all_common_residual_gates_passed": false,
+  "penalty_all_strong_policy_match_certified": false,
+  "penalty_certified_regime_count": 40,
+  "penalty_common_gate_regime_count": 40,
+  "penalty_max_abs_trajectory_difference": 6.444444977660169e-11,
+  "penalty_max_normalized_lcp_residual": 2.172284823930394e-11,
+  "penalty_newton_status": "FAILED_CORRECTNESS",
+  "promotion_rule": "Penalty/Newton cannot be promoted on timing unless every common correctness gate passes.",
+  "protocol_complete": true,
+  "regime_count": 67,
+  "selected_penalty": 100000000.0,
+  "speed_gate": 0.8,
+  "status": "STRICT_THREE_CONFIRMED"
+}

@@ -1,0 +1,5 @@
+arm,benchmark_role,sample_count,median_seconds,p95_seconds,p99_seconds,all_timed_runs_converged,median_iterations
+psor,Basic / Original Classical Benchmark,2010,0.3097067705,1.43093708125,1.5007059789100003,True,3360.0
+policy_iteration,Strengthened Classical Benchmark 1,2010,0.015999729,0.0224767436,0.02517761191000001,True,120.0
+projected_lu_single,Strengthened Classical Benchmark 2,2010,0.010258625,0.014460306400000001,0.016121412,True,120.0
+penalty_newton,Candidate comparator; promotion requires the common correctness gate,2010,0.0207950415,0.062201668450000004,0.07282548072000002,False,120.0

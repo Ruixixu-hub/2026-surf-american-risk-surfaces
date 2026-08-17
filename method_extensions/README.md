@@ -12,12 +12,14 @@ relabelled as extension work.
 
 - [`BENCHMARK_HIERARCHY.md`](BENCHMARK_HIERARCHY.md): formal benchmark roles.
 - [`METHOD_STATUS.md`](METHOD_STATUS.md): current GO/STOP/INCOMPLETE decisions.
-- [`benchmarks/`](benchmarks/): historical, strengthened, and accuracy
+- [`benchmarks/`](benchmarks/): basic/original, strengthened, and accuracy
   benchmarks.
+- [`solver_candidates/`](solver_candidates/): strict-solver candidates that
+  were tested but not promoted to benchmark status.
 - [`reduced_order_methods/`](reduced_order_methods/): POD, RB-VI, localized
   bases, and the positive-premium basis operator.
 - [`neural_methods/`](neural_methods/): pointwise MLP, PINN, and DeepONet work.
-- [`experiments/`](experiments/): canonical Experiments 21--61.
+- [`experiments/`](experiments/): canonical Experiments 21--64.
 - [`src/`](src/): source snapshot used by the extension experiments.
 - [`tests/`](tests/): extension-specific tests.
 - [`results/`](results/): curated formal evidence and decision files.
@@ -32,7 +34,7 @@ them.
 
 - Formal Mac results are included for Policy Iteration, numerical-reference
   audits, POD diagnostics, RB-VI, boundary/localized bases, the basis operator,
-  and Projected LU.
+  Projected LU, and the unified strict-solver poster comparison.
 - PINN and DeepONet contain implementation code and protocols but are marked
   **NO FORMAL RESULTS YET**. Tiny smoke runs are not published as performance
   evidence.

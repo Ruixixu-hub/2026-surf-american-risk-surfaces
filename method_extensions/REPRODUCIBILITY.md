@@ -22,13 +22,16 @@ export PYTHONPATH="$PWD/src"
 
 ## Frozen original inputs
 
-The extension protocols depend on the original repository's frozen Stage-4
-dataset and Stage-5 surrogate manifests. They are not duplicated here. Before
-regenerating artifact-heavy stages, copy them from the repository root:
+The small Stage-4 regime and split CSVs used by the unified solver comparison
+are included under `results/04_surrogate_dataset/v1_small_grid/`. The 48 MB
+dataset bundle, Stage-5 model artifacts, RB snapshots, and neural checkpoints
+remain excluded. Before regenerating artifact-heavy stages, copy those files
+from the repository root:
 
 ```bash
 mkdir -p results/04_surrogate_dataset results/05_surrogate_models
-cp -R ../results/04_surrogate_dataset/v1_small_grid results/04_surrogate_dataset/
+cp ../results/04_surrogate_dataset/v1_small_grid/dataset_v1_small_grid.npz \
+  results/04_surrogate_dataset/v1_small_grid/
 cp -R ../results/05_surrogate_models/price_premium results/05_surrogate_models/
 ```
 
@@ -44,6 +47,8 @@ Core strict-solver tests do not require regenerated learning artifacts:
 python -m pytest -q \
   tests/test_policy_iteration.py \
   tests/test_projected_lu.py \
+  tests/test_penalty_newton.py \
+  tests/test_poster_unified_study.py \
   tests/test_reduced_basis_vi.py
 ```
 
@@ -62,5 +67,7 @@ python -m pytest -q tests
 - 46--51: positive-premium basis operator.
 - 52--57: positive-premium DeepONet; no formal results yet.
 - 58--61: Projected LU validation and held-out benchmark.
+- 62--64: unified poster strict-solver comparison, numerical-reference audit,
+  and evidence synthesis.
 
 Do not rerun or tune held-out experiments after reading their formal scores.

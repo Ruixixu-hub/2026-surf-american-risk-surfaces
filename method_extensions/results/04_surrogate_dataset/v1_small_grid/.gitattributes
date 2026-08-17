@@ -1,0 +1,2 @@
+# Preserve frozen CSV bytes so protocol SHA-256 values remain reproducible.
+*.csv -text -diff

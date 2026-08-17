@@ -1,5 +1,6 @@
 benchmark,role,median_seconds,p95_seconds,paired_ratio_vs_policy,correctness_scope
-CN+PSOR,historical benchmark,0.2436151250,1.4154250601,,same frozen 121x121 CN-LCP
-CN+Policy Iteration,strengthened benchmark 1,0.0138142705,0.0161275837,1.0,same frozen 121x121 CN-LCP
-CN+Projected LU,strengthened benchmark 2,0.0093837915,0.0099822141,0.6803838126,67/67 held-out numerically certified
+CN+PSOR,basic / original classical benchmark,0.3097067705,1.4309370813,0.0556801163 (Policy/PSOR),67/67 common residual gate; 66/67 strong Policy-match certification
+CN+Policy Iteration,strengthened benchmark 1,0.0159997290,0.0224767436,1.0,67/67 strict certification
+CN+Projected LU,strengthened benchmark 2,0.0102586250,0.0144603064,0.6776059594,67/67 held-out numerically certified
+Penalty/Newton,failed candidate comparator,0.0207950415,0.0622016685,1.0066820383,40/67 common residual gate; FAILED_CORRECTNESS
 DIRK+Policy+sinh,high-accuracy reference,,,,accuracy reference; not online speed competitor

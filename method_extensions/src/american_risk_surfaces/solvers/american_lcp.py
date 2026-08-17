@@ -22,6 +22,7 @@ from american_risk_surfaces.solvers.operator import (
     apply_black_scholes_operator,
     black_scholes_operator_coefficients,
 )
+from american_risk_surfaces.solvers.penalty_newton import penalty_newton_lcp_solve
 from american_risk_surfaces.solvers.policy_iteration import policy_iteration_lcp_solve
 from american_risk_surfaces.solvers.projected_lu import (
     factorize_projected_lu,
@@ -32,6 +33,7 @@ from american_risk_surfaces.solvers.projected_lu import (
 LCPSolverName = Literal[
     "psor",
     "policy_iteration",
+    "penalty_newton",
     "projected_lu_single",
     "projected_lu_double",
 ]
@@ -62,6 +64,8 @@ class AmericanLCPConfig:
     tolerance: float = 1e-10
     obstacle_tolerance: float = 1e-12
     max_iter: int = 10000
+    penalty: float = 1e10
+    penalty_newton_max_iter: int = 100
 
 
 @dataclass(frozen=True)
@@ -293,6 +297,9 @@ def american_cn_lcp_price(
                 }
                 if lcp_solver == "psor":
                     kwargs["omega"] = validated.omega
+                elif lcp_solver == "penalty_newton":
+                    kwargs["penalty"] = validated.penalty
+                    kwargs["max_iter"] = validated.penalty_newton_max_iter
                 solve_result = solver_function(system, **kwargs)
             solve_results.append(solve_result)
 
@@ -332,8 +339,10 @@ def _solver_function(name: str) -> Callable[..., LCPSolveResult]:
         return psor_lcp_solve_residual
     if name == "policy_iteration":
         return policy_iteration_lcp_solve
+    if name == "penalty_newton":
+        return penalty_newton_lcp_solve
     raise ValueError(
-        "lcp_solver must be 'psor', 'policy_iteration', "
+        "lcp_solver must be 'psor', 'policy_iteration', 'penalty_newton', "
         "'projected_lu_single', or 'projected_lu_double'."
     )
 
@@ -366,8 +375,16 @@ def _validated_config(config: AmericanLCPConfig) -> AmericanLCPConfig:
         raise ValueError("omega must satisfy 0 < omega < 2.")
     if config.tolerance <= 0.0 or config.obstacle_tolerance <= 0.0:
         raise ValueError("solver tolerances must be positive.")
+    if not np.isfinite(config.penalty) or config.penalty <= 0.0:
+        raise ValueError("penalty must be positive and finite.")
     if isinstance(config.max_iter, bool) or not isinstance(config.max_iter, int) or config.max_iter < 1:
         raise ValueError("max_iter must be a positive integer.")
+    if (
+        isinstance(config.penalty_newton_max_iter, bool)
+        or not isinstance(config.penalty_newton_max_iter, int)
+        or config.penalty_newton_max_iter < 1
+    ):
+        raise ValueError("penalty_newton_max_iter must be a positive integer.")
     return AmericanLCPConfig(
         option_type=option,
         K=float(config.K),
@@ -382,6 +399,8 @@ def _validated_config(config: AmericanLCPConfig) -> AmericanLCPConfig:
         tolerance=float(config.tolerance),
         obstacle_tolerance=float(config.obstacle_tolerance),
         max_iter=config.max_iter,
+        penalty=float(config.penalty),
+        penalty_newton_max_iter=config.penalty_newton_max_iter,
     )
 
 

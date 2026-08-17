@@ -1,0 +1,5 @@
+{
+  "spatial_gamma": "reports/16_poster_unified_comparison/figures/spatial_grid_gamma_reference.png",
+  "strict_runtime": "reports/16_poster_unified_comparison/figures/strict_solver_runtime_log.png",
+  "temporal_gamma": "reports/16_poster_unified_comparison/figures/temporal_gamma_reference.png"
+}

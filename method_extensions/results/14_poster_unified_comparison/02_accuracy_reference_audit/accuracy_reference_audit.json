@@ -1,0 +1,33 @@
+{
+  "audit_regime_count": 12,
+  "benchmark_role": "High-Accuracy Numerical Reference",
+  "completeness_checks": {
+    "selected_grid_ok": true,
+    "selected_spatial_all_converged": true,
+    "selected_temporal_all_converged": true,
+    "selected_time_integrator_ok": true,
+    "spatial_grids_ok": true,
+    "spatial_levels_ok": true,
+    "spatial_regime_count_ok": true,
+    "spatial_row_count_ok": true,
+    "stable_mask_status_ok": true,
+    "temporal_levels_ok": true,
+    "temporal_methods_ok": true,
+    "temporal_regime_count_ok": true,
+    "temporal_row_count_ok": true
+  },
+  "gamma_scope": "validated stable mask only",
+  "reference_limit": "Fine DIRK+sinh refinement is an internal numerical reference, not an analytic American-option theorem or a speed benchmark.",
+  "rerun_recommendation": "No rerun needed for the poster evidence panel",
+  "selected_spatial_grid": "sinh_strike_concentrated",
+  "selected_time_integrator": "dirk_lstable_quadratic",
+  "source_hashes": {
+    "spatial": "d1d1640e0f0dbd1ac38ace8d83fe59410fbdf6af90003f70fb15e75fb93c0e78",
+    "spatial_decision": "51e2b4cc4aec04a0376acec20f9aa1027405a06ca7221984ded20349c0c8cf56",
+    "spatial_summary": "9ff339878082ec01ec8d947f8111660c7c3407abe50d468d4a0c6f0d9f0fd0f3",
+    "temporal": "ff5c31a03c2135f40aa115a39b81bbf0348cd7e4018ccfb581b05983c2608f71",
+    "temporal_decision": "2ae2c3e2f9d9bd07a7cf5dc358360981a8ea413e173d170f3ffdbe416ca5b7af",
+    "temporal_summary": "b8369c28594ad41b77f8896d61671d3dcec302aa7c7255e1bf0492966f76b795"
+  },
+  "status": "REUSE_EXISTING_REFERENCE_EVIDENCE"
+}

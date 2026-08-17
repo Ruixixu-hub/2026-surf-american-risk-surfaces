@@ -1,0 +1,66 @@
+{
+  "accuracy_reference_question": "time/spatial discretization and Greek stability",
+  "benchmark_roles": {
+    "dirk_policy_sinh": "High-Accuracy Numerical Reference",
+    "penalty_newton": "Candidate comparator; promotion requires the common correctness gate",
+    "policy_iteration": "Strengthened Classical Benchmark 1",
+    "projected_lu_single": "Strengthened Classical Benchmark 2",
+    "psor": "Basic / Original Classical Benchmark"
+  },
+  "environment": {
+    "cpu_count": 10,
+    "float_precision": "float64",
+    "git_commit": "3a7ee1b98ca198c45e80a057320c97572c9d962e",
+    "machine": "arm64",
+    "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+    "processor": "arm",
+    "python": "3.13.5",
+    "versions": {
+      "matplotlib": "3.10.3",
+      "numpy": "1.26.4",
+      "scipy": "1.16.0",
+      "sklearn": "1.7.1",
+      "torch": "2.7.1"
+    }
+  },
+  "frozen_grid": {
+    "K": 1.0,
+    "M": 120,
+    "N": 120,
+    "Smax": 4.0
+  },
+  "frozen_normalized_lcp_tolerance": 1e-12,
+  "frozen_normalized_obstacle_tolerance": 1e-12,
+  "heldout_policy": "one diagnostic evaluation after validation freeze; heldout never changes penalty",
+  "input_hashes": {
+    "results/04_surrogate_dataset/v1_small_grid/regime_manifest.csv": "0e10c5e57cca88a1b941e532b1c0d2f4ef69a6e5d9e2ec4e18392515bd24297d",
+    "results/04_surrogate_dataset/v1_small_grid/split_assignment.csv": "e891e20acbea1458c249c9418ac73ded7b9aaf964ef4ab7d97459c4de65dfa1f",
+    "results/07_method_extensions/03_greek_audit/spatial_convergence.csv": "d1d1640e0f0dbd1ac38ace8d83fe59410fbdf6af90003f70fb15e75fb93c0e78",
+    "results/07_method_extensions/03_greek_audit/temporal_convergence.csv": "ff5c31a03c2135f40aa115a39b81bbf0348cd7e4018ccfb581b05983c2608f71",
+    "results/13_projected_lu/02_heldout/correctness_and_structure.csv": "303f88fd6711fe6970ee96d8b6d06a5c1ab037bcd82b7f0c73e7d278c1967faa",
+    "results/13_projected_lu/02_heldout/runtime_samples.csv": "d17f50b12bb132ffb9da7535e3a9d9c686017551eef9f1e32b206a1cc0d9c07e",
+    "results/13_projected_lu/method_decision.json": "b89c77503ee62a0e10d15ae892d6851b67f95d8b97fa2e475263104179f5e3ab",
+    "src/american_risk_surfaces/solvers/american_lcp.py": "4608683ec820503985d7c4d3cb0b9d1c608fec9e21e23f629b594cabf5ce5fd1",
+    "src/american_risk_surfaces/solvers/penalty_newton.py": "5eb1352317c70f64e9a220fa38e9db8633e49a38dde8123b8ead7daadaa96959"
+  },
+  "penalty_ladder": [
+    100000000.0,
+    10000000000.0,
+    1000000000000.0,
+    100000000000000.0
+  ],
+  "penalty_newton_max_iter": 100,
+  "penalty_selection_rule": "smallest penalty passing every common correctness gate; otherwise freeze the smallest worst-residual candidate as a failed diagnostic without retuning",
+  "penalty_selection_split": "validation_only",
+  "policy_match_tolerance_K": 1e-09,
+  "protocol_hash": "05296cdd98c832254d434a5507ac4449ccc6757ee705511938ed22e04916b9ec",
+  "protocol_version": "poster_unified_comparison_v1",
+  "strict_solver_question": "same frozen CN-LCP; only the LCP solver changes",
+  "timing": {
+    "dtype": "float64",
+    "randomized_arm_order": true,
+    "repeats": 30,
+    "threads": 1,
+    "warmups": 5
+  }
+}

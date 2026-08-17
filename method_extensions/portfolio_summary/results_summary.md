@@ -2,10 +2,17 @@
 
 ## Main benchmark result
 
-Projected LU is strengthened benchmark 2. On the same Mac and the same frozen
-CN-LCP, its pooled median was `0.00938379 s`, compared with `0.0138143 s` for
-strengthened benchmark 1 (Policy Iteration) and `0.243615 s` for historical
-PSOR. All 67 held-out trajectories passed the strict numerical certification.
+The unified poster rerun used the same Mac, frozen 121-by-121 CN-LCP, 67
+held-out regimes, float64 arithmetic, one CPU thread, five warm-ups, and 30
+timed repetitions per arm. Projected LU (strengthened benchmark 2) had a pooled
+median of `0.0102586 s`, compared with `0.0159997 s` for Policy Iteration
+(strengthened benchmark 1) and `0.309707 s` for CN+PSOR (the basic/original
+classical benchmark). Policy and Projected LU passed strict certification on
+67/67 regimes.
+
+Penalty/Newton was included under the same protocol. It passed the common LCP
+gate on only 40/67 regimes and had a pooled median of `0.0207950 s`; it is
+therefore a failed candidate comparator, not a benchmark.
 
 The Projected-LU claim is limited to the frozen SURF domain because four
 held-out q=0 calls lie outside the classic M-matrix sufficient conditions.

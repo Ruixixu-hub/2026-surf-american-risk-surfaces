@@ -1,0 +1,11 @@
+{
+  "accuracy_sha256": "368e1afcdd67da06922a23c50a9d5d70309c5c19dc6dbcfb163defea87e19b71",
+  "decision_sha256": "b3709f8759fff88efedabfa3835ec11b0176853ed11682e9424eeea7f6818a60",
+  "frozen_penalty_config_hash": "768ae9724bf74d92e53a477e82fc4d61f7e00afbd5b243e4db503a8a2b6f8afd",
+  "regime_count": 67,
+  "repeats": 30,
+  "resummarized_from_immutable_raw": true,
+  "runtime_sha256": "92108d3f20793f93fa8742d70c9dd96573e8a868b2247bc2d929042a59daf8ec",
+  "status": "COMPLETE",
+  "warmups": 5
+}

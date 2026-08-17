@@ -1,0 +1,5 @@
+arm,benchmark_role,regime_count,common_gate_regime_count,all_common_residual_gates_passed,certified_regime_count,all_numerically_certified,max_normalized_lcp_residual,max_normalized_obstacle_violation,max_abs_trajectory_difference
+psor,Basic / Original Classical Benchmark,67,67,True,66,False,9.999917748719672e-13,0.0,5.331366792482584e-09
+policy_iteration,Strengthened Classical Benchmark 1,67,67,True,67,True,6.477019176184712e-16,0.0,0.0
+projected_lu_single,Strengthened Classical Benchmark 2,67,67,True,67,True,6.29798004141283e-16,0.0,2.6201263381153694e-14
+penalty_newton,Candidate comparator; promotion requires the common correctness gate,67,40,False,40,False,2.172284823930394e-11,2.172284823930394e-11,6.444444977660169e-11

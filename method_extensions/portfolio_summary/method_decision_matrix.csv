@@ -1,8 +1,9 @@
 method,category,status,formal_evidence,heldout_access,role
-CN+PSOR,benchmark,HISTORICAL_BENCHMARK,yes,yes,historical benchmark
+CN+PSOR,benchmark,BASIC_ORIGINAL_CLASSICAL_BENCHMARK,yes,yes,basic / original classical benchmark
 CN+Policy Iteration,benchmark,STRENGTHENED_BENCHMARK_1,yes,yes,strict iterative benchmark
 CN+Projected LU,benchmark,STRENGTHENED_BENCHMARK_2_NUMERICALLY_CERTIFIED,yes,yes,strict direct benchmark on frozen domain
 DIRK/Greek nonuniform-grid reference,benchmark,HIGH_ACCURACY_REFERENCE,yes,audit only,accuracy and stable-mask Greek reference
+Penalty/Newton,solver candidate,FAILED_CORRECTNESS,yes,yes,failed unified comparator; not a benchmark
 Positive-premium MLP warm start,neural,STOP_LEARNED_ACCELERATION,yes,yes,negative acceleration result
 POD/SVD representation,reduced order,REPRESENTATION_GO,yes,diagnostic only,rank diagnostic
 Polynomial POD coefficient map,reduced order,STOP_MAPPING,yes,yes,negative coefficient-map result

@@ -1,0 +1,24 @@
+{
+  "accuracy_reference_status": "REUSE_EXISTING_REFERENCE_EVIDENCE",
+  "benchmark_roles": {
+    "dirk_policy_sinh": "High-Accuracy Numerical Reference",
+    "penalty_newton": "Candidate comparator; promotion requires the common correctness gate",
+    "policy_iteration": "Strengthened Classical Benchmark 1",
+    "projected_lu_single": "Strengthened Classical Benchmark 2",
+    "psor": "Basic / Original Classical Benchmark"
+  },
+  "claim_rules": {
+    "penalty_newton": "Candidate or failed comparator; never promoted on speed alone",
+    "policy": "Strengthened Classical Benchmark 1",
+    "projected_lu": "Strengthened Classical Benchmark 2",
+    "psor": "Basic / Original Classical Benchmark"
+  },
+  "penalty_newton_status": "FAILED_CORRECTNESS",
+  "poster_accuracy_reference": "dirk_policy_sinh",
+  "poster_headline_solver": "projected_lu_single",
+  "source_decisions": {
+    "accuracy": "results/14_poster_unified_comparison/02_accuracy_reference_audit/accuracy_reference_audit.json",
+    "strict": "results/14_poster_unified_comparison/01_strict_solvers/strict_solver_decision.json"
+  },
+  "strict_solver_status": "STRICT_THREE_CONFIRMED"
+}

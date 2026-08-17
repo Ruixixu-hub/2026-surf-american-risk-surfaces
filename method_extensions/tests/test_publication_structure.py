@@ -11,6 +11,8 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def test_benchmark_hierarchy_and_formal_decisions() -> None:
     hierarchy = (ROOT / "BENCHMARK_HIERARCHY.md").read_text(encoding="utf-8")
+    assert "Basic / Original Classical Benchmark" in hierarchy
+    assert "Historical benchmark" not in hierarchy
     assert "Strengthened benchmark 1" in hierarchy
     assert "CN + Policy Iteration" in hierarchy
     assert "Strengthened benchmark 2" in hierarchy
@@ -29,6 +31,18 @@ def test_benchmark_hierarchy_and_formal_decisions() -> None:
     )
     assert policy["selected_method"] == "policy_iteration_previous_slice"
     assert projected["status"] == "GO_PROJECTED_LU_NUMERICALLY_CERTIFIED"
+
+    poster = json.loads(
+        (ROOT / "results/14_poster_unified_comparison/method_decision.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert poster["strict_solver_status"] == "STRICT_THREE_CONFIRMED"
+    assert poster["penalty_newton_status"] == "FAILED_CORRECTNESS"
+    assert (
+        poster["benchmark_roles"]["psor"]
+        == "Basic / Original Classical Benchmark"
+    )
 
 
 def test_unfinished_neural_methods_publish_no_result_directories() -> None:

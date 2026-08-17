@@ -1,0 +1,2 @@
+# Preserve immutable raw experiment CSV bytes and recorded SHA-256 markers.
+*.csv -text -diff

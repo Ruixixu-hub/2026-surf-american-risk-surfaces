@@ -1,0 +1,15 @@
+{
+  "all_numerically_certified": false,
+  "certified_regime_count": 3,
+  "common_lcp_tolerance": 1e-12,
+  "frozen_config_hash": "768ae9724bf74d92e53a477e82fc4d61f7e00afbd5b243e4db503a8a2b6f8afd",
+  "full_validation_protocol": true,
+  "max_abs_trajectory_difference": 1.4444001550373287e-11,
+  "max_normalized_lcp_residual": 4.868764567541557e-12,
+  "no_post_heldout_retuning": true,
+  "protocol_hash": "05296cdd98c832254d434a5507ac4449ccc6757ee705511938ed22e04916b9ec",
+  "selected_penalty": 100000000.0,
+  "status": "PENALTY_FAILED_VALIDATION_FROZEN_DIAGNOSTIC",
+  "validation_metrics_sha256": "65c75d5d7b3a9facafacb67df4704cb323ac23b04954b272a14430f4c89cd75d",
+  "validation_regime_count": 19
+}
