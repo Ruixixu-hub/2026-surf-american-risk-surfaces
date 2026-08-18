@@ -74,8 +74,11 @@ BOUNDARY_THRESHOLD = 1e-6
 REFERENCE_ERROR_MULTIPLIER = 1.25
 MIN_EMPIRICAL_ORDER = 1.5
 MIN_STABLE_ORDER_FRACTION = 0.90
-MAX_NORMALIZED_PENALTY_LCP_RESIDUAL = 1e-6
-MAX_NORMALIZED_PENALTY_OBSTACLE = 1e-6
+# These are the project-wide tolerances frozen by Experiment 21.  They apply
+# to the common ``compute_lcp_residual`` metrics even though the published
+# penalty iteration itself stops with its paper-specific 1e-7 update test.
+MAX_NORMALIZED_PENALTY_LCP_RESIDUAL = 1e-12
+MAX_NORMALIZED_PENALTY_OBSTACLE = 1e-12
 MAX_RUNTIME_MEDIAN_RATIO = 1.25
 MAX_RUNTIME_P95_RATIO = 1.50
 
@@ -99,9 +102,11 @@ def write_protocol() -> dict[str, Path]:
         PROJECT_ROOT / "experiments" / "69_published_dirk_p_reproduction.py",
         PROJECT_ROOT / "experiments" / "70_published_dirk_p_formal_audit.py",
         PROJECT_ROOT / "experiments" / "71_published_dirk_p_synthesis.py",
+        PROJECT_ROOT / "experiments" / "72_published_dirk_p_metric_gate_correction.py",
         PROJECT_ROOT / "experiments" / "23_greek_time_integrator_audit.py",
         PROJECT_ROOT / "experiments" / "26_greek_spatial_grid_audit.py",
         PROJECT_ROOT / "results" / "07_method_extensions" / "03_greek_audit" / "spatial_convergence.csv",
+        PROJECT_ROOT / "results" / "07_method_extensions" / "00_protocol" / "tolerance_decision.json",
     )
     sources = [
         {
@@ -181,6 +186,24 @@ def write_protocol() -> dict[str, Path]:
             "candidate_numerical_outputs_changed": False,
             "accuracy_or_runtime_gates_changed": False,
             "first_pass_evidence_preserved_at": "results/16_published_dirk_p/02_audit_v1_raw_threshold_scoring",
+        },
+        "metric_gate_correction": {
+            "version": 3,
+            "reason": (
+                "The initial DIRK-P study incorrectly introduced candidate-specific 1e-6 "
+                "acceptance limits for the common normalized obstacle and LCP residuals. "
+                "Those quantities are produced by the same compute_lcp_residual function "
+                "and normalization as the project-wide Experiment 21 metrics, whose frozen "
+                "limits are 1e-12. The formal rows were rescored without rerunning or changing "
+                "any candidate solution, timing, grid, or financial-output data."
+            ),
+            "previous_incorrect_normalized_obstacle_gate": 1e-6,
+            "previous_incorrect_normalized_lcp_gate": 1e-6,
+            "corrected_frozen_normalized_obstacle_gate": MAX_NORMALIZED_PENALTY_OBSTACLE,
+            "corrected_frozen_normalized_lcp_gate": MAX_NORMALIZED_PENALTY_LCP_RESIDUAL,
+            "same_metric_and_normalization": True,
+            "source": "results/07_method_extensions/00_protocol/tolerance_decision.json",
+            "numerical_outputs_changed": False,
         },
         "timing": {
             "warmups": WARMUPS,
@@ -554,6 +577,94 @@ def run_formal_audit(
     }
 
 
+def rescore_existing_audit_with_frozen_vi_gate() -> Path:
+    """Correct VI pass/fail using the pre-existing project-wide 1e-12 gate.
+
+    This deliberately does not rerun the numerical method or timing study.  It
+    only re-evaluates the stored common normalized residuals and preserves a
+    machine-readable correction record.
+    """
+
+    metrics_path = AUDIT_DIR / "regime_metrics.csv"
+    if not metrics_path.exists():
+        raise RuntimeError("formal regime metrics are required before rescoring")
+    rows = _read_csv(metrics_path)
+    affected: list[dict[str, Any]] = []
+    for row in rows:
+        # Reconstruct the erroneous v2 decision mechanically so the correction
+        # remains idempotent even after the CSV has already been rescored.
+        previous_vi = bool(
+            _as_bool(row["converged"])
+            and float(row["max_normalized_obstacle_violation"]) <= 1e-6
+            and float(row["max_normalized_lcp_residual"]) <= 1e-6
+        )
+        corrected_vi = bool(
+            _as_bool(row["converged"])
+            and float(row["max_normalized_obstacle_violation"])
+            <= MAX_NORMALIZED_PENALTY_OBSTACLE
+            and float(row["max_normalized_lcp_residual"])
+            <= MAX_NORMALIZED_PENALTY_LCP_RESIDUAL
+        )
+        row["frozen_normalized_obstacle_tolerance"] = (
+            MAX_NORMALIZED_PENALTY_OBSTACLE
+        )
+        row["frozen_normalized_lcp_tolerance"] = (
+            MAX_NORMALIZED_PENALTY_LCP_RESIDUAL
+        )
+        row["vi_pass"] = corrected_vi
+        row["regime_pass"] = bool(
+            _as_bool(row["price_pass"])
+            and _as_bool(row["delta_pass"])
+            and _as_bool(row["gamma_pass"])
+            and _as_bool(row["boundary_pass"])
+            and _as_bool(row["q0_bsm_pass"])
+            and corrected_vi
+        )
+        if previous_vi != corrected_vi:
+            affected.append(
+                {
+                    "regime_id": row["regime_id"],
+                    "previous_vi_pass": previous_vi,
+                    "corrected_vi_pass": corrected_vi,
+                    "max_normalized_obstacle_violation": float(
+                        row["max_normalized_obstacle_violation"]
+                    ),
+                    "max_normalized_lcp_residual": float(
+                        row["max_normalized_lcp_residual"]
+                    ),
+                }
+            )
+    _write_csv(metrics_path, rows)
+    correction = {
+        "status": "CORRECTED_TO_PROJECT_WIDE_FROZEN_GATE",
+        "same_metric_and_normalization": True,
+        "metric_definition": (
+            "max(max(obstacle-solution,0)) / "
+            "max(1, ||solution||_inf, ||obstacle||_inf)"
+        ),
+        "previous_incorrect_gate": 1e-6,
+        "corrected_frozen_normalized_obstacle_tolerance": (
+            MAX_NORMALIZED_PENALTY_OBSTACLE
+        ),
+        "corrected_frozen_normalized_lcp_tolerance": (
+            MAX_NORMALIZED_PENALTY_LCP_RESIDUAL
+        ),
+        "frozen_tolerance_source": (
+            "results/07_method_extensions/00_protocol/tolerance_decision.json"
+        ),
+        "candidate_solutions_or_timings_rerun": False,
+        "candidate_numerical_values_changed": False,
+        "affected_rows": affected,
+        "corrected_vi_pass_count": sum(_as_bool(row["vi_pass"]) for row in rows),
+        "regime_count": len(rows),
+    }
+    correction_path = PROTOCOL_DIR / "metric_gate_correction.json"
+    correction_path.write_text(
+        json.dumps(correction, indent=2, sort_keys=True), encoding="utf-8"
+    )
+    return correction_path
+
+
 def synthesize() -> dict[str, Path]:
     """Create the immutable decision, figures, and plain-language reports."""
 
@@ -577,6 +688,7 @@ def synthesize() -> dict[str, Path]:
     ]
     order_fraction = len(order_pass_rows) / len(AUDIT_REGIME_IDS)
     accuracy_structure_pass = all(_as_bool(row["regime_pass"]) for row in metrics)
+    vi_pass_count = sum(_as_bool(row["vi_pass"]) for row in metrics)
     runtime_pass = bool(timing["runtime_gate_pass"])
     convergence_pass = order_fraction >= MIN_STABLE_ORDER_FRACTION
     promote = accuracy_structure_pass and runtime_pass and convergence_pass
@@ -589,6 +701,9 @@ def synthesize() -> dict[str, Path]:
         "paper_fidelity": "DIRECT_FOR_1D_PUT_WITH_DISCLOSED_SURF_CALL_AND_DOMAIN_EXTENSIONS",
         "all_12_accuracy_structure_pass": accuracy_structure_pass,
         "passing_regimes": sum(_as_bool(row["regime_pass"]) for row in metrics),
+        "strict_vi_passing_regimes": vi_pass_count,
+        "frozen_normalized_obstacle_tolerance": MAX_NORMALIZED_PENALTY_OBSTACLE,
+        "frozen_normalized_lcp_tolerance": MAX_NORMALIZED_PENALTY_LCP_RESIDUAL,
         "regime_count": len(metrics),
         "joint_second_order_fraction": order_fraction,
         "required_joint_second_order_fraction": MIN_STABLE_ORDER_FRACTION,
@@ -1033,7 +1148,15 @@ def _english_report(
         "",
         "## Twelve-regime evidence",
         "",
-        "| Regime | Price max/gate | Boundary error/gate | Delta max/gate | Gamma max/gate | VI residual | Pass |",
+        "The paper stopping rule and the SURF acceptance rule are distinct: all runs may "
+        "converge under the published penalty iteration while still failing the common "
+        "frozen normalized obstacle/LCP tolerance of 1e-12.",
+        "",
+        f"Strict VI gate: {decision['strict_vi_passing_regimes']}/{decision['regime_count']} regimes pass; "
+        f"normalized obstacle and LCP tolerances are both "
+        f"{decision['frozen_normalized_obstacle_tolerance']:.0e}.",
+        "",
+        "| Regime | Price max/gate | Boundary error/gate | Delta max/gate | Gamma max/gate | VI residual/gate | Pass |",
         "|---|---:|---:|---:|---:|---:|:---:|",
     ]
     for row in metrics:
@@ -1042,7 +1165,7 @@ def _english_report(
             f"{float(row['boundary_abs_error']):.3g}/{float(row['boundary_gate']):.3g} | "
             f"{float(row['delta_max_error']):.3g}/{float(row['delta_gate']):.3g} | "
             f"{float(row['gamma_max_error']):.3g}/{float(row['gamma_gate']):.3g} | "
-            f"{float(row['max_normalized_lcp_residual']):.3g} | "
+            f"{float(row['max_normalized_lcp_residual']):.3g}/{MAX_NORMALIZED_PENALTY_LCP_RESIDUAL:.0e} | "
             f"{'yes' if _as_bool(row['regime_pass']) else 'no'} |"
         )
     lines.extend(
@@ -1097,6 +1220,11 @@ def _chinese_report(
         f"12 个 regime 中有 {decision['passing_regimes']}/{decision['regime_count']} 个通过全部"
         "价格、边界、Delta、stable-mask Gamma 和 VI 门槛。",
         "",
+        "论文 penalty 的 tol=1e-7 是迭代停止条件，不是 SURF 正式 obstacle/LCP 验收容差。"
+        f"所有计算都按论文规则收敛，但只有 {decision['strict_vi_passing_regimes']}/"
+        f"{decision['regime_count']} 个 regime 通过项目冻结的 normalized obstacle/LCP "
+        f"{decision['frozen_normalized_obstacle_tolerance']:.0e} 门槛。",
+        "",
         f"联合二阶收敛比例为 {decision['joint_second_order_fraction']:.3f}（门槛 "
         f"{decision['required_joint_second_order_fraction']:.3f}）。",
         "",
@@ -1107,7 +1235,7 @@ def _chinese_report(
         "",
         "## 逐 regime 正式结果",
         "",
-        "| Regime | Price max | Boundary error | Delta max | Stable Gamma max | VI residual | 通过 |",
+        "| Regime | Price max | Boundary error | Delta max | Stable Gamma max | VI residual/gate | 通过 |",
         "|---|---:|---:|---:|---:|---:|:---:|",
     ]
     for row in metrics:
@@ -1115,7 +1243,7 @@ def _chinese_report(
             f"| `{row['regime_id']}` | {float(row['price_max_error']):.3g} | "
             f"{float(row['boundary_abs_error']):.3g} | {float(row['delta_max_error']):.3g} | "
             f"{float(row['gamma_max_error']):.3g} | "
-            f"{float(row['max_normalized_lcp_residual']):.3g} | "
+            f"{float(row['max_normalized_lcp_residual']):.3g}/{MAX_NORMALIZED_PENALTY_LCP_RESIDUAL:.0e} | "
             f"{'是' if _as_bool(row['regime_pass']) else '否'} |"
         )
     if failed:

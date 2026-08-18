@@ -17,11 +17,12 @@ claimed reliable outside that mask.
 The published DIRKa-P framework from in 't Hout was also implemented as a
 separate method-level candidate, including its finite penalty, quadratic time
 mesh, first-two-step BE-P damping, and published uniform-to-2K/sinh-tail
-spatial mesh. It retained regular second-order behaviour but did not match the
-current SURF reference closely enough on 11 of 12 regimes, so the selected
-reference was not changed.
+spatial mesh. It retained regular second-order behaviour, but only 3 of 12
+regimes met the existing strict `1e-12` normalized VI gate and no regime passed
+every frozen accuracy/structure gate. The selected reference was not changed.
 
 - Candidate protocol: [`protocol.json`](../../results/16_published_dirk_p/00_protocol/protocol.json)
+- Metric-gate correction: [`metric_gate_correction.json`](../../results/16_published_dirk_p/00_protocol/metric_gate_correction.json)
 - Twelve-regime metrics: [`regime_metrics.csv`](../../results/16_published_dirk_p/02_audit/regime_metrics.csv)
 - Decision: [`method_decision.json`](../../results/16_published_dirk_p/method_decision.json)
 - Technical report: [`published_dirk_p_technical_report.md`](../../reports/18_published_dirk_p/published_dirk_p_technical_report.md)

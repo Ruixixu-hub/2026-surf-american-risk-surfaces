@@ -1,0 +1,78 @@
+{
+  "affected_rows": [
+    {
+      "corrected_vi_pass": false,
+      "max_normalized_lcp_residual": 1.0380474257942751e-11,
+      "max_normalized_obstacle_violation": 1.0380474257942751e-11,
+      "previous_vi_pass": true,
+      "regime_id": "put_T100_s020_r005_q003"
+    },
+    {
+      "corrected_vi_pass": false,
+      "max_normalized_lcp_residual": 1.3210720373736503e-11,
+      "max_normalized_obstacle_violation": 1.3210720373736503e-11,
+      "previous_vi_pass": true,
+      "regime_id": "call_T100_s020_r005_q006"
+    },
+    {
+      "corrected_vi_pass": false,
+      "max_normalized_lcp_residual": 4.143962950564628e-11,
+      "max_normalized_obstacle_violation": 4.143962950564628e-11,
+      "previous_vi_pass": true,
+      "regime_id": "put_T200_s060_r010_q010"
+    },
+    {
+      "corrected_vi_pass": false,
+      "max_normalized_lcp_residual": 4.164493194747142e-11,
+      "max_normalized_obstacle_violation": 4.164493194747142e-11,
+      "previous_vi_pass": true,
+      "regime_id": "call_T200_s060_r010_q010"
+    },
+    {
+      "corrected_vi_pass": false,
+      "max_normalized_lcp_residual": 3.958944283510846e-12,
+      "max_normalized_obstacle_violation": 3.958944283510846e-12,
+      "previous_vi_pass": true,
+      "regime_id": "put_T200_s020_r001_q010"
+    },
+    {
+      "corrected_vi_pass": false,
+      "max_normalized_lcp_residual": 4.164493194747142e-11,
+      "max_normalized_obstacle_violation": 4.164493194747142e-11,
+      "previous_vi_pass": true,
+      "regime_id": "call_T200_s020_r010_q010"
+    },
+    {
+      "corrected_vi_pass": false,
+      "max_normalized_lcp_residual": 5.190181617820144e-12,
+      "max_normalized_obstacle_violation": 5.190181617820144e-12,
+      "previous_vi_pass": true,
+      "regime_id": "put_T050_s060_r005_q003"
+    },
+    {
+      "corrected_vi_pass": false,
+      "max_normalized_lcp_residual": 1.2204029068382713e-11,
+      "max_normalized_obstacle_violation": 1.2204029068382713e-11,
+      "previous_vi_pass": true,
+      "regime_id": "call_T050_s060_r005_q010"
+    },
+    {
+      "corrected_vi_pass": false,
+      "max_normalized_lcp_residual": 1.607922469338256e-11,
+      "max_normalized_obstacle_violation": 1.607922469338256e-11,
+      "previous_vi_pass": true,
+      "regime_id": "call_T100_s060_r001_q006"
+    }
+  ],
+  "candidate_numerical_values_changed": false,
+  "candidate_solutions_or_timings_rerun": false,
+  "corrected_frozen_normalized_lcp_tolerance": 1e-12,
+  "corrected_frozen_normalized_obstacle_tolerance": 1e-12,
+  "corrected_vi_pass_count": 3,
+  "frozen_tolerance_source": "results/07_method_extensions/00_protocol/tolerance_decision.json",
+  "metric_definition": "max(max(obstacle-solution,0)) / max(1, ||solution||_inf, ||obstacle||_inf)",
+  "previous_incorrect_gate": 1e-06,
+  "regime_count": 12,
+  "same_metric_and_normalization": true,
+  "status": "CORRECTED_TO_PROJECT_WIDE_FROZEN_GATE"
+}

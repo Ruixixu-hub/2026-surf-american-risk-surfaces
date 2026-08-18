@@ -20,7 +20,7 @@ relabelled as extension work.
   bases, and the positive-premium basis operator.
 - [`neural_methods/`](neural_methods/): pointwise MLP, PINN, and DeepONet work.
 - [`experiments/`](experiments/): canonical Experiments 21--64 and the
-  independent published DIRK-P audit (68--71).
+  independent published DIRK-P audit and metric-gate correction (68--72).
 - [`src/`](src/): source snapshot used by the extension experiments.
 - [`tests/`](tests/): extension-specific tests.
 - [`results/`](results/): curated formal evidence and decision files.

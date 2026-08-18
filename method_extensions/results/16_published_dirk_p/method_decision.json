@@ -9,7 +9,8 @@
     {
       "failed_gates": [
         "price",
-        "delta"
+        "delta",
+        "vi"
       ],
       "regime_id": "put_T100_s020_r005_q003"
     },
@@ -17,7 +18,8 @@
       "failed_gates": [
         "price",
         "delta",
-        "gamma"
+        "gamma",
+        "vi"
       ],
       "regime_id": "call_T100_s020_r005_q006"
     },
@@ -49,8 +51,15 @@
     },
     {
       "failed_gates": [
+        "vi"
+      ],
+      "regime_id": "put_T200_s060_r010_q010"
+    },
+    {
+      "failed_gates": [
         "price",
-        "gamma"
+        "gamma",
+        "vi"
       ],
       "regime_id": "call_T200_s060_r010_q010"
     },
@@ -58,43 +67,51 @@
       "failed_gates": [
         "price",
         "delta",
-        "gamma"
+        "gamma",
+        "vi"
       ],
       "regime_id": "put_T200_s020_r001_q010"
     },
     {
       "failed_gates": [
-        "price"
+        "price",
+        "vi"
       ],
       "regime_id": "call_T200_s020_r010_q010"
     },
     {
       "failed_gates": [
-        "price"
+        "price",
+        "vi"
       ],
       "regime_id": "put_T050_s060_r005_q003"
     },
     {
       "failed_gates": [
-        "price"
+        "price",
+        "vi"
       ],
       "regime_id": "call_T050_s060_r005_q010"
     },
     {
       "failed_gates": [
-        "price"
+        "price",
+        "vi"
       ],
       "regime_id": "call_T100_s060_r001_q006"
     }
   ],
+  "frozen_normalized_lcp_tolerance": 1e-12,
+  "frozen_normalized_obstacle_tolerance": 1e-12,
   "joint_second_order_fraction": 1.0,
   "paired_median_candidate_over_reference": 0.9868262689017995,
   "paper_fidelity": "DIRECT_FOR_1D_PUT_WITH_DISCLOSED_SURF_CALL_AND_DOMAIN_EXTENSIONS",
-  "passing_regimes": 1,
+  "passing_regimes": 0,
   "pooled_p95_candidate_over_reference": 1.0311509993191108,
   "poster_modified": false,
   "promotion_rule": "All 12 accuracy/structure gates, >=90% joint second-order fraction, and frozen runtime non-regression gates must pass.",
   "regime_count": 12,
   "required_joint_second_order_fraction": 0.9,
-  "runtime_gate_pass": true
+  "runtime_gate_pass": true,
+  "strict_vi_passing_regimes": 3
 }

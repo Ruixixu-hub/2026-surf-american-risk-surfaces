@@ -9,7 +9,7 @@ is retained as evidence and is not rewritten as a successful method.
 | CN + Policy Iteration | `STRENGTHENED_BENCHMARK_1` | Yes | Best strict iterative solver from the warm-start study |
 | CN + Projected LU | `STRENGTHENED_BENCHMARK_2_NUMERICALLY_CERTIFIED` | Yes | Fastest strict solver on the frozen SURF domain |
 | Rannacher/DIRK/Lobatto/nonuniform-grid audit | `HIGH_ACCURACY_REFERENCE` | Yes | Stable-mask Gamma reference allowed |
-| Published DIRK-P full framework | `RETAIN_DIRK_POLICY_SINH` | Yes, 12-regime audit | Faithful penalty/time/grid framework converged regularly, but only 1/12 regimes passed all frozen accuracy/structure gates and runtime was essentially tied |
+| Published DIRK-P full framework | `RETAIN_DIRK_POLICY_SINH` | Yes, 12-regime audit | All runs met the paper stop, but only 3/12 met SURF's strict `1e-12` VI gate and 0/12 passed every frozen accuracy/structure gate; runtime was essentially tied |
 | Penalty/Newton | `FAILED_CORRECTNESS` | Yes | Unified 67-regime comparator; only 40/67 passed the common LCP gate and it was not faster than Policy overall |
 | Positive-premium MLP warm start | `STOP_LEARNED_ACCELERATION` | Yes | Did not improve end-to-end time over conventional Policy initialization |
 | POD/SVD representation | `REPRESENTATION_GO` | Yes | Low-rank price representation is viable |

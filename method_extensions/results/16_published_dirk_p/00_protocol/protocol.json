@@ -10,7 +10,7 @@
   "environment": {
     "cpu_count": 10,
     "float_precision": "float64",
-    "git_commit": "3aa2d821b9c92d095658782e7bcaf1322a90a7cb",
+    "git_commit": "8b3294941f11c8d7e8ef9bc5e3cb5579e25e4031",
     "machine": "arm64",
     "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
     "processor": "arm",
@@ -25,6 +25,17 @@
   },
   "experiment": "published_dirk_p_high_accuracy_candidate",
   "frozen_reference_error_scales_sha256": "d3cfef930a1a7371149e2d839ca0d6833dc348cbfb5f04e5b19692d00ba0438a",
+  "metric_gate_correction": {
+    "corrected_frozen_normalized_lcp_gate": 1e-12,
+    "corrected_frozen_normalized_obstacle_gate": 1e-12,
+    "numerical_outputs_changed": false,
+    "previous_incorrect_normalized_lcp_gate": 1e-06,
+    "previous_incorrect_normalized_obstacle_gate": 1e-06,
+    "reason": "The initial DIRK-P study incorrectly introduced candidate-specific 1e-6 acceptance limits for the common normalized obstacle and LCP residuals. Those quantities are produced by the same compute_lcp_residual function and normalization as the project-wide Experiment 21 metrics, whose frozen limits are 1e-12. The formal rows were rescored without rerunning or changing any candidate solution, timing, grid, or financial-output data.",
+    "same_metric_and_normalization": true,
+    "source": "results/07_method_extensions/00_protocol/tolerance_decision.json",
+    "version": 3
+  },
   "paper": {
     "arxiv": "https://arxiv.org/abs/2401.13361",
     "author": "Karel J. in 't Hout",
@@ -44,8 +55,8 @@
     "minimum_empirical_order": 1.5,
     "minimum_joint_order_fraction": 0.9,
     "no_post_result_tuning": true,
-    "normalized_penalty_lcp_residual_max": 1e-06,
-    "normalized_penalty_obstacle_max": 1e-06,
+    "normalized_penalty_lcp_residual_max": 1e-12,
+    "normalized_penalty_obstacle_max": 1e-12,
     "per_regime_price_delta_gamma_max_error": "candidate-vs-current-reference <= 1.25 times the existing regime-specific M480-vs-M960 SURF sinh reference error",
     "q0_call": "no fabricated boundary and candidate BSM error <= 1.25 * reference BSM error",
     "reference_error_multiplier": 1.25,
@@ -97,9 +108,9 @@
       "sha256": "49605fff4ed2dd2071fce53bac505e27d1b56c62f1cf7527efe100a1b11acf0a"
     },
     {
-      "bytes": 50369,
+      "bytes": 56784,
       "path": "src/american_risk_surfaces/method_extensions/published_dirk_p_study.py",
-      "sha256": "e022b100bd2e56841dd61ef32a96c52eacf5946d1b3d1b45046c553ace9b4524"
+      "sha256": "fbe366181acea0f33588fa79cfc9bc8f0b02b08b4a84d80c521fc6a9ad7ff012"
     },
     {
       "bytes": 361,
@@ -122,6 +133,11 @@
       "sha256": "b74c729edd0bdd12a62d06416c046040c8a3aff57f37c15b3f8c45eb1fcd7c0e"
     },
     {
+      "bytes": 775,
+      "path": "experiments/72_published_dirk_p_metric_gate_correction.py",
+      "sha256": "23e6cd8bf810ae1e5aeae845060f81142a2e04c584a2c45613a3b5c65188bc33"
+    },
+    {
       "bytes": 13688,
       "path": "experiments/23_greek_time_integrator_audit.py",
       "sha256": "6bf8be815f4aae99dfd4998353dec3f06605759f4754cf7630f0b618482bed8e"
@@ -135,6 +151,11 @@
       "bytes": 21437,
       "path": "results/07_method_extensions/03_greek_audit/spatial_convergence.csv",
       "sha256": "6b8d838d45c490fbae99f80324c87d4c9335f65a46dee47ceeaf0ff108e6d4ee"
+    },
+    {
+      "bytes": 313,
+      "path": "results/07_method_extensions/00_protocol/tolerance_decision.json",
+      "sha256": "4c3d16c808663684753a0f7b299d27ef2ecf03a6f35c476a72ab8a478b3acb9a"
     }
   ],
   "surf_application_frozen": {

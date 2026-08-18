@@ -15,9 +15,17 @@ from american_risk_surfaces.solvers.published_dirk_p import (
     american_published_dirk_p_price,
     published_penalty_lcp_solve,
 )
+from american_risk_surfaces.method_extensions.published_dirk_p_study import (
+    MAX_NORMALIZED_PENALTY_LCP_RESIDUAL,
+    MAX_NORMALIZED_PENALTY_OBSTACLE,
+)
 
 
 class PublishedDIRKPTests(unittest.TestCase):
+    def test_formal_vi_gates_match_project_wide_frozen_tolerance(self) -> None:
+        self.assertEqual(1e-12, MAX_NORMALIZED_PENALTY_OBSTACLE)
+        self.assertEqual(1e-12, MAX_NORMALIZED_PENALTY_LCP_RESIDUAL)
+
     def test_published_grid_matches_piecewise_formula(self) -> None:
         grid = inthout_published_spot_grid(5.0, 1.0, 50)
         d = 0.1
