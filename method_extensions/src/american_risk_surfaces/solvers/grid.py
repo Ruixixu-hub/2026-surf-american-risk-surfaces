@@ -78,6 +78,49 @@ def sinh_spot_grid(
     return grid
 
 
+def inthout_published_spot_grid(
+    Smax: float,
+    K: float,
+    M: int,
+    *,
+    d: float | None = None,
+) -> np.ndarray:
+    """Return the nonuniform spatial grid used by in 't Hout.
+
+    The construction is the one referenced by the American-option Greeks
+    paper: an artificial uniform coordinate is mapped linearly onto
+    ``[0, 2 K]`` and by a sinh tail onto ``(2 K, Smax]``.  The paper freezes
+    ``d = K / 10``; the keyword is exposed only so the formula can be tested.
+
+    Unlike :func:`sinh_spot_grid`, this mesh is *uniform* over ``[0, 2 K]``
+    and only uses a sinh transformation in the far-field tail.
+    """
+
+    domain_max = float(Smax)
+    strike = float(K)
+    intervals = _validate_interval_count("M", M, minimum=3)
+    if strike <= 0.0:
+        raise ValueError("K must be positive.")
+    if domain_max <= 2.0 * strike:
+        raise ValueError("Smax must be greater than 2K for the published grid.")
+    scale = strike / 10.0 if d is None else float(d)
+    if not np.isfinite(scale) or scale <= 0.0:
+        raise ValueError("d must be positive and finite.")
+
+    xi_interface = 2.0 * strike / scale
+    xi_max = xi_interface + np.arcsinh(domain_max / scale - xi_interface)
+    xi = np.linspace(0.0, float(xi_max), intervals + 1)
+    grid = np.where(
+        xi <= xi_interface,
+        scale * xi,
+        2.0 * strike + scale * np.sinh(xi - xi_interface),
+    )
+    grid[0], grid[-1] = 0.0, domain_max
+    if len(grid) != intervals + 1 or np.any(np.diff(grid) <= 0.0):
+        raise RuntimeError("failed to construct the published in 't Hout grid.")
+    return grid
+
+
 def interior_indices(M: int) -> np.ndarray:
     """Return spot-grid interior indices, excluding boundary nodes.
 

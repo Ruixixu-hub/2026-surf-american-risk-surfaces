@@ -69,5 +69,7 @@ python -m pytest -q tests
 - 58--61: Projected LU validation and held-out benchmark.
 - 62--64: unified poster strict-solver comparison, numerical-reference audit,
   and evidence synthesis.
+- 68--71: published in 't Hout DIRK-P protocol, paper-case reproduction,
+  12-regime high-accuracy audit, and decision synthesis.
 
 Do not rerun or tune held-out experiments after reading their formal scores.

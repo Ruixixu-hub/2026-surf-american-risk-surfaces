@@ -1,0 +1,100 @@
+{
+  "all_12_accuracy_structure_pass": false,
+  "candidate": "published DIRKa-P + quadratic time grid + published nonuniform spatial grid",
+  "convergence_gate_pass": true,
+  "current_reference": "DIRK + Policy Iteration + SURF strike-concentrated sinh grid",
+  "current_reference_modified": false,
+  "decision": "RETAIN_DIRK_POLICY_SINH",
+  "failed_regimes": [
+    {
+      "failed_gates": [
+        "price",
+        "delta"
+      ],
+      "regime_id": "put_T100_s020_r005_q003"
+    },
+    {
+      "failed_gates": [
+        "price",
+        "delta",
+        "gamma"
+      ],
+      "regime_id": "call_T100_s020_r005_q006"
+    },
+    {
+      "failed_gates": [
+        "price",
+        "delta",
+        "gamma",
+        "q0_bsm"
+      ],
+      "regime_id": "call_T100_s020_r005_q000"
+    },
+    {
+      "failed_gates": [
+        "price",
+        "delta",
+        "gamma"
+      ],
+      "regime_id": "put_T025_s020_r001_q000"
+    },
+    {
+      "failed_gates": [
+        "price",
+        "delta",
+        "gamma",
+        "q0_bsm"
+      ],
+      "regime_id": "call_T025_s020_r001_q000"
+    },
+    {
+      "failed_gates": [
+        "price",
+        "gamma"
+      ],
+      "regime_id": "call_T200_s060_r010_q010"
+    },
+    {
+      "failed_gates": [
+        "price",
+        "delta",
+        "gamma"
+      ],
+      "regime_id": "put_T200_s020_r001_q010"
+    },
+    {
+      "failed_gates": [
+        "price"
+      ],
+      "regime_id": "call_T200_s020_r010_q010"
+    },
+    {
+      "failed_gates": [
+        "price"
+      ],
+      "regime_id": "put_T050_s060_r005_q003"
+    },
+    {
+      "failed_gates": [
+        "price"
+      ],
+      "regime_id": "call_T050_s060_r005_q010"
+    },
+    {
+      "failed_gates": [
+        "price"
+      ],
+      "regime_id": "call_T100_s060_r001_q006"
+    }
+  ],
+  "joint_second_order_fraction": 1.0,
+  "paired_median_candidate_over_reference": 0.9868262689017995,
+  "paper_fidelity": "DIRECT_FOR_1D_PUT_WITH_DISCLOSED_SURF_CALL_AND_DOMAIN_EXTENSIONS",
+  "passing_regimes": 1,
+  "pooled_p95_candidate_over_reference": 1.0311509993191108,
+  "poster_modified": false,
+  "promotion_rule": "All 12 accuracy/structure gates, >=90% joint second-order fraction, and frozen runtime non-regression gates must pass.",
+  "regime_count": 12,
+  "required_joint_second_order_fraction": 0.9,
+  "runtime_gate_pass": true
+}

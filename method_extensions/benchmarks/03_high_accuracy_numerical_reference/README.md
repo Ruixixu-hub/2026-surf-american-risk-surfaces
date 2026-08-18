@@ -14,4 +14,16 @@ claimed reliable outside that mask.
 - Temporal decision: [`greek_decision.json`](../../results/07_method_extensions/03_greek_audit/greek_decision.json)
 - Spatial decision: [`spatial_greek_decision.json`](../../results/07_method_extensions/03_greek_audit/spatial_greek_decision.json)
 
+The published DIRKa-P framework from in 't Hout was also implemented as a
+separate method-level candidate, including its finite penalty, quadratic time
+mesh, first-two-step BE-P damping, and published uniform-to-2K/sinh-tail
+spatial mesh. It retained regular second-order behaviour but did not match the
+current SURF reference closely enough on 11 of 12 regimes, so the selected
+reference was not changed.
+
+- Candidate protocol: [`protocol.json`](../../results/16_published_dirk_p/00_protocol/protocol.json)
+- Twelve-regime metrics: [`regime_metrics.csv`](../../results/16_published_dirk_p/02_audit/regime_metrics.csv)
+- Decision: [`method_decision.json`](../../results/16_published_dirk_p/method_decision.json)
+- Technical report: [`published_dirk_p_technical_report.md`](../../reports/18_published_dirk_p/published_dirk_p_technical_report.md)
+
 This reference does not replace the same-grid speed benchmarks.
