@@ -21,6 +21,8 @@ __all__ = (
     "GreekDiagnostics",
     "finite_difference_delta",
     "finite_difference_gamma",
+    "finite_difference_delta_nonuniform",
+    "finite_difference_gamma_nonuniform",
     "payoff_kink_mask",
     "boundary_near_mask",
     "maturity_row_mask",
@@ -168,6 +170,42 @@ def finite_difference_gamma(spot_grid: Any, values: Any) -> np.ndarray:
             + value_array[:, :-2]
         ) / (dS * dS)
     return gamma
+
+
+def finite_difference_delta_nonuniform(spot_grid: Any, values: Any) -> np.ndarray:
+    """Compute a three-point first derivative on a nonuniform spot grid."""
+
+    spots = _validated_strict_spot_grid(spot_grid)
+    array = _validated_values(values, len(spots))
+    left = spots[1:-1] - spots[:-2]
+    right = spots[2:] - spots[1:-1]
+    a = -right / (left * (left + right))
+    b = (right - left) / (left * right)
+    c = left / (right * (left + right))
+    result = np.full(array.shape, np.nan, dtype=float)
+    if array.ndim == 1:
+        result[1:-1] = a * array[:-2] + b * array[1:-1] + c * array[2:]
+    else:
+        result[:, 1:-1] = a * array[:, :-2] + b * array[:, 1:-1] + c * array[:, 2:]
+    return result
+
+
+def finite_difference_gamma_nonuniform(spot_grid: Any, values: Any) -> np.ndarray:
+    """Compute a three-point second derivative on a nonuniform spot grid."""
+
+    spots = _validated_strict_spot_grid(spot_grid)
+    array = _validated_values(values, len(spots))
+    left = spots[1:-1] - spots[:-2]
+    right = spots[2:] - spots[1:-1]
+    a = 2.0 / (left * (left + right))
+    b = -2.0 / (left * right)
+    c = 2.0 / (right * (left + right))
+    result = np.full(array.shape, np.nan, dtype=float)
+    if array.ndim == 1:
+        result[1:-1] = a * array[:-2] + b * array[1:-1] + c * array[2:]
+    else:
+        result[:, 1:-1] = a * array[:, :-2] + b * array[:, 1:-1] + c * array[:, 2:]
+    return result
 
 
 def payoff_kink_mask(
@@ -558,6 +596,15 @@ def _validated_spot_grid(spot_grid: Any) -> tuple[np.ndarray, float]:
     if not np.allclose(spacing, spacing[0]):
         raise ValueError("spot_grid must be uniformly spaced.")
     return spots, float(spacing[0])
+
+
+def _validated_strict_spot_grid(spot_grid: Any) -> np.ndarray:
+    spots = np.asarray(spot_grid, dtype=float)
+    if spots.ndim != 1 or len(spots) < 3:
+        raise ValueError("spot_grid must be one-dimensional with at least three nodes.")
+    if np.any(~np.isfinite(spots)) or np.any(np.diff(spots) <= 0.0):
+        raise ValueError("spot_grid must be finite and strictly increasing.")
+    return spots
 
 
 def _validated_values(values: Any, spot_count: int) -> np.ndarray:

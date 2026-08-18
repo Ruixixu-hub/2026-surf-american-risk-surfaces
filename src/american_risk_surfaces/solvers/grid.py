@@ -39,6 +39,45 @@ def uniform_tau_grid(T: float, N: int) -> tuple[np.ndarray, float]:
     return np.linspace(0.0, maturity, intervals + 1), dtau
 
 
+def sinh_spot_grid(
+    Smax: float,
+    K: float,
+    M: int,
+    concentration_width: float | None = None,
+) -> np.ndarray:
+    """Return a monotone sinh grid concentrated around the strike.
+
+    The grid includes ``0``, ``K``, and ``Smax`` exactly. The two sinh
+    coordinate pieces use interval counts proportional to their transformed
+    lengths, avoiding an arbitrary 50/50 split when ``K`` is off-center.
+    """
+
+    domain_max = float(Smax)
+    strike = float(K)
+    intervals = _validate_interval_count("M", M, minimum=4)
+    if not 0.0 < strike < domain_max:
+        raise ValueError("K must lie strictly inside (0, Smax).")
+    width = 0.1 * strike if concentration_width is None else float(concentration_width)
+    if width <= 0.0:
+        raise ValueError("concentration_width must be positive.")
+    left_coordinate = float(np.arcsinh(-strike / width))
+    right_coordinate = float(np.arcsinh((domain_max - strike) / width))
+    transformed_fraction = -left_coordinate / (right_coordinate - left_coordinate)
+    left_intervals = min(max(int(round(intervals * transformed_fraction)), 2), intervals - 2)
+    right_intervals = intervals - left_intervals
+    left = strike + width * np.sinh(
+        np.linspace(left_coordinate, 0.0, left_intervals + 1)
+    )
+    right = strike + width * np.sinh(
+        np.linspace(0.0, right_coordinate, right_intervals + 1)
+    )
+    grid = np.concatenate([left, right[1:]])
+    grid[0], grid[left_intervals], grid[-1] = 0.0, strike, domain_max
+    if len(grid) != intervals + 1 or np.any(np.diff(grid) <= 0.0):
+        raise RuntimeError("failed to construct a valid sinh spot grid.")
+    return grid
+
+
 def interior_indices(M: int) -> np.ndarray:
     """Return spot-grid interior indices, excluding boundary nodes.
 
