@@ -116,6 +116,10 @@ def train_single_regime_pinn(
     status_path = output / f"{run_name}_status.json"
     heartbeat_path = output / f"{run_name}_heartbeat.json"
     config_hash = training_config_hash(problem, config)
+    compatible_resume_hashes = {
+        config_hash,
+        _legacy_training_config_hash(problem, config, max_seconds=3600.0),
+    }
 
     device = _resolve_device(config.device)
     _set_seed(config.seed)
@@ -147,9 +151,14 @@ def train_single_regime_pinn(
 
     if resume and status_path.exists():
         terminal = json.loads(status_path.read_text(encoding="utf-8"))
-        if terminal.get("config_hash") != config_hash:
+        if terminal.get("config_hash") not in compatible_resume_hashes:
             raise ValueError("terminal status config hash does not match the requested run.")
-        if terminal.get("status") in {"COMPLETE", "FAILED", "BUDGET_EXHAUSTED"}:
+        terminal_status = terminal.get("status")
+        budget_can_resume = (
+            terminal_status == "BUDGET_EXHAUSTED"
+            and float(terminal.get("training_seconds", 0.0)) < config.max_seconds
+        )
+        if terminal_status in {"COMPLETE", "FAILED", "BUDGET_EXHAUSTED"} and not budget_can_resume:
             return PINNRunResult(
                 status=terminal["status"],
                 checkpoint_path=Path(terminal["checkpoint_path"]),
@@ -162,7 +171,7 @@ def train_single_regime_pinn(
 
     if resume and latest_path.exists():
         saved = torch.load(latest_path, map_location=device, weights_only=False)
-        if saved.get("config_hash") != config_hash:
+        if saved.get("config_hash") not in compatible_resume_hashes:
             raise ValueError("checkpoint config hash does not match the requested run.")
         model.load_state_dict(saved["state_dict"])
         optimizer.load_state_dict(saved["optimizer_state"])
@@ -422,9 +431,32 @@ def train_single_regime_pinn(
 
 
 def training_config_hash(problem: PINNProblem, config: PINNTrainingConfig) -> str:
+    """Hash optimization semantics while excluding the operational wall-clock guard."""
+
+    config_payload = {**asdict(config), "network_spec": config.network_spec.to_dict()}
+    config_payload.pop("max_seconds", None)
     payload = {
         "problem": asdict(problem),
-        "config": {**asdict(config), "network_spec": config.network_spec.to_dict()},
+        "config": config_payload,
+        "protocol": "surf_pinn_cde_v1",
+    }
+    serialized = json.dumps(payload, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(serialized.encode("utf-8")).hexdigest()
+
+
+def _legacy_training_config_hash(
+    problem: PINNProblem,
+    config: PINNTrainingConfig,
+    *,
+    max_seconds: float,
+) -> str:
+    """Reproduce pre-parallel hashes so one-hour checkpoints remain resumable."""
+
+    config_payload = {**asdict(config), "network_spec": config.network_spec.to_dict()}
+    config_payload["max_seconds"] = float(max_seconds)
+    payload = {
+        "problem": asdict(problem),
+        "config": config_payload,
         "protocol": "surf_pinn_cde_v1",
     }
     serialized = json.dumps(payload, sort_keys=True, separators=(",", ":"))

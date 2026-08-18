@@ -41,10 +41,19 @@ def main() -> None:
     parser.add_argument("phase", choices=("train", "reference", "score", "all"))
     parser.add_argument("--device", choices=("auto", "cpu", "cuda"), default="cuda")
     parser.add_argument("--seed", type=int, default=101)
+    parser.add_argument("--shard-index", type=int, default=0)
+    parser.add_argument("--shard-count", type=int, default=1)
+    parser.add_argument("--max-seconds", type=float, default=3600.0)
     parser.add_argument("--resume", action="store_true")
     args = parser.parse_args()
     if args.seed not in SEEDS:
         raise ValueError(f"seed must be one of the frozen seeds: {SEEDS}")
+    if args.shard_count < 1 or not 0 <= args.shard_index < args.shard_count:
+        raise ValueError("shard controls must satisfy 0 <= index < count")
+    if args.phase in {"reference", "score", "all"} and args.shard_count != 1:
+        raise ValueError("parallel shards may run only the train phase")
+    if args.max_seconds <= 0.0:
+        raise ValueError("max-seconds must be positive")
 
     frozen_path = RESULTS_DIR / "03_validation_gates" / "frozen_pinn_configuration.json"
     if not frozen_path.exists():
@@ -55,7 +64,16 @@ def main() -> None:
     _write_pilot_protocol(output, frozen_path, frozen, args.seed)
 
     if args.phase in {"train", "all"}:
-        _train(output, frozen, args.seed, args.device, args.resume)
+        _train(
+            output,
+            frozen,
+            args.seed,
+            args.device,
+            args.resume,
+            args.shard_index,
+            args.shard_count,
+            args.max_seconds,
+        )
     if args.phase in {"reference", "all"}:
         _reference(output)
     if args.phase in {"score", "all"}:
@@ -68,6 +86,9 @@ def _train(
     seed: int,
     device: str,
     resume: bool,
+    shard_index: int,
+    shard_count: int,
+    max_seconds: float,
 ) -> None:
     rows = run_training_jobs(
         arms=("D",),
@@ -75,6 +96,9 @@ def _train(
         output_dir=output / "training",
         device=device,
         resume=resume,
+        shard_index=shard_index,
+        shard_count=shard_count,
+        max_seconds=max_seconds,
         seeds=(seed,),
         adam_steps=int(frozen["adam_steps"]),
         lbfgs_max_evaluations=int(frozen["lbfgs_max_evaluations"]),
@@ -208,11 +232,17 @@ def _pilot_summary(
 
 
 def _all_status_rows(directory: Path) -> list[dict[str, str]]:
-    rows: list[dict[str, str]] = []
+    rows_by_key: dict[tuple[str, str, str, str], dict[str, str]] = {}
     for path in sorted(directory.glob("training_status_shard_*.csv")):
         with path.open(newline="", encoding="utf-8") as handle:
-            rows.extend(csv.DictReader(handle))
-    return rows
+            for row in csv.DictReader(handle):
+                key = (row["arm"], row["split"], row["regime_id"], row["seed"])
+                previous = rows_by_key.get(key)
+                if previous is None or (
+                    previous.get("status") != "COMPLETE" and row.get("status") == "COMPLETE"
+                ):
+                    rows_by_key[key] = row
+    return [rows_by_key[key] for key in sorted(rows_by_key)]
 
 
 def _write_pilot_protocol(

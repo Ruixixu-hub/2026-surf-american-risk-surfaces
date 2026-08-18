@@ -44,6 +44,28 @@ bash scripts/linux/run_autodl_pinn_pilot.sh C 101 all
 
 意外中断后执行相同命令，训练会从checkpoint恢复。
 
+### RTX 5090并行运行
+
+单个PINN网络较小，RTX 5090可以先使用4个独立进程训练不同regime：
+
+```bash
+bash scripts/linux/run_autodl_pinn_parallel.sh C 101 4
+```
+
+脚本会依次完成：并行训练、生成67个高精度参考、一次性评分。每个分片有独立日志：
+
+```text
+results/08_pinn_gap/04_heldout_pilots/parallel_logs/
+```
+
+已有的顺序训练checkpoint会被`--resume`复用。不要让原来的顺序命令和并行命令同时运行。训练步数仍固定为冻结配置；并行脚本只把每个任务的墙钟安全上限自动设为`并行数×1小时`，避免共享GPU造成误判超时。
+
+只运行一个指定分片的底层命令是：
+
+```bash
+bash scripts/linux/run_autodl_pinn_pilot.sh C 101 train 0 4 14400
+```
+
 若只训练而暂不打开held-out参考和评分：
 
 ```bash

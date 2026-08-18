@@ -6,6 +6,7 @@ import inspect
 import math
 import tempfile
 import unittest
+from dataclasses import replace
 from pathlib import Path
 
 import numpy as np
@@ -36,6 +37,7 @@ from american_risk_surfaces.pinn.protocol import (
     load_regime_records,
 )
 from american_risk_surfaces.pinn.sampling import PINNSampler
+from american_risk_surfaces.pinn.training import training_config_hash
 from american_risk_surfaces.pinn.reference import generate_reference_cache
 from american_risk_surfaces.pinn.scoring import score_classical_baselines
 from american_risk_surfaces.solvers.american_lcp import (
@@ -189,6 +191,56 @@ class PINNSamplingAndTrainingTests(unittest.TestCase):
             self.assertGreaterEqual(surface.transfer_seconds, 0.0)
             heartbeat = next(Path(directory).glob("*_heartbeat.json"))
             self.assertIn('"phase": "COMPLETE"', heartbeat.read_text(encoding="utf-8"))
+
+    def test_wall_clock_guard_does_not_change_training_hash(self) -> None:
+        problem = PINNProblem("budget_hash", "put", 0.25, 0.01, 0.0, 0.2)
+        config = PINNTrainingConfig(
+            arm="C",
+            seed=17,
+            device="cpu",
+            adam_steps=1,
+            lbfgs_max_evaluations=0,
+            interior_batch_size=16,
+            boundary_batch_size=4,
+            checkpoint_interval=1,
+            gradient_log_interval=1,
+            pool_size=64,
+            candidate_size=32,
+            max_seconds=1.0,
+            network_spec=NetworkSpec(width=8, blocks=1, layers_per_block=2),
+        )
+        self.assertEqual(
+            training_config_hash(problem, config),
+            training_config_hash(problem, replace(config, max_seconds=14400.0)),
+        )
+
+    def test_budget_exhausted_run_can_resume_with_a_larger_guard(self) -> None:
+        problem = PINNProblem("budget_resume", "put", 0.25, 0.01, 0.0, 0.2)
+        config = PINNTrainingConfig(
+            arm="C",
+            seed=17,
+            device="cpu",
+            adam_steps=1,
+            lbfgs_max_evaluations=0,
+            interior_batch_size=16,
+            boundary_batch_size=4,
+            checkpoint_interval=1,
+            gradient_log_interval=1,
+            pool_size=64,
+            candidate_size=32,
+            max_seconds=1e-12,
+            network_spec=NetworkSpec(width=8, blocks=1, layers_per_block=2),
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            exhausted = train_single_regime_pinn(problem, config, output_dir=directory)
+            self.assertEqual(exhausted.status, "BUDGET_EXHAUSTED")
+            resumed = train_single_regime_pinn(
+                problem,
+                replace(config, max_seconds=30.0),
+                output_dir=directory,
+                resume=True,
+            )
+            self.assertEqual(resumed.status, "COMPLETE")
 
     def test_label_free_training_modules_do_not_open_reference_bundle(self) -> None:
         from american_risk_surfaces.pinn import study, training

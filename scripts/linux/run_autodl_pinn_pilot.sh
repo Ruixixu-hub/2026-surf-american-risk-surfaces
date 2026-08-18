@@ -2,13 +2,16 @@
 set -euo pipefail
 
 usage() {
-  echo "Usage: $0 C|D [seed] [train|reference|score|all]" >&2
+  echo "Usage: $0 C|D [seed] [train|reference|score|all] [shard_index] [shard_count] [max_seconds]" >&2
   exit 2
 }
 
 arm="${1:-}"
 seed="${2:-101}"
 phase="${3:-all}"
+shard_index="${4:-0}"
+shard_count="${5:-1}"
+max_seconds="${6:-3600}"
 
 case "$arm" in
   C) experiment="experiments/33b_arm_c_seed101_pilot.py" ;;
@@ -51,6 +54,16 @@ args=("$experiment" "$phase" --device cuda --seed "$seed")
 if [[ "$phase" == "train" || "$phase" == "all" ]]; then
   args+=(--resume)
 fi
+if [[ "$phase" == "train" ]]; then
+  args+=(
+    --shard-index "$shard_index"
+    --shard-count "$shard_count"
+    --max-seconds "$max_seconds"
+  )
+elif [[ "$shard_index" != "0" || "$shard_count" != "1" ]]; then
+  echo "Sharding is supported only for the train phase" >&2
+  exit 2
+fi
 
-echo "Running Arm $arm, seed $seed, phase $phase"
+echo "Running Arm $arm, seed $seed, phase $phase, shard $shard_index/$shard_count, max_seconds=$max_seconds"
 exec "$python_bin" "${args[@]}"
