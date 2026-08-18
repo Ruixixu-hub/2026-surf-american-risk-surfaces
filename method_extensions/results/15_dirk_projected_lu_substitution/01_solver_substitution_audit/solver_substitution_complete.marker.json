@@ -1,0 +1,19 @@
+{
+  "decision": "RETAIN_DIRK_POLICY_SINH",
+  "output_hashes": {
+    "boundary_paths.csv": "740e8089111d9d90e799c8b61a213fbf09bba587c09b44d06c41bc790ef7d63a",
+    "final_price_greek_profiles.csv": "59bfbb66b22928edc0370556f550c0d73ee054a82aa183d82b83187e54c7ccb8",
+    "method_decision.json": "f41ee78f78cc6111a3411a019fd508cc17fe9bb257340e616afb1079039fa844",
+    "paired_runtime_by_regime.csv": "75480df17d3a2c0dc3de865a095440fa7e81702070e17d6fc70d6ac6a0bce5ae",
+    "regime_correctness_and_agreement.csv": "36d75f9d1f45ec5c9a290e660c60b314fddd7484bea0a9cdba492ca667961a71",
+    "runtime_samples.csv": "88ea6c4a23bf917196f40551d06ac284377c0c3d269279a5357ff5fce52ade48",
+    "runtime_summary.csv": "0cc52f3c487622a0ef734a23e3eebbdc7f284df97bdd5508ffe5f694af68612b",
+    "stage_structural_checks.csv": "fe10a8da09953f8c416711199af6270b8a441b6f0be3bcd4781466f9b1466728",
+    "surface_hashes.csv": "0f9d9e12bf1acc4d8d9cca5351e1a8545a1ca9aa7300145d02f7ce7100e66ee6"
+  },
+  "protocol_hash": "8c199cd7b9a008e6afe32fd27e79a584c18840ce4a1f8fb194f9663e35223450",
+  "regime_count": 12,
+  "repeats": 30,
+  "status": "COMPLETE",
+  "warmups": 5
+}

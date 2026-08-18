@@ -1,0 +1,2 @@
+# Preserve formal evidence bytes and keep large CSVs out of text diffs.
+*.csv -text -diff

@@ -22,6 +22,13 @@ from american_risk_surfaces.solvers.operator import (
     black_scholes_operator_coefficients_nonuniform,
 )
 from american_risk_surfaces.solvers.policy_iteration import policy_iteration_lcp_solve
+from american_risk_surfaces.solvers.projected_lu import (
+    ProjectedLUEligibility,
+    ProjectedLUFactorization,
+    audit_projected_lu_eligibility,
+    factorize_projected_lu,
+    projected_lu_lcp_solve,
+)
 
 
 DIRK_THETA = 1.0 - 0.5 * math.sqrt(2.0)
@@ -30,8 +37,10 @@ __all__ = (
     "DIRK_THETA",
     "AmericanGreekIntegratorResult",
     "PenaltyStageResult",
+    "ProjectedLUDIRKStageAudit",
     "american_theta_policy_price",
     "american_dirk_policy_price",
+    "american_dirk_projected_lu_price",
     "american_lobatto_penalty_price",
     "as_legacy_integrator_result",
     "quadratic_tau_grid",
@@ -44,6 +53,23 @@ class PenaltyStageResult:
     iterations: int
     final_relative_update: float
     active_set_changes: tuple[int, ...]
+
+
+@dataclass(frozen=True)
+class ProjectedLUDIRKStageAudit:
+    """Structural and timing evidence for one Projected-LU implicit stage."""
+
+    step_index: int
+    stage_name: str
+    dt: float
+    mode: str
+    matrix_sha256: str
+    factorization_seconds: float
+    precheck_seconds: float
+    postcheck_seconds: float
+    pre_eligibility: ProjectedLUEligibility
+    post_eligibility: ProjectedLUEligibility
+    result: LCPSolveResult
 
 
 @dataclass(frozen=True)
@@ -60,6 +86,7 @@ class AmericanGreekIntegratorResult:
     max_obstacle_violation: float
     total_seconds: float
     time_grid: str
+    projected_lu_stage_audits: tuple[ProjectedLUDIRKStageAudit, ...] = ()
 
 
 def quadratic_tau_grid(T: float, N: int) -> np.ndarray:
@@ -88,6 +115,28 @@ def american_dirk_policy_price(
         quadratic_time=quadratic_time,
         damping_steps=damping_steps,
         spot_grid=spot_grid,
+        lcp_solver="policy_iteration",
+    )
+
+
+def american_dirk_projected_lu_price(
+    config: AmericanLCPConfig,
+    *,
+    theta: float = DIRK_THETA,
+    quadratic_time: bool = True,
+    damping_steps: int = 2,
+    spot_grid: np.ndarray | None = None,
+) -> AmericanGreekIntegratorResult:
+    """The frozen Cash-DIRK path with option-directed Projected-LU stages."""
+
+    return _run_integrator(
+        config,
+        method="dirk_projected_lu",
+        theta=float(theta),
+        quadratic_time=quadratic_time,
+        damping_steps=damping_steps,
+        spot_grid=spot_grid,
+        lcp_solver="projected_lu_single",
     )
 
 
@@ -109,6 +158,7 @@ def american_theta_policy_price(
         quadratic_time=quadratic_time,
         damping_steps=damping_steps,
         spot_grid=spot_grid,
+        lcp_solver="policy_iteration",
     )
 
 
@@ -136,13 +186,20 @@ def american_lobatto_penalty_price(
         penalty_tolerance=penalty_tolerance,
         penalty_max_iter=penalty_max_iter,
         spot_grid=spot_grid,
+        lcp_solver="policy_iteration",
     )
 
 
 def _run_integrator(
     config: AmericanLCPConfig,
     *,
-    method: Literal["cn_policy", "rannacher_cn_policy", "dirk_policy", "lobatto_penalty"],
+    method: Literal[
+        "cn_policy",
+        "rannacher_cn_policy",
+        "dirk_policy",
+        "dirk_projected_lu",
+        "lobatto_penalty",
+    ],
     theta: float,
     quadratic_time: bool,
     damping_steps: int,
@@ -150,6 +207,7 @@ def _run_integrator(
     penalty_tolerance: float = 1e-10,
     penalty_max_iter: int = 100,
     spot_grid: np.ndarray | None = None,
+    lcp_solver: Literal["policy_iteration", "projected_lu_single"] = "policy_iteration",
 ) -> AmericanGreekIntegratorResult:
     if not isinstance(config, AmericanLCPConfig):
         raise ValueError("config must be an AmericanLCPConfig.")
@@ -157,6 +215,10 @@ def _run_integrator(
         raise ValueError("theta must lie in (0, 1].")
     if damping_steps < 0:
         raise ValueError("damping_steps must be nonnegative.")
+    if lcp_solver not in {"policy_iteration", "projected_lu_single"}:
+        raise ValueError("unsupported LCP stage solver")
+    if method == "dirk_projected_lu" and lcp_solver != "projected_lu_single":
+        raise ValueError("dirk_projected_lu requires Projected LU")
     started = perf_counter()
     if spot_grid is None:
         spots, dS = uniform_spot_grid(config.Smax, config.M)
@@ -179,6 +241,7 @@ def _run_integrator(
     value_grid = np.empty((config.N + 1, config.M + 1), dtype=float)
     value_grid[0] = values
     all_stage_results: list[tuple[LCPSolveResult | PenaltyStageResult, ...]] = []
+    projected_lu_audits: list[ProjectedLUDIRKStageAudit] = []
     for step in range(1, config.N + 1):
         old_tau = float(taus[step - 1])
         new_tau = float(taus[step])
@@ -188,7 +251,7 @@ def _run_integrator(
         values[0] = old_lower
         values[-1] = old_upper
         if step <= damping_steps:
-            values, stage = _backward_euler_stage(
+            values, stage, audit = _backward_euler_stage(
                 values,
                 payoff,
                 coefficients,
@@ -196,10 +259,14 @@ def _run_integrator(
                 new_lower,
                 new_upper,
                 config,
+                lcp_solver=lcp_solver,
+                step_index=step,
             )
+            if audit is not None:
+                projected_lu_audits.append(audit)
             stage_results: tuple[LCPSolveResult | PenaltyStageResult, ...] = (stage,)
         elif method in {"cn_policy", "rannacher_cn_policy"}:
-            values, stage = _theta_step(
+            values, stage, audit = _theta_step(
                 values,
                 payoff,
                 coefficients,
@@ -208,10 +275,14 @@ def _run_integrator(
                 new_upper,
                 config,
                 theta,
+                lcp_solver=lcp_solver,
+                step_index=step,
             )
+            if audit is not None:
+                projected_lu_audits.append(audit)
             stage_results = (stage,)
-        elif method == "dirk_policy":
-            values, stages = _dirk_step(
+        elif method in {"dirk_policy", "dirk_projected_lu"}:
+            values, stages, audits = _dirk_step(
                 values,
                 payoff,
                 coefficients,
@@ -220,7 +291,10 @@ def _run_integrator(
                 new_upper,
                 config,
                 theta,
+                lcp_solver=lcp_solver,
+                step_index=step,
             )
+            projected_lu_audits.extend(audits)
             stage_results = stages
         else:
             values, stage = _lobatto_penalty_step(
@@ -255,6 +329,7 @@ def _run_integrator(
         max_obstacle_violation=max_obstacle,
         total_seconds=float(perf_counter() - started),
         time_grid="quadratic" if quadratic_time else "uniform",
+        projected_lu_stage_audits=tuple(projected_lu_audits),
     )
 
 
@@ -266,7 +341,10 @@ def _backward_euler_stage(
     new_lower: float,
     new_upper: float,
     config: AmericanLCPConfig,
-) -> tuple[np.ndarray, LCPSolveResult]:
+    *,
+    lcp_solver: Literal["policy_iteration", "projected_lu_single"],
+    step_index: int,
+) -> tuple[np.ndarray, LCPSolveResult, ProjectedLUDIRKStageAudit | None]:
     rhs = old_values[1:-1].copy()
     rhs[0] += dt * coefficients.lower[0] * new_lower
     rhs[-1] += dt * coefficients.upper[-1] * new_upper
@@ -277,18 +355,20 @@ def _backward_euler_stage(
         rhs=rhs,
         obstacle=payoff[1:-1],
     )
-    result = policy_iteration_lcp_solve(
+    result, audit = _solve_lcp_stage(
         system,
         initial=old_values[1:-1],
-        tolerance=config.tolerance,
-        obstacle_tolerance=config.obstacle_tolerance,
-        max_iter=config.max_iter,
+        config=config,
+        lcp_solver=lcp_solver,
+        step_index=step_index,
+        stage_name="backward_euler_damping",
+        dt=dt,
     )
     values = np.empty_like(old_values)
     values[0] = new_lower
     values[-1] = new_upper
     values[1:-1] = result.solution
-    return values, result
+    return values, result, audit
 
 
 def _theta_step(
@@ -300,7 +380,10 @@ def _theta_step(
     new_upper: float,
     config: AmericanLCPConfig,
     theta: float,
-) -> tuple[np.ndarray, LCPSolveResult]:
+    *,
+    lcp_solver: Literal["policy_iteration", "projected_lu_single"],
+    step_index: int,
+) -> tuple[np.ndarray, LCPSolveResult, ProjectedLUDIRKStageAudit | None]:
     rhs = old_values[1:-1] + (1.0 - theta) * dt * apply_black_scholes_operator(
         old_values, coefficients
     )
@@ -313,18 +396,20 @@ def _theta_step(
         rhs=rhs,
         obstacle=payoff[1:-1],
     )
-    result = policy_iteration_lcp_solve(
+    result, audit = _solve_lcp_stage(
         system,
         initial=old_values[1:-1],
-        tolerance=config.tolerance,
-        obstacle_tolerance=config.obstacle_tolerance,
-        max_iter=config.max_iter,
+        config=config,
+        lcp_solver=lcp_solver,
+        step_index=step_index,
+        stage_name="theta",
+        dt=dt,
     )
     values = np.empty_like(old_values)
     values[0] = new_lower
     values[-1] = new_upper
     values[1:-1] = result.solution
-    return values, result
+    return values, result, audit
 
 
 def _dirk_step(
@@ -336,7 +421,14 @@ def _dirk_step(
     new_upper: float,
     config: AmericanLCPConfig,
     theta: float,
-) -> tuple[np.ndarray, tuple[LCPSolveResult, LCPSolveResult]]:
+    *,
+    lcp_solver: Literal["policy_iteration", "projected_lu_single"],
+    step_index: int,
+) -> tuple[
+    np.ndarray,
+    tuple[LCPSolveResult, LCPSolveResult],
+    tuple[ProjectedLUDIRKStageAudit, ...],
+]:
     lhs_lower = -theta * dt * coefficients.lower[1:]
     lhs_diagonal = 1.0 - theta * dt * coefficients.diagonal
     lhs_upper = -theta * dt * coefficients.upper[:-1]
@@ -348,12 +440,29 @@ def _dirk_step(
     system_y = TridiagonalLCP(
         lhs_lower, lhs_diagonal, lhs_upper, rhs_y, payoff[1:-1]
     )
-    result_y = policy_iteration_lcp_solve(
+    factorization: ProjectedLUFactorization | None = None
+    pre_eligibility: ProjectedLUEligibility | None = None
+    factorization_seconds = 0.0
+    precheck_seconds = 0.0
+    if lcp_solver == "projected_lu_single":
+        (
+            factorization,
+            pre_eligibility,
+            factorization_seconds,
+            precheck_seconds,
+        ) = _prepare_projected_lu(system_y)
+    result_y, audit_y = _solve_lcp_stage(
         system_y,
         initial=old_values[1:-1],
-        tolerance=config.tolerance,
-        obstacle_tolerance=config.obstacle_tolerance,
-        max_iter=config.max_iter,
+        config=config,
+        lcp_solver=lcp_solver,
+        step_index=step_index,
+        stage_name="dirk_y",
+        dt=dt,
+        factorization=factorization,
+        pre_eligibility=pre_eligibility,
+        factorization_seconds=factorization_seconds,
+        precheck_seconds=precheck_seconds,
     )
     y_values = np.empty_like(old_values)
     y_values[0] = new_lower
@@ -370,18 +479,103 @@ def _dirk_step(
     system_z = TridiagonalLCP(
         lhs_lower, lhs_diagonal, lhs_upper, rhs_z, payoff[1:-1]
     )
-    result_z = policy_iteration_lcp_solve(
+    result_z, audit_z = _solve_lcp_stage(
         system_z,
         initial=result_y.solution,
-        tolerance=config.tolerance,
-        obstacle_tolerance=config.obstacle_tolerance,
-        max_iter=config.max_iter,
+        config=config,
+        lcp_solver=lcp_solver,
+        step_index=step_index,
+        stage_name="dirk_z",
+        dt=dt,
+        factorization=factorization,
+        pre_eligibility=pre_eligibility,
     )
     values = np.empty_like(old_values)
     values[0] = new_lower
     values[-1] = new_upper
     values[1:-1] = result_z.solution
-    return values, (result_y, result_z)
+    audits = tuple(
+        audit for audit in (audit_y, audit_z) if audit is not None
+    )
+    return values, (result_y, result_z), audits
+
+
+def _prepare_projected_lu(
+    system: TridiagonalLCP,
+) -> tuple[ProjectedLUFactorization, ProjectedLUEligibility, float, float]:
+    setup_started = perf_counter()
+    factorization = factorize_projected_lu(system, directions=("lu", "ul"))
+    factorization_seconds = perf_counter() - setup_started
+    check_started = perf_counter()
+    eligibility = audit_projected_lu_eligibility(
+        system, factorization=factorization
+    )
+    precheck_seconds = perf_counter() - check_started
+    return factorization, eligibility, factorization_seconds, precheck_seconds
+
+
+def _solve_lcp_stage(
+    system: TridiagonalLCP,
+    *,
+    initial: np.ndarray,
+    config: AmericanLCPConfig,
+    lcp_solver: Literal["policy_iteration", "projected_lu_single"],
+    step_index: int,
+    stage_name: str,
+    dt: float,
+    factorization: ProjectedLUFactorization | None = None,
+    pre_eligibility: ProjectedLUEligibility | None = None,
+    factorization_seconds: float = 0.0,
+    precheck_seconds: float = 0.0,
+) -> tuple[LCPSolveResult, ProjectedLUDIRKStageAudit | None]:
+    if lcp_solver == "policy_iteration":
+        return (
+            policy_iteration_lcp_solve(
+                system,
+                initial=initial,
+                tolerance=config.tolerance,
+                obstacle_tolerance=config.obstacle_tolerance,
+                max_iter=config.max_iter,
+            ),
+            None,
+        )
+    if factorization is None or pre_eligibility is None:
+        (
+            factorization,
+            pre_eligibility,
+            factorization_seconds,
+            precheck_seconds,
+        ) = _prepare_projected_lu(system)
+    mode = "single_put" if config.option_type == "put" else "single_call"
+    result = projected_lu_lcp_solve(
+        system,
+        factorization,
+        mode=mode,
+        tolerance=config.tolerance,
+        obstacle_tolerance=config.obstacle_tolerance,
+    )
+    postcheck_started = perf_counter()
+    post_eligibility = audit_projected_lu_eligibility(
+        system,
+        result.solution,
+        option_type=config.option_type,
+        factorization=factorization,
+    )
+    postcheck_seconds = perf_counter() - postcheck_started
+    audit = ProjectedLUDIRKStageAudit(
+        step_index=step_index,
+        stage_name=stage_name,
+        dt=float(dt),
+        mode=mode,
+        matrix_sha256=factorization.matrix_sha256,
+        factorization_seconds=float(factorization_seconds),
+        precheck_seconds=float(precheck_seconds),
+        postcheck_seconds=float(postcheck_seconds),
+        pre_eligibility=pre_eligibility,
+        post_eligibility=post_eligibility,
+        result=result,
+    )
+    return result, audit
 
 
 def _lobatto_penalty_step(

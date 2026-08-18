@@ -1,0 +1,38 @@
+{
+  "all_regime_runtime_ratio_gate_passed": false,
+  "claim_limit": "Projected LU changes only the algebraic LCP solver; DIRK and sinh remain the sources of temporal/spatial reference accuracy.",
+  "correctness_and_financial_gates_passed": false,
+  "decision": "RETAIN_DIRK_POLICY_SINH",
+  "early_exercise_paired_ratio_median": 1.7407395313197407,
+  "failed_correctness_regimes": [
+    {
+      "candidate_exception": "",
+      "reasons": "structural_or_pivot",
+      "regime_id": "put_T200_s020_r001_q010"
+    }
+  ],
+  "failed_runtime_regimes": [
+    "put_T100_s020_r005_q003",
+    "call_T100_s020_r005_q006",
+    "call_T100_s020_r005_q000",
+    "put_T025_s020_r001_q000",
+    "call_T025_s020_r001_q000",
+    "put_T200_s060_r010_q010",
+    "call_T200_s060_r010_q010",
+    "put_T200_s020_r001_q010",
+    "call_T200_s020_r010_q010",
+    "put_T050_s060_r005_q003",
+    "call_T050_s060_r005_q010",
+    "call_T100_s060_r001_q006"
+  ],
+  "full_12_regime_protocol": true,
+  "p95_nonregression_passed": false,
+  "paired_ratio_median": 1.7432426890106125,
+  "paired_ratio_p95": 1.8477885478607152,
+  "policy_pooled_p95_seconds": 0.8249612937500002,
+  "projected_lu_pooled_p95_seconds": 1.4236467625000002,
+  "protocol_hash": "8c199cd7b9a008e6afe32fd27e79a584c18840ce4a1f8fb194f9663e35223450",
+  "regime_count": 12,
+  "runtime_gate_passed": false,
+  "speedup_from_median_ratio": 0.5736435932323088
+}
