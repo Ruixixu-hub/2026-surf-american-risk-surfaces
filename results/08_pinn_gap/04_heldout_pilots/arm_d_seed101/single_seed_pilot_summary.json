@@ -1,0 +1,36 @@
+{
+  "evidence_scope": "67 test/stress regimes; Arm D only; one validation-selected seed",
+  "metrics": {
+    "A": {
+      "delta_rmse": 0.00042058149139386527,
+      "mae": 7.161191839223932e-05,
+      "max_abs_error": 0.0022278886455784856,
+      "rmse": 0.00011923985889978069,
+      "runtime_seconds": 0.37249810000139405,
+      "scaled_gamma_rmse": 0.008053918720045131
+    },
+    "B": {
+      "delta_rmse": 0.0004205814913719271,
+      "mae": 7.161191843319816e-05,
+      "max_abs_error": 0.002227888645588769,
+      "rmse": 0.00011923985889996199,
+      "runtime_seconds": 0.020748400002048584,
+      "scaled_gamma_rmse": 0.008053918720638178
+    },
+    "D": {
+      "boundary_found_rate": 1.0,
+      "delta_rmse": 0.0025433426252824127,
+      "mae": 0.0004957979600520722,
+      "max_abs_error": 0.0021175854294325225,
+      "rmse": 0.0007370997723146176,
+      "scaled_gamma_rmse": 0.017582514597920273,
+      "training_seconds": 1162.1856576999999,
+      "vi_p95": 0.0018567424996371366
+    }
+  },
+  "price_rmse_ratio_D_over_B": 6.1816558583235,
+  "seed": 101,
+  "selection_disclosure": "Seed 101 was selected before held-out scoring because it had the lowest Arm D validation median price RMSE. This is not a random-seed robustness estimate.",
+  "status": "COMPLETE_SINGLE_SEED_PILOT",
+  "warning": "Do not describe this pilot as the registered five-seed held-out experiment."
+}

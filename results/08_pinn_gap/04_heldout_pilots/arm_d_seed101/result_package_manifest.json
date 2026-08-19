@@ -1,0 +1,11 @@
+{
+  "archive_bytes": 677973093,
+  "archive_name": "arm_d_seed101.zip",
+  "archive_sha256": "237d670ccb889564d94a9f553cf9528082f71c2a6891687585c68e56dedcbc5c",
+  "arm": "D",
+  "evidence_scope": "SINGLE_SEED_HELDOUT_PILOT_NOT_FORMAL_FIVE_SEED_STUDY",
+  "heldout_regimes": 67,
+  "release_tag": "arm-d-seed101-pilot-v1",
+  "seed": 101,
+  "status": "COMPLETE"
+}
