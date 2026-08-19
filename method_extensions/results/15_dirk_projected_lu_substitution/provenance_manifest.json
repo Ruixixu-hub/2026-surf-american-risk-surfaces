@@ -1,0 +1,48 @@
+{
+  "base_git_commit_before_experiment": "3aa2d821b9c92d095658782e7bcaf1322a90a7cb",
+  "candidate_results_seen_before_protocol_freeze": false,
+  "environment": {
+    "cpu_count": 10,
+    "float_precision": "float64",
+    "git_commit": "3aa2d821b9c92d095658782e7bcaf1322a90a7cb",
+    "machine": "arm64",
+    "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+    "processor": "arm",
+    "python": "3.13.5",
+    "versions": {
+      "matplotlib": "3.10.3",
+      "numpy": "1.26.4",
+      "scipy": "1.16.0",
+      "sklearn": "1.7.1",
+      "torch": "2.7.1"
+    }
+  },
+  "experiment": "DIRK sinh Projected-LU solver substitution audit",
+  "protocol_hash": "8c199cd7b9a008e6afe32fd27e79a584c18840ce4a1f8fb194f9663e35223450",
+  "raw_evidence_hashes": {
+    "results/15_dirk_projected_lu_substitution/01_solver_substitution_audit/boundary_paths.csv": "740e8089111d9d90e799c8b61a213fbf09bba587c09b44d06c41bc790ef7d63a",
+    "results/15_dirk_projected_lu_substitution/01_solver_substitution_audit/final_price_greek_profiles.csv": "59bfbb66b22928edc0370556f550c0d73ee054a82aa183d82b83187e54c7ccb8",
+    "results/15_dirk_projected_lu_substitution/01_solver_substitution_audit/method_decision.json": "f41ee78f78cc6111a3411a019fd508cc17fe9bb257340e616afb1079039fa844",
+    "results/15_dirk_projected_lu_substitution/01_solver_substitution_audit/paired_runtime_by_regime.csv": "75480df17d3a2c0dc3de865a095440fa7e81702070e17d6fc70d6ac6a0bce5ae",
+    "results/15_dirk_projected_lu_substitution/01_solver_substitution_audit/regime_correctness_and_agreement.csv": "36d75f9d1f45ec5c9a290e660c60b314fddd7484bea0a9cdba492ca667961a71",
+    "results/15_dirk_projected_lu_substitution/01_solver_substitution_audit/runtime_samples.csv": "88ea6c4a23bf917196f40551d06ac284377c0c3d269279a5357ff5fce52ade48",
+    "results/15_dirk_projected_lu_substitution/01_solver_substitution_audit/runtime_summary.csv": "0cc52f3c487622a0ef734a23e3eebbdc7f284df97bdd5508ffe5f694af68612b",
+    "results/15_dirk_projected_lu_substitution/01_solver_substitution_audit/solver_substitution_complete.marker.json": "5022cb7bed65296b6ecc6c2e82bfc255cbc2b4710c019405ab5222108b181ae6",
+    "results/15_dirk_projected_lu_substitution/01_solver_substitution_audit/stage_structural_checks.csv": "fe10a8da09953f8c416711199af6270b8a441b6f0be3bcd4781466f9b1466728",
+    "results/15_dirk_projected_lu_substitution/01_solver_substitution_audit/surface_hashes.csv": "0f9d9e12bf1acc4d8d9cca5351e1a8545a1ca9aa7300145d02f7ce7100e66ee6"
+  },
+  "report_hashes": {
+    "reports/17_dirk_projected_lu_substitution/dirk_projected_lu_substitution_report.md": "dbfef15ec9cfe2dd646571e2ebb47920aab2019ed71728d9135e3b49d2fda83f",
+    "reports/17_dirk_projected_lu_substitution/dirk_projected_lu_substitution_\u7ed3\u8bba_CN.md": "09ae7670b63ccad3dfb79436e2695ac42ca24f39266df620f4b9c6a2f4f2a66c",
+    "reports/17_dirk_projected_lu_substitution/stage_structural_summary.csv": "83200acf96ef73f91c28461cdc5bd59e41e454c9be0f4695174caf9820c9e020"
+  },
+  "source_hashes": {
+    "experiments/65_dirk_projected_lu_protocol.py": "2e77f53a26b7e8bf9eba1b7d7aa95571c4e34cd535728c09639a4c0799057adb",
+    "experiments/66_dirk_sinh_projected_lu_substitution_audit.py": "78b9158c0ade0ad8bb230267e5bcef80c50100f7d819ba5f0387a972068af6f9",
+    "experiments/67_dirk_projected_lu_substitution_synthesis.py": "cff782c7ddf05798a33f5c596a6da27cccfcc0cee8c5fe44b66c22652a7abbec",
+    "src/american_risk_surfaces/method_extensions/dirk_projected_lu_study.py": "c1b2e884c3753bf642fab3840a8a7bcb094d0161fc3df97550a272c445a27c86",
+    "src/american_risk_surfaces/solvers/greek_integrators.py": "06cd0fd9705c84efe20dfec186fe850337f025036acd8ad2dda01e0d2e96f972",
+    "src/american_risk_surfaces/solvers/projected_lu.py": "39103e3601ec8571d31690ba755b74789d4d1f953eecfc0cca1fed77d8daa653",
+    "tests/test_dirk_projected_lu_substitution.py": "b565a07db682a39f993e715e8df953528539765e03bad128da0bec9a32a82598"
+  }
+}

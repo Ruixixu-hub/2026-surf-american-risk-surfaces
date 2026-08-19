@@ -266,6 +266,7 @@ def audit_projected_lu_eligibility(
     solution: Any = None,
     option_type: str | None = None,
     *,
+    factorization: ProjectedLUFactorization | None = None,
     pivot_tolerance: float = 1e-14,
     sign_tolerance: float = 1e-15,
     contact_tolerance: float = 1e-10,
@@ -290,8 +291,12 @@ def audit_projected_lu_eligibility(
         row_offdiagonal[:-1] += np.abs(system.upper)
     strict_dominance = bool(np.all(system.diagonal > row_offdiagonal))
 
-    positive_lu_pivots = _positive_pivots(system, "lu", pivot_tolerance)
-    positive_ul_pivots = _positive_pivots(system, "ul", pivot_tolerance)
+    positive_lu_pivots = _positive_pivots(
+        system, "lu", pivot_tolerance, factorization=factorization
+    )
+    positive_ul_pivots = _positive_pivots(
+        system, "ul", pivot_tolerance, factorization=factorization
+    )
     m_matrix = bool(
         positive_diagonal
         and nonpositive_offdiagonals
@@ -432,17 +437,30 @@ def _positive_pivots(
     system: TridiagonalLCP,
     direction: ProjectedLUDirection,
     pivot_tolerance: float,
+    *,
+    factorization: ProjectedLUFactorization | None = None,
 ) -> bool:
+    if factorization is not None and direction in factorization.available_directions:
+        try:
+            _validate_factorization(system, factorization, direction)
+        except ValueError:
+            return False
+        pivots = (
+            factorization.lu_diagonal
+            if direction == "lu"
+            else factorization.ul_diagonal
+        )
+        return bool(np.all(pivots > pivot_tolerance))
     try:
-        factorization = factorize_projected_lu(
+        computed = factorize_projected_lu(
             system, directions=(direction,), pivot_tolerance=pivot_tolerance
         )
     except ValueError:
         return False
     pivots = (
-        factorization.lu_diagonal
+        computed.lu_diagonal
         if direction == "lu"
-        else factorization.ul_diagonal
+        else computed.ul_diagonal
     )
     return bool(np.all(pivots > pivot_tolerance))
 

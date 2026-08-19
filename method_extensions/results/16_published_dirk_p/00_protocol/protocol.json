@@ -1,0 +1,205 @@
+{
+  "dataset_manifest": {
+    "path": "/private/tmp/surf-published-dirk-p/method_extensions/results/04_surrogate_dataset/v1_small_grid/regime_manifest.csv",
+    "sha256": "0e10c5e57cca88a1b941e532b1c0d2f4ef69a6e5d9e2ec4e18392515bd24297d"
+  },
+  "decision_options": [
+    "PROMOTE_PUBLISHED_DIRK_P",
+    "RETAIN_DIRK_POLICY_SINH"
+  ],
+  "environment": {
+    "cpu_count": 10,
+    "float_precision": "float64",
+    "git_commit": "8b3294941f11c8d7e8ef9bc5e3cb5579e25e4031",
+    "machine": "arm64",
+    "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+    "processor": "arm",
+    "python": "3.13.5",
+    "versions": {
+      "matplotlib": "3.10.3",
+      "numpy": "1.26.4",
+      "scipy": "1.16.0",
+      "sklearn": "1.7.1",
+      "torch": "2.7.1"
+    }
+  },
+  "experiment": "published_dirk_p_high_accuracy_candidate",
+  "frozen_reference_error_scales_sha256": "d3cfef930a1a7371149e2d839ca0d6833dc348cbfb5f04e5b19692d00ba0438a",
+  "metric_gate_correction": {
+    "corrected_frozen_normalized_lcp_gate": 1e-12,
+    "corrected_frozen_normalized_obstacle_gate": 1e-12,
+    "numerical_outputs_changed": false,
+    "previous_incorrect_normalized_lcp_gate": 1e-06,
+    "previous_incorrect_normalized_obstacle_gate": 1e-06,
+    "reason": "The initial DIRK-P study incorrectly introduced candidate-specific 1e-6 acceptance limits for the common normalized obstacle and LCP residuals. Those quantities are produced by the same compute_lcp_residual function and normalization as the project-wide Experiment 21 metrics, whose frozen limits are 1e-12. The formal rows were rescored without rerunning or changing any candidate solution, timing, grid, or financial-output data.",
+    "same_metric_and_normalization": true,
+    "source": "results/07_method_extensions/00_protocol/tolerance_decision.json",
+    "version": 3
+  },
+  "paper": {
+    "arxiv": "https://arxiv.org/abs/2401.13361",
+    "author": "Karel J. in 't Hout",
+    "doi": "https://doi.org/10.1016/j.matcom.2024.10.038",
+    "downloaded_pdf_sha256": "38a9690bdf37be0ee0dd1b98451b2a55ec85a8a30508f5fac2f8c62c51640bbb",
+    "grid_formula_source": "https://arxiv.org/abs/2207.10060",
+    "title": "A note on the numerical approximation of Greeks for American-style options"
+  },
+  "pre_formal_protocol_snapshot": {
+    "note": "This immutable v2 snapshot predates the retained formal candidate results.",
+    "path": "results/16_published_dirk_p/00_protocol/protocol_v2_pre_formal.json",
+    "sha256": "56c445d0b4b1f6da6f5ec1982abdc83cc50eb54a1269017013934cc279046b56"
+  },
+  "pre_registered_gates": {
+    "all_12_regimes_must_pass_accuracy_and_structure": true,
+    "boundary": "final boundary agreement within max(candidate local cell, reference local cell)",
+    "minimum_empirical_order": 1.5,
+    "minimum_joint_order_fraction": 0.9,
+    "no_post_result_tuning": true,
+    "normalized_penalty_lcp_residual_max": 1e-12,
+    "normalized_penalty_obstacle_max": 1e-12,
+    "per_regime_price_delta_gamma_max_error": "candidate-vs-current-reference <= 1.25 times the existing regime-specific M480-vs-M960 SURF sinh reference error",
+    "q0_call": "no fabricated boundary and candidate BSM error <= 1.25 * reference BSM error",
+    "reference_error_multiplier": 1.25,
+    "runtime_median_candidate_over_reference_max": 1.25,
+    "runtime_p95_candidate_over_reference_max": 1.5
+  },
+  "protocol_amendment": {
+    "accuracy_or_runtime_gates_changed": false,
+    "candidate_method_changed": false,
+    "candidate_numerical_outputs_changed": false,
+    "first_pass_evidence_preserved_at": "results/16_published_dirk_p/02_audit_v1_raw_threshold_scoring",
+    "reason": "The first formal pass exposed that the generic premium-threshold extractor can label a numerical transition for q=0 calls. The user-required theorem control is now applied before boundary scoring; raw threshold behaviour is retained only as a diagnostic.",
+    "version": 2
+  },
+  "published_method_frozen": {
+    "be_p_damping_steps": 2,
+    "dirk": "Cash DIRK (3.3)-(3.4), DIRKa-P (3.12)",
+    "finite_differences": "second-order three-point central differences on the nonuniform grid",
+    "implementation_iteration_guard": 100,
+    "l_stable": true,
+    "penalty_large": 10000000.0,
+    "penalty_stopping_rule": "max componentwise relative update < tol OR penalty matrix unchanged",
+    "penalty_tolerance": 1e-07,
+    "postsolve_payoff_projection": false,
+    "space_grid": "uniform on [0,2K], sinh tail to Smax",
+    "space_grid_d": "K/10",
+    "theta": 0.2928932188134524,
+    "time_grid": "tau_n=(n/N)^2*T"
+  },
+  "source_files": [
+    {
+      "bytes": 14966,
+      "path": "src/american_risk_surfaces/solvers/published_dirk_p.py",
+      "sha256": "68143ada75e87ace109dbd7906ded3ac518dd739d6c92e6f7eba5e92e134bdf6"
+    },
+    {
+      "bytes": 17991,
+      "path": "src/american_risk_surfaces/solvers/greek_integrators.py",
+      "sha256": "de0cb211b4ba7e7de2c6b239c8b097f98bd84552700c106142792219e807d3ec"
+    },
+    {
+      "bytes": 5241,
+      "path": "src/american_risk_surfaces/solvers/grid.py",
+      "sha256": "e139034e4daaa03e1129b93f2f8f73543bf1108430ccc4dffe781169bb6e4f6c"
+    },
+    {
+      "bytes": 7022,
+      "path": "src/american_risk_surfaces/solvers/operator.py",
+      "sha256": "49605fff4ed2dd2071fce53bac505e27d1b56c62f1cf7527efe100a1b11acf0a"
+    },
+    {
+      "bytes": 56784,
+      "path": "src/american_risk_surfaces/method_extensions/published_dirk_p_study.py",
+      "sha256": "fbe366181acea0f33588fa79cfc9bc8f0b02b08b4a84d80c521fc6a9ad7ff012"
+    },
+    {
+      "bytes": 361,
+      "path": "experiments/68_published_dirk_p_protocol.py",
+      "sha256": "1ff57792f06bba90fb8a52668c11df15aa990528cfc6928baf406fa999aa4e36"
+    },
+    {
+      "bytes": 379,
+      "path": "experiments/69_published_dirk_p_reproduction.py",
+      "sha256": "f9e154ab5058704f6b3dd00a818e4bcec15a5217f8e4ca957c6d82bf195cc3bc"
+    },
+    {
+      "bytes": 557,
+      "path": "experiments/70_published_dirk_p_formal_audit.py",
+      "sha256": "cac62c952fcc66ecdde90301d7ab54b88cf25a7b34c2be1f0866ff0128f1985c"
+    },
+    {
+      "bytes": 349,
+      "path": "experiments/71_published_dirk_p_synthesis.py",
+      "sha256": "b74c729edd0bdd12a62d06416c046040c8a3aff57f37c15b3f8c45eb1fcd7c0e"
+    },
+    {
+      "bytes": 775,
+      "path": "experiments/72_published_dirk_p_metric_gate_correction.py",
+      "sha256": "23e6cd8bf810ae1e5aeae845060f81142a2e04c584a2c45613a3b5c65188bc33"
+    },
+    {
+      "bytes": 13688,
+      "path": "experiments/23_greek_time_integrator_audit.py",
+      "sha256": "6bf8be815f4aae99dfd4998353dec3f06605759f4754cf7630f0b618482bed8e"
+    },
+    {
+      "bytes": 13521,
+      "path": "experiments/26_greek_spatial_grid_audit.py",
+      "sha256": "a3261e9e442273dd1b95f9e046c4fef02ba3a420170b51cf86cc1bea40cf6249"
+    },
+    {
+      "bytes": 21437,
+      "path": "results/07_method_extensions/03_greek_audit/spatial_convergence.csv",
+      "sha256": "6b8d838d45c490fbae99f80324c87d4c9335f65a46dee47ceeaf0ff108e6d4ee"
+    },
+    {
+      "bytes": 313,
+      "path": "results/07_method_extensions/00_protocol/tolerance_decision.json",
+      "sha256": "4c3d16c808663684753a0f7b299d27ef2ecf03a6f35c476a72ab8a478b3acb9a"
+    }
+  ],
+  "surf_application_frozen": {
+    "audit_regime_ids": [
+      "put_T100_s020_r005_q003",
+      "call_T100_s020_r005_q006",
+      "call_T100_s020_r005_q000",
+      "put_T025_s020_r001_q000",
+      "call_T025_s020_r001_q000",
+      "put_T200_s060_r010_q010",
+      "call_T200_s060_r010_q010",
+      "put_T200_s020_r001_q010",
+      "call_T200_s020_r010_q010",
+      "put_T050_s060_r005_q003",
+      "call_T050_s060_r005_q010",
+      "call_T100_s060_r001_q006"
+    ],
+    "boundary_threshold": 1e-06,
+    "candidate_levels_M_N": [
+      [
+        120,
+        240
+      ],
+      [
+        240,
+        480
+      ],
+      [
+        480,
+        960
+      ]
+    ],
+    "float_precision": "float64",
+    "internal_reference": "DIRK + Policy Iteration + SURF strike-concentrated sinh grid",
+    "internal_reference_M": 480,
+    "internal_reference_N": 960,
+    "q0_call_rule": "no exercise boundary; European BSM theorem control",
+    "stable_gamma_query": "existing 0.8K--1.2K query, excluding +/-0.03K around strike and extracted boundary"
+  },
+  "timing": {
+    "end_to_end": true,
+    "randomized_order_seed": 20260819,
+    "repeats": 30,
+    "single_cpu_thread": true,
+    "warmups": 5
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "Smax": 500.0,
+  "d": 10.0,
+  "nodes": 201,
+  "strictly_increasing": true,
+  "tail_spacing_max": 34.06984465710957,
+  "uniform_region_last_spot": 199.9853644619434,
+  "uniform_region_spacing_max": 1.2047311112165744,
+  "uniform_region_spacing_min": 1.2047311112164891
+}

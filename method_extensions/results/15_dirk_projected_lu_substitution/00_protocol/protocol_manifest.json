@@ -1,0 +1,78 @@
+{
+  "agreement_gate_rows_sha256": "5b15bc93c8303d7249ccb5e41e7f23a288b56c99872aeb65995f8d1eb12eab8f",
+  "all_reference_errors_pre_existing_and_valid": true,
+  "audit_regime_ids": [
+    "put_T100_s020_r005_q003",
+    "call_T100_s020_r005_q006",
+    "call_T100_s020_r005_q000",
+    "put_T025_s020_r001_q000",
+    "call_T025_s020_r001_q000",
+    "put_T200_s060_r010_q010",
+    "call_T200_s060_r010_q010",
+    "put_T200_s020_r001_q010",
+    "call_T200_s020_r010_q010",
+    "put_T050_s060_r005_q003",
+    "call_T050_s060_r005_q010",
+    "call_T100_s060_r001_q006"
+  ],
+  "boundary_gate": "same found/no-boundary status and difference no larger than the pre-existing regime-specific local M=480 grid spacing",
+  "candidate_results_seen_before_freeze": false,
+  "environment": {
+    "cpu_count": 10,
+    "float_precision": "float64",
+    "git_commit": "3aa2d821b9c92d095658782e7bcaf1322a90a7cb",
+    "machine": "arm64",
+    "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+    "processor": "arm",
+    "python": "3.13.5",
+    "versions": {
+      "matplotlib": "3.10.3",
+      "numpy": "1.26.4",
+      "scipy": "1.16.0",
+      "sklearn": "1.7.1",
+      "torch": "2.7.1"
+    }
+  },
+  "frozen_configuration": {
+    "DIRK_theta": "1-sqrt(2)/2",
+    "K": 1.0,
+    "M": 480,
+    "N": 960,
+    "Smax": 4.0,
+    "backward_euler_damping_steps": 2,
+    "boundary_threshold": 1e-06,
+    "dtype": "float64",
+    "quadratic_time_grid": true,
+    "reference_M_used_by_existing_spatial_audit": 960,
+    "sinh_concentration_width_K": 0.1
+  },
+  "frozen_greek_gate_formula": {
+    "delta": "min(0.1 * existing regime Delta max error, B_delta_price)",
+    "gamma": "min(0.1 * existing regime Gamma max error, B_gamma_price)",
+    "price_bound_definition": "1e-9 K times the maximum L1 row norm of the exact M=480 nonuniform finite-difference-plus-interpolation operator on the existing stable query nodes",
+    "reference_error_fraction": 0.1
+  },
+  "frozen_lcp_gates": {
+    "normalized_lcp_residual": 1e-12,
+    "normalized_obstacle_violation": 1e-12,
+    "price_max_difference_K": 1e-09
+  },
+  "input_hashes": {
+    "experiments/26_greek_spatial_grid_audit.py": "a3261e9e442273dd1b95f9e046c4fef02ba3a420170b51cf86cc1bea40cf6249",
+    "results/04_surrogate_dataset/v1_small_grid/regime_manifest.csv": "0e10c5e57cca88a1b941e532b1c0d2f4ef69a6e5d9e2ec4e18392515bd24297d",
+    "results/07_method_extensions/00_protocol/tolerance_decision.json": "4c3d16c808663684753a0f7b299d27ef2ecf03a6f35c476a72ab8a478b3acb9a",
+    "results/07_method_extensions/03_greek_audit/spatial_convergence.csv": "6b8d838d45c490fbae99f80324c87d4c9335f65a46dee47ceeaf0ff108e6d4ee",
+    "src/american_risk_surfaces/diagnostics/greeks.py": "66bfeaa0efe23193f2db2c24a403266e6e4db788402448df53916ba3d8968a6b",
+    "src/american_risk_surfaces/solvers/greek_integrators.py": "de0cb211b4ba7e7de2c6b239c8b097f98bd84552700c106142792219e807d3ec",
+    "src/american_risk_surfaces/solvers/grid.py": "dade3f36c55c1b3f35b1924247e70595948b258fba1cda89f99ab10b5549b59a"
+  },
+  "protocol_hash": "8c199cd7b9a008e6afe32fd27e79a584c18840ce4a1f8fb194f9663e35223450",
+  "protocol_version": "dirk_sinh_projected_lu_substitution_v1",
+  "research_question": "replace only Policy Iteration with option-directed single-sweep Projected LU inside the frozen DIRK+sinh reference",
+  "runtime_gate": {
+    "paired_candidate_over_policy_median_ratio_max": 0.8,
+    "repeats": 30,
+    "threads": 1,
+    "warmups": 5
+  }
+}

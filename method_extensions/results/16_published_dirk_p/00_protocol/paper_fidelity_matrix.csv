@@ -1,0 +1,14 @@
+component,status,note
+Cash DIRKa coefficients,EXACT,theta=1-sqrt(2)/2
+DIRK-P stage equations,EXACT,paper equation (3.12)
+penalty Large and tol,EXACT,1e7 and 1e-7
+penalty stop,EXACT,relative update or unchanged active penalty matrix
+time grid,EXACT,quadratic paper equation (3.14)
+initial damping,EXACT,first two time steps are BE-P
+space grid,EXACT_FORMULA,"uniform [0,2K], d=K/10 sinh tail"
+finite differences,EXACT_FORMULA,second-order nonuniform central differences
+one-dimensional put,DIRECT_PAPER_SCOPE,paper Section 4.1
+dividend call,SURF_EXTENSION,paper does not report one-dimensional calls
+q=0 call,SURF_EXTENSION_CONTROL,enforces no-boundary theorem control
+Smax,SURF_REGIME_VALUE,existing SURF Smax=4K rather than paper example 5K
+far call boundary,SURF_EXTENSION,existing exact SURF call boundary

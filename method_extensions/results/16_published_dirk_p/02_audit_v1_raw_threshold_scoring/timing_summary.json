@@ -1,0 +1,96 @@
+{
+  "candidate_pooled_median_seconds": 0.6221150415000001,
+  "candidate_pooled_p95_seconds": 0.7433549702,
+  "paired_median_candidate_over_reference": 0.9954128133415827,
+  "paired_median_speedup": 1.0046083259095473,
+  "per_regime": [
+    {
+      "candidate_median": 0.604688146,
+      "candidate_over_reference": 0.9653326069649746,
+      "reference_median": 0.6264039375,
+      "regime_id": "put_T100_s020_r005_q003",
+      "speedup": 1.0359123816857492
+    },
+    {
+      "candidate_median": 0.6150307915,
+      "candidate_over_reference": 0.9825458721749484,
+      "reference_median": 0.625956313,
+      "regime_id": "call_T100_s020_r005_q006",
+      "speedup": 1.0177641862017246
+    },
+    {
+      "candidate_median": 0.5902115205,
+      "candidate_over_reference": 0.9177562650132759,
+      "reference_median": 0.6431026875000001,
+      "regime_id": "call_T100_s020_r005_q000",
+      "speedup": 1.089613918337604
+    },
+    {
+      "candidate_median": 0.6399959165,
+      "candidate_over_reference": 1.0077748419805856,
+      "reference_median": 0.6350584374999999,
+      "regime_id": "put_T025_s020_r001_q000",
+      "speedup": 0.9922851398380758
+    },
+    {
+      "candidate_median": 0.5882464165,
+      "candidate_over_reference": 0.9568547249412229,
+      "reference_median": 0.614770875,
+      "regime_id": "call_T025_s020_r001_q000",
+      "speedup": 1.0450907268722818
+    },
+    {
+      "candidate_median": 0.642622146,
+      "candidate_over_reference": 1.0352528900329383,
+      "reference_median": 0.620739292,
+      "regime_id": "put_T200_s060_r010_q010",
+      "speedup": 0.965947556995647
+    },
+    {
+      "candidate_median": 0.6961596875,
+      "candidate_over_reference": 1.087516998035702,
+      "reference_median": 0.6401368335,
+      "regime_id": "call_T200_s060_r010_q010",
+      "speedup": 0.9195258573486417
+    },
+    {
+      "candidate_median": 0.571818875,
+      "candidate_over_reference": 0.9511535245932145,
+      "reference_median": 0.601184625,
+      "regime_id": "put_T200_s020_r001_q010",
+      "speedup": 1.0513549854401012
+    },
+    {
+      "candidate_median": 0.6019142085,
+      "candidate_over_reference": 0.9903401672030862,
+      "reference_median": 0.6077853129999999,
+      "regime_id": "call_T200_s020_r010_q010",
+      "speedup": 1.009754055340596
+    },
+    {
+      "candidate_median": 0.6188720000000001,
+      "candidate_over_reference": 1.0004854594800792,
+      "reference_median": 0.6185717085,
+      "regime_id": "put_T050_s060_r005_q003",
+      "speedup": 0.9995147760764744
+    },
+    {
+      "candidate_median": 0.6664215835,
+      "candidate_over_reference": 1.0591257525082949,
+      "reference_median": 0.6292185625,
+      "regime_id": "call_T050_s060_r005_q010",
+      "speedup": 0.9441749458284163
+    },
+    {
+      "candidate_median": 0.6950196455,
+      "candidate_over_reference": 1.1038427230325707,
+      "reference_median": 0.629636479,
+      "regime_id": "call_T100_s060_r001_q006",
+      "speedup": 0.9059261606152685
+    }
+  ],
+  "pooled_p95_candidate_over_reference": 1.054007565782893,
+  "reference_pooled_median_seconds": 0.6250543125,
+  "reference_pooled_p95_seconds": 0.7052653077000001,
+  "runtime_gate_pass": true
+}
