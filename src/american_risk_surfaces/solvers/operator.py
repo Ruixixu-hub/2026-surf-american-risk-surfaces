@@ -66,6 +66,42 @@ def black_scholes_operator_coefficients(
     )
 
 
+def black_scholes_operator_coefficients_nonuniform(
+    spot_grid: Any,
+    r: float,
+    q: float,
+    sigma: float,
+) -> BlackScholesOperatorCoefficients:
+    """Build second-order three-point coefficients on a nonuniform grid."""
+
+    spots = np.asarray(spot_grid, dtype=float)
+    if spots.ndim != 1 or len(spots) < 3:
+        raise ValueError("spot_grid must be one-dimensional with at least three nodes.")
+    if spots[0] < 0.0 or np.any(np.diff(spots) <= 0.0):
+        raise ValueError("spot_grid must be nonnegative and strictly increasing.")
+    volatility = float(sigma)
+    if volatility < 0.0:
+        raise ValueError("sigma must be nonnegative.")
+    rate, dividend = float(r), float(q)
+    interior = spots[1:-1]
+    left_width = interior - spots[:-2]
+    right_width = spots[2:] - interior
+    first_left = -right_width / (left_width * (left_width + right_width))
+    first_diagonal = (right_width - left_width) / (left_width * right_width)
+    first_right = left_width / (right_width * (left_width + right_width))
+    second_left = 2.0 / (left_width * (left_width + right_width))
+    second_diagonal = -2.0 / (left_width * right_width)
+    second_right = 2.0 / (right_width * (left_width + right_width))
+    diffusion = 0.5 * volatility**2 * interior**2
+    drift = (rate - dividend) * interior
+    return BlackScholesOperatorCoefficients(
+        lower=diffusion * second_left + drift * first_left,
+        diagonal=diffusion * second_diagonal + drift * first_diagonal - rate,
+        upper=diffusion * second_right + drift * first_right,
+        interior_spots=interior,
+    )
+
+
 def apply_black_scholes_operator(
     values: Any,
     coefficients: BlackScholesOperatorCoefficients,
