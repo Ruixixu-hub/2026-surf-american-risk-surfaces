@@ -12,4 +12,3 @@ from american_risk_surfaces.method_extensions.dirk_projected_lu_study import (
 if __name__ == "__main__":
     outputs = synthesize_substitution_audit()
     print(json.dumps({key: str(value) for key, value in outputs.items()}, indent=2))
-
