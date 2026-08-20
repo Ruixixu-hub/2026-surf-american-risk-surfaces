@@ -1,0 +1,101 @@
+{
+  "arms": [
+    "C"
+  ],
+  "compute_budget_reason": "Limited GPU availability",
+  "evidence_scope": "PILOT_NOT_FORMAL_FIVE_SEED_HELDOUT",
+  "frozen_configuration": {
+    "adam_steps": 40000,
+    "architecture": "resnet_4x2x50",
+    "d_variant": "etc_fb_mixture",
+    "lbfgs_max_evaluations": 2000,
+    "protocol": "surf_pinn_cde_v1",
+    "seed_list": [
+      17,
+      29,
+      43,
+      71,
+      101
+    ],
+    "source_decisions": {
+      "arm_c_architecture": {
+        "anchor": {
+          "architecture": "resnet_4x2x50",
+          "median_boundary_rmse": 0.6296029824090645,
+          "median_rmse": 0.02710121460001993,
+          "median_vi_p95": 0.021166122137208983
+        },
+        "candidates": [
+          {
+            "architecture": "mlp_4x64",
+            "median_boundary_rmse": 1.5073432905546436,
+            "median_rmse": 0.030755309469260625,
+            "median_vi_p95": 0.022975290031698698,
+            "passed_replacement_gate": false,
+            "price_rmse_improvement_fraction": -0.13483140601521254
+          },
+          {
+            "architecture": "mlp_6x64",
+            "median_boundary_rmse": 0.39527785540015625,
+            "median_rmse": 0.02413701700121087,
+            "median_vi_p95": 0.017501846288484335,
+            "passed_replacement_gate": false,
+            "price_rmse_improvement_fraction": 0.10937508309339328
+          },
+          {
+            "architecture": "resnet_4x2x64",
+            "median_boundary_rmse": 2.2212257287740416,
+            "median_rmse": 0.02790289330904276,
+            "median_vi_p95": 0.020707160370621,
+            "passed_replacement_gate": false,
+            "price_rmse_improvement_fraction": -0.029580914392753472
+          }
+        ],
+        "rule": "replace only for >=30% RMSE improvement with no VI/boundary degradation",
+        "selected_architecture": "resnet_4x2x50",
+        "status": "KEEP_ANCHOR"
+      },
+      "arm_d_ablations": {
+        "adaptive_sampling": {
+          "boundary_or_max_improvement_fraction": 0.13494874136454957,
+          "global_rmse_ratio": 0.9812357175089166,
+          "status": "STOP"
+        },
+        "positive_premium": {
+          "ratios_positive_over_smooth_etc": {
+            "delta_rmse": 35.41733893346531,
+            "rmse": 28.209893917629678,
+            "scaled_gamma_rmse": 17.77489702568998,
+            "vi_p95": 0.017081600855803337
+          },
+          "status": "STOP"
+        }
+      },
+      "arm_d_validation": {
+        "any_regime_with_two_or_more_failed_d_seeds": false,
+        "boundary_rmse_improvement_fraction": -0.15614510480416358,
+        "completed_checkpoints": 190,
+        "d_training_success_rate": 1.0,
+        "delta_ratio_d_over_c": 0.08205690750314372,
+        "equation_ratio_d_over_c": 0.2882805303893257,
+        "gamma_ratio_d_over_c": 0.06850259766489569,
+        "median_c_rmse": 0.025972499857182894,
+        "median_d_rmse": 0.0009245588656456805,
+        "obstacle_ratio_d_over_c": 1.0009544171195435,
+        "price_rmse_improvement_fraction": 0.9644023921174463,
+        "status": "GO",
+        "vi_ratio_d_over_c": 0.13197428530449148
+      }
+    }
+  },
+  "frozen_configuration_sha256": "53356d97cc70924c7460408b0ea5d52bf70086a57c19a0e2b15630485c209552",
+  "protocol": "surf_pinn_cde_v1_single_seed_arm_c_followup",
+  "regimes": 67,
+  "scoring_rule": "Score once after all 67 jobs finish; never switch seed after scoring.",
+  "seed": 101,
+  "selection_basis": "Seed fixed to match the Arm D seed-101 pilot.",
+  "splits": [
+    "test",
+    "stress_holdout"
+  ]
+}

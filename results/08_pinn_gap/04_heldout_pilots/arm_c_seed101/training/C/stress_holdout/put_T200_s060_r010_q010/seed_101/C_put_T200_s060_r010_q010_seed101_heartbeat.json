@@ -1,0 +1,12 @@
+{
+  "arm": "C",
+  "config_hash": "2d87dd277dc3f4a89a8a28a45f72a1288b16fa132d939b547f64f9c583e3e44c",
+  "cumulative_seconds": 6552.5075427819975,
+  "failure_reason": null,
+  "phase": "COMPLETE",
+  "physics_monitor_score": 2.066196460553697e-06,
+  "protocol": "surf_pinn_cde_v1",
+  "regime_id": "put_T200_s060_r010_q010",
+  "seed": 101,
+  "step": 40000
+}

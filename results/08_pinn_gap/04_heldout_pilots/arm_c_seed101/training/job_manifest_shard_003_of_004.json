@@ -1,0 +1,306 @@
+[
+  {
+    "arm": "C",
+    "parameters": {
+      "K": 1.0,
+      "M": 120,
+      "N": 120,
+      "Smax": 4.0,
+      "T": 0.5,
+      "option_type": "call",
+      "q": 0.1,
+      "r": 0.01,
+      "regime_id": "call_T050_s060_r001_q010",
+      "sigma": 0.6,
+      "split": "stress_holdout"
+    },
+    "regime_id": "call_T050_s060_r001_q010",
+    "seed": 101,
+    "split": "stress_holdout"
+  },
+  {
+    "arm": "C",
+    "parameters": {
+      "K": 1.0,
+      "M": 120,
+      "N": 120,
+      "Smax": 4.0,
+      "T": 1.0,
+      "option_type": "call",
+      "q": 0.1,
+      "r": 0.05,
+      "regime_id": "call_T100_s060_r005_q010",
+      "sigma": 0.6,
+      "split": "stress_holdout"
+    },
+    "regime_id": "call_T100_s060_r005_q010",
+    "seed": 101,
+    "split": "stress_holdout"
+  },
+  {
+    "arm": "C",
+    "parameters": {
+      "K": 1.0,
+      "M": 120,
+      "N": 120,
+      "Smax": 4.0,
+      "T": 2.0,
+      "option_type": "call",
+      "q": 0.1,
+      "r": 0.1,
+      "regime_id": "call_T200_s060_r010_q010",
+      "sigma": 0.6,
+      "split": "stress_holdout"
+    },
+    "regime_id": "call_T200_s060_r010_q010",
+    "seed": 101,
+    "split": "stress_holdout"
+  },
+  {
+    "arm": "C",
+    "parameters": {
+      "K": 1.0,
+      "M": 120,
+      "N": 120,
+      "Smax": 4.0,
+      "T": 0.5,
+      "option_type": "put",
+      "q": 0.1,
+      "r": 0.01,
+      "regime_id": "put_T050_s060_r001_q010",
+      "sigma": 0.6,
+      "split": "stress_holdout"
+    },
+    "regime_id": "put_T050_s060_r001_q010",
+    "seed": 101,
+    "split": "stress_holdout"
+  },
+  {
+    "arm": "C",
+    "parameters": {
+      "K": 1.0,
+      "M": 120,
+      "N": 120,
+      "Smax": 4.0,
+      "T": 1.0,
+      "option_type": "put",
+      "q": 0.1,
+      "r": 0.05,
+      "regime_id": "put_T100_s060_r005_q010",
+      "sigma": 0.6,
+      "split": "stress_holdout"
+    },
+    "regime_id": "put_T100_s060_r005_q010",
+    "seed": 101,
+    "split": "stress_holdout"
+  },
+  {
+    "arm": "C",
+    "parameters": {
+      "K": 1.0,
+      "M": 120,
+      "N": 120,
+      "Smax": 4.0,
+      "T": 2.0,
+      "option_type": "put",
+      "q": 0.1,
+      "r": 0.1,
+      "regime_id": "put_T200_s060_r010_q010",
+      "sigma": 0.6,
+      "split": "stress_holdout"
+    },
+    "regime_id": "put_T200_s060_r010_q010",
+    "seed": 101,
+    "split": "stress_holdout"
+  },
+  {
+    "arm": "C",
+    "parameters": {
+      "K": 1.0,
+      "M": 120,
+      "N": 120,
+      "Smax": 4.0,
+      "T": 0.25,
+      "option_type": "call",
+      "q": 0.0,
+      "r": 0.01,
+      "regime_id": "call_T025_s040_r001_q000",
+      "sigma": 0.4,
+      "split": "test"
+    },
+    "regime_id": "call_T025_s040_r001_q000",
+    "seed": 101,
+    "split": "test"
+  },
+  {
+    "arm": "C",
+    "parameters": {
+      "K": 1.0,
+      "M": 120,
+      "N": 120,
+      "Smax": 4.0,
+      "T": 0.25,
+      "option_type": "call",
+      "q": 0.0,
+      "r": 0.05,
+      "regime_id": "call_T025_s060_r005_q000",
+      "sigma": 0.6,
+      "split": "test"
+    },
+    "regime_id": "call_T025_s060_r005_q000",
+    "seed": 101,
+    "split": "test"
+  },
+  {
+    "arm": "C",
+    "parameters": {
+      "K": 1.0,
+      "M": 120,
+      "N": 120,
+      "Smax": 4.0,
+      "T": 0.5,
+      "option_type": "call",
+      "q": 0.0,
+      "r": 0.1,
+      "regime_id": "call_T050_s020_r010_q000",
+      "sigma": 0.2,
+      "split": "test"
+    },
+    "regime_id": "call_T050_s020_r010_q000",
+    "seed": 101,
+    "split": "test"
+  },
+  {
+    "arm": "C",
+    "parameters": {
+      "K": 1.0,
+      "M": 120,
+      "N": 120,
+      "Smax": 4.0,
+      "T": 0.5,
+      "option_type": "call",
+      "q": 0.0,
+      "r": 0.01,
+      "regime_id": "call_T050_s060_r001_q000",
+      "sigma": 0.6,
+      "split": "test"
+    },
+    "regime_id": "call_T050_s060_r001_q000",
+    "seed": 101,
+    "split": "test"
+  },
+  {
+    "arm": "C",
+    "parameters": {
+      "K": 1.0,
+      "M": 120,
+      "N": 120,
+      "Smax": 4.0,
+      "T": 1.0,
+      "option_type": "call",
+      "q": 0.0,
+      "r": 0.05,
+      "regime_id": "call_T100_s020_r005_q000",
+      "sigma": 0.2,
+      "split": "test"
+    },
+    "regime_id": "call_T100_s020_r005_q000",
+    "seed": 101,
+    "split": "test"
+  },
+  {
+    "arm": "C",
+    "parameters": {
+      "K": 1.0,
+      "M": 120,
+      "N": 120,
+      "Smax": 4.0,
+      "T": 1.0,
+      "option_type": "call",
+      "q": 0.0,
+      "r": 0.1,
+      "regime_id": "call_T100_s040_r010_q000",
+      "sigma": 0.4,
+      "split": "test"
+    },
+    "regime_id": "call_T100_s040_r010_q000",
+    "seed": 101,
+    "split": "test"
+  },
+  {
+    "arm": "C",
+    "parameters": {
+      "K": 1.0,
+      "M": 120,
+      "N": 120,
+      "Smax": 4.0,
+      "T": 2.0,
+      "option_type": "call",
+      "q": 0.0,
+      "r": 0.01,
+      "regime_id": "call_T200_s020_r001_q000",
+      "sigma": 0.2,
+      "split": "test"
+    },
+    "regime_id": "call_T200_s020_r001_q000",
+    "seed": 101,
+    "split": "test"
+  },
+  {
+    "arm": "C",
+    "parameters": {
+      "K": 1.0,
+      "M": 120,
+      "N": 120,
+      "Smax": 4.0,
+      "T": 2.0,
+      "option_type": "call",
+      "q": 0.0,
+      "r": 0.05,
+      "regime_id": "call_T200_s040_r005_q000",
+      "sigma": 0.4,
+      "split": "test"
+    },
+    "regime_id": "call_T200_s040_r005_q000",
+    "seed": 101,
+    "split": "test"
+  },
+  {
+    "arm": "C",
+    "parameters": {
+      "K": 1.0,
+      "M": 120,
+      "N": 120,
+      "Smax": 4.0,
+      "T": 2.0,
+      "option_type": "call",
+      "q": 0.1,
+      "r": 0.1,
+      "regime_id": "call_T200_s040_r010_q010",
+      "sigma": 0.4,
+      "split": "test"
+    },
+    "regime_id": "call_T200_s040_r010_q010",
+    "seed": 101,
+    "split": "test"
+  },
+  {
+    "arm": "C",
+    "parameters": {
+      "K": 1.0,
+      "M": 120,
+      "N": 120,
+      "Smax": 4.0,
+      "T": 2.0,
+      "option_type": "put",
+      "q": 0.0,
+      "r": 0.1,
+      "regime_id": "put_T200_s040_r010_q000",
+      "sigma": 0.4,
+      "split": "test"
+    },
+    "regime_id": "put_T200_s040_r010_q000",
+    "seed": 101,
+    "split": "test"
+  }
+]

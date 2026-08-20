@@ -1,0 +1,15 @@
+{
+  "adam_steps_completed": 40000,
+  "arm": "C",
+  "best_physics_monitor_score": 2.6159702537627747e-07,
+  "checkpoint_path": "/root/2026-surf-american-risk-surfaces/results/08_pinn_gap/04_heldout_pilots/arm_c_seed101/training/C/test/call_T025_s040_r001_q000/seed_101/checkpoints/C_call_T025_s040_r001_q000_seed101_best.pt",
+  "config_hash": "93b719a71c28694866bd1b306c6da19b724e749b9d6d6dcb3fa23591e594f00f",
+  "d_variant": null,
+  "device": "cuda",
+  "failure_reason": null,
+  "lbfgs_evaluations": 595,
+  "regime_id": "call_T025_s040_r001_q000",
+  "seed": 101,
+  "status": "COMPLETE",
+  "training_seconds": 6160.381377354031
+}

@@ -1,0 +1,18 @@
+{
+  "arm": "C",
+  "evidence_scope": "SINGLE_SEED_HELDOUT_FOLLOWUP_NOT_FORMAL_FIVE_SEED_STUDY",
+  "heldout_regimes": 67,
+  "primary_archive": {
+    "bytes": 680357249,
+    "name": "arm_c_seed101_results.tar.gz",
+    "sha256": "d3f3fcdfe14618f5ecd6b41f0ad73c95d544c7d4da4b0aeb8d0b3650acabb36e"
+  },
+  "release_tag": "arm-c-seed101-followup-v1",
+  "seed": 101,
+  "status": "COMPLETE",
+  "supplemental_partial_log_archive": {
+    "bytes": 36851535,
+    "name": "arm_c_seed101_partial_logs.tar.gz",
+    "sha256": "15db72cd3c154b35416108977223491a647fc5c1f875d215819c9b7edffe2303"
+  }
+}
