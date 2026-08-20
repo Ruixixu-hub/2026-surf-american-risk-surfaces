@@ -1,0 +1,86 @@
+{
+  "algorithm": "SHA-256",
+  "artifacts": {
+    "README.md": {
+      "bytes": 516,
+      "sha256": "0d68afc7a7aa441f6a8726f7b479a295ccc9ef741ac18b145775f891fbb8c0ad"
+    },
+    "arm_c_seed101/free_boundary.csv": {
+      "bytes": 13703,
+      "sha256": "557bc1fbb6da184d259f7bd2c513149476b1046206354decbc62f6e6eec5b8d0"
+    },
+    "arm_c_seed101/metadata.json": {
+      "bytes": 2875,
+      "sha256": "2a252aa666ae2bbeac44a6601d1d61dcf361b4ff55537299f51bcd2553f9541f"
+    },
+    "arm_c_seed101/price_slice_tau_01.csv": {
+      "bytes": 51508,
+      "sha256": "042a6bbdefb7c3b367ad9d654a0e846bfea6927eb492712a87029b3665a165df"
+    },
+    "arm_c_seed101/price_slice_tau_05.csv": {
+      "bytes": 44821,
+      "sha256": "5261ba8d86482a90906145dedcfb99d1284ea9c2fb42b2d4947115e21a2ca6b1"
+    },
+    "arm_c_seed101/price_slice_tau_1.csv": {
+      "bytes": 43846,
+      "sha256": "901ca3b4e254f8b7c491957b2cb828e1d95ec9c5380374311b18787127660d0f"
+    },
+    "arm_c_seed101/surface.npz": {
+      "bytes": 1477716,
+      "sha256": "ba4871fe2762f15d7dbfc81042bf8257c889b0b3a000d3e63f5977e1e1043288"
+    },
+    "arm_d_seed101/free_boundary.csv": {
+      "bytes": 15126,
+      "sha256": "8dd73797ff79a20306e380497391371f55e6fff0eaab479d0f89dea3474b0386"
+    },
+    "arm_d_seed101/metadata.json": {
+      "bytes": 2922,
+      "sha256": "3d9fc918f3aa9941d56b2375dc358381e7d5a7728701b575f5c91e096b98d457"
+    },
+    "arm_d_seed101/price_slice_tau_01.csv": {
+      "bytes": 51878,
+      "sha256": "61ddf6c431aa2d04a1acec9c4ae794959fe2348a76deaf73b1b029075b21b211"
+    },
+    "arm_d_seed101/price_slice_tau_05.csv": {
+      "bytes": 44848,
+      "sha256": "30ffa09198de0234386ae487041b62f3521ad3face83e880833d1d00ee8d4b1f"
+    },
+    "arm_d_seed101/price_slice_tau_1.csv": {
+      "bytes": 43836,
+      "sha256": "66beec5bce0d4108613ce347801319a006836d91fcd4c22db21df22975425fda"
+    },
+    "arm_d_seed101/surface.npz": {
+      "bytes": 1478462,
+      "sha256": "0a4a7530da60aab1fe313c64733aee7f0216765d2220382b2858965236bffb14"
+    },
+    "reference/free_boundary.csv": {
+      "bytes": 19948,
+      "sha256": "86cfe3187c69987c1c764b195b0402d1e965255e70f2ee1990d87eabf6272717"
+    },
+    "reference/metadata.json": {
+      "bytes": 2521,
+      "sha256": "69ef7423e4848401a210b10c831e66ea36af477670b5a206aaa701b641eac04d"
+    },
+    "reference/price_slice_tau_01.csv": {
+      "bytes": 51902,
+      "sha256": "e3ec026860696da4a939dec99a5c709a12647f97b90977b5a44e3571e60cd1bb"
+    },
+    "reference/price_slice_tau_05.csv": {
+      "bytes": 44893,
+      "sha256": "89453fe906fbbeb4384ad5d8e8c8eee12a3547fd0eaeb54e870401527b6f8f1c"
+    },
+    "reference/price_slice_tau_1.csv": {
+      "bytes": 43878,
+      "sha256": "777b051589097cfff2db4e4cad0caf7e3072e6ed270bbce75c28e70a9238b4db"
+    },
+    "reference/surface.npz": {
+      "bytes": 1478613,
+      "sha256": "afc1aa3ab21f5e09e329470feb19acaf2daf583d4648ef5753633bc579f8357d"
+    },
+    "validation_report.json": {
+      "bytes": 3173,
+      "sha256": "8d95ef778e73a2d588373a4232c1bedcbec0117096dd88447c0ccb4855bb99ea"
+    }
+  },
+  "checksums_json_self_hash": "excluded because a manifest cannot contain its own stable hash"
+}

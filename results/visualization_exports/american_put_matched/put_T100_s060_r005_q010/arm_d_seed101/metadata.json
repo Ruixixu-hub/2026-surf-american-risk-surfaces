@@ -1,0 +1,90 @@
+{
+  "K": 1.0,
+  "Smax": 4.0,
+  "T": 1.0,
+  "arm": "D",
+  "checkpoint_config_hash": "753dab53ab0e47718ce7dea918dde64666d6a6a6288d45b8b0f629bdf72a9a9c",
+  "checkpoint_environment": {
+    "cuda": "12.8",
+    "numpy": "1.26.4",
+    "python": "3.11.9",
+    "torch": "2.7.1+cu128"
+  },
+  "checkpoint_path": "D:\\liangzihan\\xuexi\\Y2S2\\SURF\\2026-surf-american-risk-surfaces\\results\\08_pinn_gap\\04_heldout_pilots\\arm_d_seed101\\training\\D\\stress_holdout\\put_T100_s060_r005_q010\\seed_101\\checkpoints\\D_put_T100_s060_r005_q010_seed101_best.pt",
+  "checkpoint_sha256": "826511a32c8f4ec65de4599d4b0f7074f87fa449e590c73e9c6b909e61ebe8d3",
+  "greek_source": "checkpoint automatic differentiation via evaluate_pinn_vi",
+  "grid_definition": {
+    "model_boundary_extraction": {
+      "S_points": 121,
+      "exported_positive_tau_points": 163,
+      "full_S_over_K_range": [
+        0.0,
+        4.0
+      ],
+      "method": "extract_boundary_at_time / linear_threshold_crossing",
+      "tau_points_including_internal_tau_zero_row": 164,
+      "threshold": 1e-06
+    },
+    "price_slices": {
+      "S_over_K_range": [
+        0.5,
+        1.5
+      ],
+      "S_points": 401,
+      "tau_over_T": [
+        1.0,
+        0.5,
+        0.1
+      ]
+    },
+    "surface": {
+      "S_over_K_max": 1.5,
+      "S_over_K_min": 0.5,
+      "S_points": 401,
+      "S_spacing": "equally_spaced",
+      "tau_construction": "sorted unique union of 161 equally spaced points over [0.01, 1.0] and exact slice levels {0.1, 0.5, 1.0}",
+      "tau_over_T_max": 1.0,
+      "tau_over_T_min": 0.01,
+      "tau_points": 163
+    }
+  },
+  "model": "PINN",
+  "model_or_arm": "D",
+  "normalization": {
+    "S_over_K": "S / K",
+    "V_over_K": "V / K",
+    "scaled_Gamma": "K * Gamma",
+    "tau_over_T": "tau / T"
+  },
+  "option_type": "put",
+  "q": 0.1,
+  "r": 0.05,
+  "reference_artifact_sha256": "0048f0b1af7d26ab4396d5dfa0a9704ba70c65a164f4b08ed8ba35052b8d0e26",
+  "reference_source": "DIRK_policy_sinh_M480_N960",
+  "regime_id": "put_T100_s060_r005_q010",
+  "seed": 101,
+  "sigma": 0.6,
+  "source_git_commit": "5f63fa7b12f704c3577c72f9d7b7e5146e78c1ca",
+  "statement": "Visualization export from existing completed artifacts; not a new score, training run, or reference solve.",
+  "validation": {
+    "all_found_boundary_coordinates_finite": true,
+    "all_npz_numeric_arrays_finite": true,
+    "all_surface_fields_finite": {
+      "Delta": true,
+      "V_over_K": true,
+      "scaled_Gamma": true
+    },
+    "boundary_found_count": 46,
+    "boundary_missing_count": 117,
+    "payoff_check": {
+      "minimum_V_minus_payoff": -1.250589951504497e-05,
+      "negative_gap_count": 319,
+      "tolerance": 1e-06,
+      "values_were_clipped_or_projected": false,
+      "violation_count_beyond_tolerance": 313
+    },
+    "tau_1_surface_vs_csv_max_coordinate_error": 0.0,
+    "tau_1_surface_vs_csv_max_value_error": 0.0
+  },
+  "variant": "etc_fb_mixture"
+}
