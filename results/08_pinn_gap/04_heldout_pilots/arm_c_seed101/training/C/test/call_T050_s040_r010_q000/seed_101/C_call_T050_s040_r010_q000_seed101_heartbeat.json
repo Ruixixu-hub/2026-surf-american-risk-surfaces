@@ -1,0 +1,12 @@
+{
+  "arm": "C",
+  "config_hash": "966a11f76692373fe417e4d40c5f72ef82a83871367630430b6bd891b675c861",
+  "cumulative_seconds": 6296.51170087792,
+  "failure_reason": null,
+  "phase": "COMPLETE",
+  "physics_monitor_score": 2.949174885628277e-07,
+  "protocol": "surf_pinn_cde_v1",
+  "regime_id": "call_T050_s040_r010_q000",
+  "seed": 101,
+  "step": 40000
+}

@@ -1,0 +1,36 @@
+{
+  "evidence_scope": "67 test/stress regimes; Arm C only; seed matched to Arm D pilot",
+  "metrics": {
+    "A": {
+      "delta_rmse": 0.00042058149139318813,
+      "mae": 7.161191839038187e-05,
+      "max_abs_error": 0.002227888645578482,
+      "rmse": 0.00011923985890025955,
+      "runtime_seconds": 0.5086548919789493,
+      "scaled_gamma_rmse": 0.008053918720061504
+    },
+    "B": {
+      "delta_rmse": 0.00042058149137124995,
+      "mae": 7.161191843134072e-05,
+      "max_abs_error": 0.0022278886455887655,
+      "rmse": 0.00011923985890044088,
+      "runtime_seconds": 0.02848517009988427,
+      "scaled_gamma_rmse": 0.008053918720654552
+    },
+    "C": {
+      "boundary_found_rate": 1.0,
+      "delta_rmse": 0.06187719500045806,
+      "mae": 0.03962626985777846,
+      "max_abs_error": 0.08211104713935008,
+      "rmse": 0.04422216186779293,
+      "scaled_gamma_rmse": 0.50575279574361,
+      "training_seconds": 6492.461013325956,
+      "vi_p95": 0.019537638706911165
+    }
+  },
+  "price_rmse_ratio_C_over_B": 370.8672777340013,
+  "seed": 101,
+  "selection_disclosure": "Seed 101 was fixed to match the Arm D pilot. It was not selected as the best Arm C validation seed and is not a random-seed robustness estimate.",
+  "status": "COMPLETE_SINGLE_SEED_ARM_C_FOLLOWUP",
+  "warning": "Do not describe this follow-up as the registered five-seed held-out experiment."
+}
